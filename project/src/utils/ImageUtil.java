@@ -1,8 +1,13 @@
 package utils;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
 import java.io.FileInputStream;
+
+import classes.Pixel;
+import controller.CollagerController;
+import state.CollagerState;
 
 
 /**
@@ -11,12 +16,21 @@ import java.io.FileInputStream;
  */
 public class ImageUtil {
 
+  CollagerState state;
+
+  CollagerController controller;
+
+  public ImageUtil(CollagerState state, CollagerController controller) {
+    this.state = state;
+    this.controller = controller;
+  }
+
   /**
    * Read an image file in the PPM format and print the colors.
    *
    * @param filename the path of the file. 
    */
-  public static void readPPM(String filename) {
+  public void readPPM(String filename) {
     Scanner sc;
     
     try {
@@ -43,22 +57,22 @@ public class ImageUtil {
     token = sc.next();
     if (!token.equals("P3")) {
         System.out.println("Invalid PPM file: plain RAW file should begin with P3");
+        return;
     }
     int width = sc.nextInt();
-    System.out.println("Width of image: "+width);
     int height = sc.nextInt();
-    System.out.println("Height of image: "+height);
     int maxValue = sc.nextInt();
-    System.out.println("Maximum value of a color in this file (usually 255): "+maxValue);
-    
+    ArrayList<ArrayList<Pixel>> convertedPixels = new ArrayList<ArrayList<Pixel>>();
     for (int i=0;i<height;i++) {
+      convertedPixels.add(new ArrayList<Pixel>());
         for (int j=0;j<width;j++) {
             int r = sc.nextInt();
             int g = sc.nextInt();
             int b = sc.nextInt();
-            System.out.println("Color of pixel ("+j+","+i+"): "+ r+","+g+","+b);
+            convertedPixels.get(i).add(new Pixel(r, g, b, this.state, this.controller));
         }
     }
+    this.state.imageToBeAdded = convertedPixels;
   }
 }
 

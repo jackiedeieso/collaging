@@ -1,11 +1,15 @@
 package classes;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
 import controller.CollagerController;
 import state.CollagerState;
+import utils.ImageUtil;
 import utils.Utils;
+import view.TextView;
 
 public class Project {
   String name;
@@ -18,6 +22,8 @@ public class Project {
   CollagerController controller;
   ArrayList<ArrayList<ArrayList<Pixel>>> layeredPixels;
 
+  TextView view;
+
   public Project(String name, int height, int width, CollagerState state, CollagerController controller) {
     this.state = state;
     this.controller = controller;
@@ -26,6 +32,7 @@ public class Project {
     this.height = height;
     this.width = width;
     this.maxValue = utils.maxValue;
+    this.view = new TextView(this.state);
     this.layers = new ArrayList<Layer>();
     this.layeredPixels = new ArrayList<ArrayList<ArrayList<Pixel>>>();
   }
@@ -38,6 +45,7 @@ public class Project {
     this.height = height;
     this.width = width;
     this.maxValue = maxValue;
+    this.view = new TextView(this.state);
     this.layers = layers;
     this.layeredPixels = new ArrayList<ArrayList<ArrayList<Pixel>>>();
   }
@@ -70,6 +78,10 @@ public class Project {
 
   public void saveImage(String[] input) {
     String name = input[1];
+    if (this.layers.size() == 1) {
+      this.utils.saveImageToFile(this.height, this.width, this.maxValue, this.layers.get(0).pixels, name);
+      return;
+    }
     for (int i = 0; i < this.layers.get(0).pixels.size(); i++) {
       this.layeredPixels.add(new ArrayList<ArrayList<Pixel>>());
       for (int k = 0; k < this.layers.get(0).pixels.get(0).size(); k++) {
@@ -110,6 +122,9 @@ public class Project {
     if (top.alpha == 0 && bottom.alpha == 0) {
       return top;
     }
+    if (top.alpha == 255 && bottom.alpha == 255) {
+      return top;
+    }
     int aPrime = (top.alpha/255 + bottom.alpha/255 * (1 - (top.alpha/255)));
     int rPrime = (top.alpha/255 * top.red 
             + bottom.red * (bottom.alpha/255)
@@ -122,6 +137,56 @@ public class Project {
             * (1 - top.alpha/255)) * (1/aPrime);
     
     return new Pixel(rPrime, gPrime, bPrime, aPrime, this.state, this.controller);
+  }
+  public void addImageToLayer(String layerName, String imageName, int xPosition, int yPosition) {
+    ImageUtil imageUtil = new ImageUtil(this.state, this.controller);
+    Integer layerPos = -1;
+    for (int i = 0; i < this.layers.size(); i++) {
+      if (layerName.equals(this.layers.get(i).name)) {
+        layerPos = i;
+      }
+    }
+    if (layerPos == -1) {
+      try {
+        this.view.destination.append("Given Layer not found. Re-Enter command." + "\n");
+        return;
+      }
+      catch (Exception e) {
+        throw new IllegalStateException(e.getMessage());
+      }
+    }
+    imageUtil.readPPM(imageName);
+    if (this.state.imageToBeAdded.equals(new ArrayList<ArrayList<Pixel>>())) {
+      try {
+        this.view.destination.append("Image can not be found. Re-Enter command." + "\n");
+        return;
+      }
+      catch (Exception e) {
+        throw new IllegalStateException(e.getMessage());
+      }
+    }
+    ArrayList<ArrayList<Pixel>> newPixels = this.layers.get(layerPos).pixels;
+    ArrayList<ArrayList<Pixel>> newLayer = new ArrayList<ArrayList<Pixel>>();
+    int placeCounterA = 0;
+    int placeCounterB = 0;
+    for (int a = 0; a < newPixels.size(); a++) {
+      placeCounterB = 0;
+      newLayer.add(new ArrayList<Pixel>());
+      for (int b = 0; b < newPixels.get(a).size(); b++) {
+        if (a >= yPosition && b >= xPosition
+                && this.state.imageToBeAdded.size() > placeCounterA && this.state.imageToBeAdded.get(placeCounterA).size() > placeCounterB) {
+          newLayer.get(a).add(this.state.imageToBeAdded.get(placeCounterA).get(placeCounterB));
+          placeCounterB = placeCounterB + 1;
+        }
+        else {
+          newLayer.get(a).add(newPixels.get(a).get(b));
+        }
+      }
+      if (a > yPosition) {
+        placeCounterA = placeCounterA + 1;
+      }
+    }
+    this.layers.get(layerPos).pixels = newLayer;
   }
 
   public ArrayList<Layer> getLayers() {

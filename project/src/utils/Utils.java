@@ -38,6 +38,9 @@ public class Utils {
     if (splited[0].equals("save-image")) {
       this.controller.saveImage(splited);
     }
+    if (splited[0].equals("add-image-to-layer")) {
+      this.controller.addImageToLayer(splited);
+    }
   }
 
   public void saveImageToFile(int height, int width, int maxValue, ArrayList<ArrayList<Pixel>> pixels, String name) {

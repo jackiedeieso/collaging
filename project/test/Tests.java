@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import classes.Pixel;
 import controller.CollagerController;
 import state.CollagerState;
 import utils.Utils;
@@ -83,5 +84,17 @@ public class Tests {
     utils.possibleOptions("save-image test");
 
     System.out.println(state.currentProject.getLayers().get(0).getPixels());
+  }
+
+  @Test
+  public void testFormula() {
+    CollagerState state = new CollagerState();
+    TextView view = new TextView(state);
+    CollagerController controller = new CollagerController(state, view);
+    Utils utils = new Utils(state, controller);
+    utils.possibleOptions("new-project 1000 1000");
+    Pixel pixel1 = new Pixel(173, 179, 151, 255, state, controller);
+    Pixel pixel2 = new Pixel(155, 155, 155, 0, state, controller);
+    assertEquals(state.currentProject.formula(pixel1, pixel2), new Pixel(0, 0, 0, 0, state, controller));
   }
 }

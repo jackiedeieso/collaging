@@ -188,4 +188,26 @@ public class CollagerController {
       this.state.currentProject.saveImage(input);
     }
   }
+
+  public void addImageToLayer(String[] splited) {
+    String layerName;
+    String imageName;
+    int xPosition;
+    int yPosition;
+    if (splited.length == 5) {
+      layerName = splited[1];
+      imageName = splited[2];
+      xPosition = Integer.valueOf(splited[3]);
+      yPosition = Integer.valueOf(splited[4]);
+      this.state.currentProject.addImageToLayer(layerName, imageName, xPosition, yPosition);
+    }
+    else {
+      try {
+        this.view.destination.append("Invalid command. Retry." + "\n");
+      }
+      catch (Exception e) {
+        throw new IllegalStateException(e.getMessage());
+      }
+    }
+  }
 }

@@ -11,7 +11,10 @@ public class CollagerState {
 
   public Project currentProject;
 
+  public ArrayList<ArrayList<Pixel>> imageToBeAdded;
+
   public CollagerState() {
     this.active = false;
+    this.imageToBeAdded = new ArrayList<ArrayList<Pixel>>();
   }
 }
