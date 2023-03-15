@@ -1,8 +1,6 @@
 package main;
-
 import java.io.IOException;
 import java.util.Scanner;
-
 import controller.CollagerController;
 import state.CollagerState;
 import utils.Utils;

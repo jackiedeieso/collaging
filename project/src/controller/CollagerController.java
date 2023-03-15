@@ -53,7 +53,7 @@ public class CollagerController {
     PrintWriter pw;
     Scanner sc = new Scanner(System.in);
     try {
-      this.view.destination.append("Name the file." + "\n");
+      this.view.destination.append("Name the file. (no extension, just a name)" + "\n");
     }
     catch (Exception e) {
       throw new IllegalStateException(e.getMessage());

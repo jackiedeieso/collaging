@@ -69,6 +69,7 @@ public class Project {
   }
 
   public void saveImage(String[] input) {
+    String name = input[1];
     for (int i = 0; i < this.layers.get(0).pixels.size(); i++) {
       this.layeredPixels.add(new ArrayList<ArrayList<Pixel>>());
       for (int k = 0; k < this.layers.get(0).pixels.get(0).size(); k++) {
@@ -96,7 +97,7 @@ public class Project {
       finalArray.add(fillRow);
       fillRow = new ArrayList<Pixel>();
     }
-    this.utils.saveImageToFile(this.height, this.width, this.maxValue, finalArray);
+    this.utils.saveImageToFile(this.height, this.width, this.maxValue, finalArray, name);
   }
 
   public Pixel formula (Pixel top, Pixel bottom) {

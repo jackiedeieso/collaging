@@ -40,20 +40,14 @@ public class Utils {
     }
   }
 
-  public void saveImageToFile(int height, int width, int maxValue, ArrayList<ArrayList<Pixel>> pixels) {
+  public void saveImageToFile(int height, int width, int maxValue, ArrayList<ArrayList<Pixel>> pixels, String name) {
     TextView view = new TextView(this.state);
     File save;
     PrintWriter pw;
     Scanner sc = new Scanner(System.in);
+    String fileName = name;
     try {
-      view.destination.append("Name the file" + "\n");
-    }
-    catch (Exception e) {
-      throw new IllegalStateException(e.getMessage());
-    }
-    String fileName = sc.next();
-    try {
-      save = new File(fileName + ".ppm");
+      save = new File(fileName);
     }
     catch (Exception e) {
       try {
