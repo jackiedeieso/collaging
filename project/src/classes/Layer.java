@@ -4,8 +4,18 @@ import java.util.ArrayList;
 
 public class Layer {
   ArrayList<ArrayList<Pixel>> pixels;
+  String name;
 
-  Layer(ArrayList<ArrayList<Pixel>> pixels) {
+  public Layer(ArrayList<ArrayList<Pixel>> pixels, String name) {
     this.pixels = pixels;
+    this.name = name;
+  }
+
+  public ArrayList<ArrayList<Pixel>> getPixels() {
+    return this.pixels;
+  }
+
+  public String toString() {
+    return this.name;
   }
 }
