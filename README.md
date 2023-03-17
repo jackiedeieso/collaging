@@ -8,7 +8,7 @@ In order to create a proper design for this assignment, we considered various co
 # Classes & Interfaces 
 
 * Layer
-blah blah
+    Layer
 
 * Pixel
 
