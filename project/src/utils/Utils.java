@@ -12,18 +12,30 @@ import state.CollagerState;
 import view.TextView;
 
 /**
- * class for Utils
+ * class for Utils.
  */
 public class Utils {
   public int maxValue;
   public CollagerState state;
   public CollagerController controller;
 
+  /**
+   * Utility class that holds miscellaneous methods.
+   * @param state represents the class that holds the state of the application.
+   * @param controller represents the controller class, which controls most of
+   *                   the actions that a user can do.
+   */
   public Utils(CollagerState state, CollagerController controller) {
     this.maxValue = 255;
     this.state = state;
     this.controller = controller;
   }
+
+  /**
+   * Method that takes in the user response and redirects
+   * them to the correct method in the controller.
+   * @param response represents the user input as a string.
+   */
   public void possibleOptions(String response) {
     boolean throwMessage = true;
     TextView view = new TextView(this.state);
@@ -77,11 +89,18 @@ public class Utils {
     }
   }
 
+  /**
+   * Method that saves the project as a PPM image.
+   * @param height represents the height of the image.
+   * @param width represents the width of the image.
+   * @param maxValue represents the maximum value for the RGB values.
+   * @param pixels is a 2D Array of individual pixels that will be mapped to the ppm file.
+   * @param name represents the name of the image.
+   */
   public void saveImageToFile(int height, int width, int maxValue, ArrayList<ArrayList<Pixel>> pixels, String name) {
     TextView view = new TextView(this.state);
     File save;
     PrintWriter pw;
-    Scanner sc = new Scanner(System.in);
     String fileName = name;
     try {
       save = new File(fileName);

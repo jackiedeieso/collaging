@@ -177,19 +177,31 @@ public class Project {
     if (top.alpha == 255 && bottom.alpha == 255) {
       return top;
     }
-    int aDoublePrime = (top.alpha + bottom.alpha/255 * (1 - (top.alpha/255)));
-    int aPrime = aDoublePrime * 255;
-    int rPrime = (top.alpha/255 * top.red
-            + bottom.red * (bottom.alpha/255)
-            * (1 - top.alpha/255)) * (1/aDoublePrime);
-    int gPrime = (top.alpha/255 * top.green
-            + bottom.green * (bottom.alpha/255)
-            * (1 - top.alpha/255)) * (1/aDoublePrime);
-    int bPrime = (top.alpha/255 * top.blue
-            + bottom.blue * (bottom.alpha/255)
-            * (1 - top.alpha/255)) * (1/aDoublePrime);
+    float topAlpha = top.alpha;
+    float bottomAlpha = bottom.alpha;
+    float aDoublePrime = (topAlpha/255 + bottomAlpha/255 * (1 - (topAlpha/255)));
+    float aPrime = aDoublePrime * 255;
+    float topRed = top.red;
+    float bottomRed = bottom.red;
+    float topGreen = top.green;
+    float bottomGreen = bottom.green;
+    float topBlue = top.blue;
+    float bottomBlue = bottom.blue;
+    float rPrime = (topAlpha/255 * topRed
+            + bottomRed * (bottomAlpha/255)
+            * (1 - topAlpha/255)) * (1/aDoublePrime);
+    float gPrime = (topAlpha/255 * topGreen
+            + bottomGreen * (bottomAlpha/255)
+            * (1 - topAlpha/255)) * (1/aDoublePrime);
+    float bPrime = (topAlpha/255 * topBlue
+            + bottomBlue * (bottomAlpha/255)
+            * (1 - topAlpha/255)) * (1/aDoublePrime);
+    int rPrimeInt = (int) rPrime;
+    int gPrimeInt = (int) gPrime;
+    int bPrimeInt = (int) bPrime;
+    int aPrimeInt = (int) aPrime;
 
-    return new Pixel(rPrime, gPrime, bPrime, aPrime, this.state, this.controller);
+    return new Pixel(rPrimeInt, gPrimeInt, bPrimeInt, aPrimeInt, this.state, this.controller);
   }
 
   /**
@@ -205,6 +217,15 @@ public class Project {
    */
   public void addImageToLayer(String layerName, String imageName, int xPosition, int yPosition) {
     ImageUtil imageUtil = new ImageUtil(this.state, this.controller);
+    if (xPosition < 0 || yPosition < 0 || xPosition > this.width || yPosition > this.height) {
+      try {
+        view.destination.append("X/Y Values out of bounds." + "\n");
+        return;
+      }
+      catch (Exception e) {
+        throw new IllegalStateException(e.getMessage());
+      }
+    }
     int layerPos = -1;
     for (int i = 0; i < this.layers.size(); i++) {
       if (layerName.equals(this.layers.get(i).name)) {

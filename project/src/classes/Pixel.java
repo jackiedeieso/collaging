@@ -56,8 +56,8 @@ public class Pixel {
   }
 
   /**
-   * Third constructor for the Pixel class. This is used to
-   * counteract bad Java logic.
+   * Third constructor for the Pixel class. Empty constructor created
+   * because of an error we were receiving.
    */
   public Pixel() {
   }

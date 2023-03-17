@@ -42,7 +42,12 @@ public class Main {
       Utils utils = new Utils(state, controller);
       String response = "";
       do {
-        view.destination.append("Enter Command \n");
+        if (controller.enterCommandStopper) {
+          controller.enterCommandStopper = false;
+        }
+        else {
+          view.destination.append("Enter Command \n");
+        }
         response = sc.nextLine();
         utils.possibleOptions(response);
       } while (!response.toLowerCase().equals("quit"));

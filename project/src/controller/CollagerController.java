@@ -25,6 +25,8 @@ public class CollagerController {
   TextView view;
   Scanner sc;
 
+  public boolean enterCommandStopper;
+
   /**
    * The constructor for the CollagerController class.
    * @param state represents the current state of the game.
@@ -34,6 +36,7 @@ public class CollagerController {
     this.state = state;
     this.view = view;
     this.sc = sc;
+    this.enterCommandStopper = false;
   }
 
   /**
@@ -115,6 +118,7 @@ public class CollagerController {
       }
     }
     pw.close();
+    this.enterCommandStopper = true;
   }
 
   /**
@@ -258,6 +262,7 @@ public class CollagerController {
    * @param splited represents filterName and layerName, input by the user.
    */
   public void setFilter(String[] splited) {
+    boolean validFilter = false;
     if (splited.length != 3) {
       try {
         this.view.destination.append("Invalid Arguments, Try Again.");
@@ -269,6 +274,20 @@ public class CollagerController {
     }
     String layerName = splited[1];
     String filterOption = splited[2];
+    for (int i = 0; i < this.state.possibleFilters.size(); i++) {
+      if (this.state.possibleFilters.get(i).equals(filterOption)) {
+        validFilter = true;
+      }
+    }
+    if (!validFilter) {
+      try {
+        this.view.destination.append("Invalid Filter Option" + "\n");
+        return;
+      }
+      catch (Exception e) {
+        throw new IllegalStateException(e.getMessage());
+      }
+    }
     this.state.currentProject.markFilter(layerName, filterOption);
   }
 }
