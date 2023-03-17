@@ -2,7 +2,6 @@ package state;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import classes.Layer;
 import classes.Pixel;
 import classes.Project;
 

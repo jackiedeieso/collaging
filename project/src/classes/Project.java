@@ -1,9 +1,6 @@
 package classes;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import controller.CollagerController;
 import state.CollagerState;

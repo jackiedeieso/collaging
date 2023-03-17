@@ -1,13 +1,11 @@
 import org.junit.Test;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import classes.Layer;
 import classes.Pixel;
 import classes.Project;
 import controller.CollagerController;
@@ -19,10 +17,6 @@ import static org.junit.Assert.assertEquals;
 
 public class Tests {
   Scanner sc;
-
-  public void defineScanner() {
-    this.sc = new Scanner(System.in);
-  }
 
   @Test
   public void testState() {
@@ -558,7 +552,4 @@ public class Tests {
     assertEquals(newGreen, 12);
     assertEquals(newBlue, 0);
   }
-
-
-
 }

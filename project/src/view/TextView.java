@@ -1,6 +1,5 @@
 package view;
 
-import classes.Project;
 import state.CollagerState;
 
 /**

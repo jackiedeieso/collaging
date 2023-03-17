@@ -1,7 +1,6 @@
 package classes;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Class which represents a singular layer in a project.
