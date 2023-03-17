@@ -125,22 +125,23 @@ public class Project {
     if (top.alpha == 255 && bottom.alpha == 255) {
       return top;
     }
-    int aPrime = (top.alpha/255 + bottom.alpha/255 * (1 - (top.alpha/255)));
+    int aDoublePrime = (top.alpha + bottom.alpha/255 * (1 - (top.alpha/255)));
+    int aPrime = aDoublePrime * 255;
     int rPrime = (top.alpha/255 * top.red 
             + bottom.red * (bottom.alpha/255)
-            * (1 - top.alpha/255)) * (1/aPrime);
+            * (1 - top.alpha/255)) * (1/aDoublePrime);
     int gPrime = (top.alpha/255 * top.green
             + bottom.green * (bottom.alpha/255)
-            * (1 - top.alpha/255)) * (1/aPrime);
+            * (1 - top.alpha/255)) * (1/aDoublePrime);
     int bPrime = (top.alpha/255 * top.blue
             + bottom.blue * (bottom.alpha/255)
-            * (1 - top.alpha/255)) * (1/aPrime);
+            * (1 - top.alpha/255)) * (1/aDoublePrime);
     
     return new Pixel(rPrime, gPrime, bPrime, aPrime, this.state, this.controller);
   }
   public void addImageToLayer(String layerName, String imageName, int xPosition, int yPosition) {
     ImageUtil imageUtil = new ImageUtil(this.state, this.controller);
-    Integer layerPos = -1;
+    int layerPos = -1;
     for (int i = 0; i < this.layers.size(); i++) {
       if (layerName.equals(this.layers.get(i).name)) {
         layerPos = i;
@@ -187,6 +188,7 @@ public class Project {
       }
     }
     this.layers.get(layerPos).pixels = newLayer;
+    this.setFilter(this.layers.get(layerPos).name, this.layers.get(layerPos).filterOnCurrentLayer);
   }
 
   public ArrayList<Layer> getLayers() {
@@ -203,5 +205,70 @@ public class Project {
 
   public int getMaxValue() {
     return this.maxValue;
+  }
+
+  public void setFilter(String layerName, String filterOption) {
+    int layerPos = -1;
+    for (int i = 0; i < this.layers.size(); i++) {
+      if (layerName.equals(this.layers.get(i).name)) {
+        layerPos = i;
+      }
+    }
+    if (layerPos == -1) {
+      try {
+        this.view.destination.append("Given Layer not found. Re-Enter command." + "\n");
+        return;
+      }
+      catch (Exception e) {
+        throw new IllegalStateException(e.getMessage());
+      }
+    }
+    if (this.layers.get(layerPos).filtered) {
+      this.layers.get(layerPos).makeLayerNormal();
+    }
+    if (!this.layers.get(layerPos).filtered) {
+      this.layers.get(layerPos).backupLayer();
+    }
+    if (filterOption.equals("normal")) {}
+
+    else if (filterOption.equals("red-component")) {
+      this.layers.get(layerPos).changeComponent("Red");
+    }
+    else if (filterOption.equals("green-component")) {
+      this.layers.get(layerPos).changeComponent("Green");
+    }
+    else if (filterOption.equals("blue-component")) {
+      this.layers.get(layerPos).changeComponent("Blue");
+    }
+    else if (filterOption.equals("brighten-value")) {
+      this.layers.get(layerPos).brightenValue();
+    }
+    else if (filterOption.equals("brighten-intensity")) {
+      this.layers.get(layerPos).brightenIntensity();
+    }
+    else if (filterOption.equals("brighten-luma")) {
+      this.layers.get(layerPos).brightenLuma();
+    }
+    else if (filterOption.equals("darken-value")) {
+      this.layers.get(layerPos).darkenValue();
+    }
+    else if (filterOption.equals("darken-intensity")) {
+      this.layers.get(layerPos).darkenIntensity();
+    }
+    else if (filterOption.equals("darken-luma")) {
+      this.layers.get(layerPos).darkenLuma();
+    }
+
+    else {
+      try {
+        this.view.destination.append("Invalid Filter Option. Reverted layer to normal.");
+        this.setFilter(layerName, this.layers.get(layerPos).filterOnCurrentLayer);
+        this.layers.get(layerPos).filtered = false;
+        this.layers.get(layerPos).filterOnCurrentLayer = "normal";
+      }
+      catch (Exception e) {
+        throw new IllegalStateException(e.getMessage());
+      }
+    }
   }
 }

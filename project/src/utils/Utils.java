@@ -22,24 +22,49 @@ public class Utils {
     this.controller = controller;
   }
   public void possibleOptions(String response) {
+    TextView view = new TextView(this.state);
     String[] splited = response.split(" ");
     if (splited[0].equals("new-project")) {
       this.controller.makeNewProject(splited);
     }
-    if (splited[0].equals("save-project")) {
-      this.controller.saveProject();
-    }
     if (splited[0].equals("load-project")) {
       this.controller.loadProject(splited);
     }
-    if (splited[0].equals("add-layer")) {
-      this.controller.addLayer(splited);
+    if (this.state.active) {
+      if (splited[0].equals("save-project")) {
+        this.controller.saveProject();
+      }
+      if (splited[0].equals("add-layer")) {
+        this.controller.addLayer(splited);
+      }
+      if (splited[0].equals("save-image")) {
+        this.controller.saveImage(splited);
+      }
+      if (splited[0].equals("add-image-to-layer")) {
+        this.controller.addImageToLayer(splited);
+      }
+      if (splited[0].equals("set-filter")) {
+        this.controller.setFilter(splited);
+      }
     }
-    if (splited[0].equals("save-image")) {
-      this.controller.saveImage(splited);
-    }
-    if (splited[0].equals("add-image-to-layer")) {
-      this.controller.addImageToLayer(splited);
+    if (!this.state.active) {
+      if (splited[0].equals("save-project") || splited[0].equals("add-layer")
+              || splited[0].equals("save-image") || splited[0].equals("add-image-to-layer")) {
+        try {
+          view.destination.append("Cannot do command without importing or making a project." + "\n");
+        }
+        catch (Exception e) {
+          throw new IllegalStateException(e.getMessage());
+        }
+      }
+      else {
+        try {
+          view.destination.append("Unknown Command. Re-Type" + "\n");
+        }
+        catch (Exception e) {
+          throw new IllegalStateException(e.getMessage());
+        }
+      }
     }
   }
 

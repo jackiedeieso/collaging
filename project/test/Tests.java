@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 
+import classes.Layer;
 import classes.Pixel;
 import controller.CollagerController;
 import state.CollagerState;
@@ -95,6 +96,91 @@ public class Tests {
     utils.possibleOptions("new-project 1000 1000");
     Pixel pixel1 = new Pixel(173, 179, 151, 255, state, controller);
     Pixel pixel2 = new Pixel(155, 155, 155, 0, state, controller);
-    assertEquals(state.currentProject.formula(pixel1, pixel2), new Pixel(0, 0, 0, 0, state, controller));
+    assertEquals(state.currentProject.formula(pixel1, pixel2), new Pixel(173, 179, 151, 255, state, controller));
   }
+
+  @Test
+  public void testFindMax() {
+    ArrayList<ArrayList<Pixel>> pix = new ArrayList<ArrayList<Pixel>>();
+    Layer lay = new Layer(pix, "");
+  }
+
+  @Test
+  public void testBrightenValue() {
+    CollagerState state = new CollagerState();
+    TextView view = new TextView(state);
+    CollagerController controller = new CollagerController(state, view);
+    String input = "new-project 800 600";
+    controller.makeNewProject(input.split(" "));
+    input = "add-image-to-layer Initial sample.ppm 0 0";
+    controller.addImageToLayer(input.split(" "));
+    controller.setFilter("set-layer Initial brighten-value".split(" "));
+    controller.saveImage("save-image brighten.ppm".split(" "));
+  }
+
+  @Test
+  public void testBrightenLuma() {
+    CollagerState state = new CollagerState();
+    TextView view = new TextView(state);
+    CollagerController controller = new CollagerController(state, view);
+    String input = "new-project 800 600";
+    controller.makeNewProject(input.split(" "));
+    input = "add-image-to-layer Initial sample.ppm 0 0";
+    controller.addImageToLayer(input.split(" "));
+    controller.setFilter("set-layer Initial brighten-luma".split(" "));
+    controller.saveImage("save-image brightenLuma.ppm".split(" "));
+  }
+
+  @Test
+  public void testBrightenIntensity() {
+    CollagerState state = new CollagerState();
+    TextView view = new TextView(state);
+    CollagerController controller = new CollagerController(state, view);
+    String input = "new-project 800 600";
+    controller.makeNewProject(input.split(" "));
+    input = "add-image-to-layer Initial sample.ppm 0 0";
+    controller.addImageToLayer(input.split(" "));
+    controller.setFilter("set-layer Initial brighten-intensity".split(" "));
+    controller.saveImage("save-image brightenIntensity.ppm".split(" "));
+  }
+
+  @Test
+  public void testDarkenValue() {
+    CollagerState state = new CollagerState();
+    TextView view = new TextView(state);
+    CollagerController controller = new CollagerController(state, view);
+    String input = "new-project 800 600";
+    controller.makeNewProject(input.split(" "));
+    input = "add-image-to-layer Initial sample.ppm 0 0";
+    controller.addImageToLayer(input.split(" "));
+    controller.setFilter("set-layer Initial darken-value".split(" "));
+    controller.saveImage("save-image darken.ppm".split(" "));
+  }
+
+  @Test
+  public void testDarkenLuma() {
+    CollagerState state = new CollagerState();
+    TextView view = new TextView(state);
+    CollagerController controller = new CollagerController(state, view);
+    String input = "new-project 800 600";
+    controller.makeNewProject(input.split(" "));
+    input = "add-image-to-layer Initial sample.ppm 0 0";
+    controller.addImageToLayer(input.split(" "));
+    controller.setFilter("set-layer Initial darken-luma".split(" "));
+    controller.saveImage("save-image darkenLuma.ppm".split(" "));
+  }
+
+  @Test
+  public void testDarkenIntensity() {
+    CollagerState state = new CollagerState();
+    TextView view = new TextView(state);
+    CollagerController controller = new CollagerController(state, view);
+    String input = "new-project 800 600";
+    controller.makeNewProject(input.split(" "));
+    input = "add-image-to-layer Initial sample.ppm 0 0";
+    controller.addImageToLayer(input.split(" "));
+    controller.setFilter("set-layer Initial darken-intensity".split(" "));
+    controller.saveImage("save-image darkenIntensity.ppm".split(" "));
+  }
+
 }

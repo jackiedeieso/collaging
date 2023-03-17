@@ -106,7 +106,7 @@ public class CollagerController {
     }
     Scanner sc;
     try {
-      sc = new Scanner(new FileInputStream(input[1]));
+      sc = new Scanner(new FileInputStream(input[1] + ".txt"));
     }
     catch (FileNotFoundException e) {
       try {
@@ -209,5 +209,20 @@ public class CollagerController {
         throw new IllegalStateException(e.getMessage());
       }
     }
+  }
+
+  public void setFilter(String[] splited) {
+    if (splited.length != 3) {
+      try {
+        this.view.destination.append("Invalid Arguments, Try Again.");
+        return;
+      }
+      catch (Exception e) {
+        throw new IllegalStateException(e.getMessage());
+      }
+    }
+    String layerName = splited[1];
+    String filterOption = splited[2];
+    this.state.currentProject.setFilter(layerName, filterOption);
   }
 }
