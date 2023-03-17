@@ -11,6 +11,10 @@ import utils.ImageUtil;
 import utils.Utils;
 import view.TextView;
 
+/**
+ * A class representation of a Project. A project is what a user can open
+ * or close, and can contain multiple layers.
+ */
 public class Project {
   String name;
   int height;
@@ -21,9 +25,17 @@ public class Project {
   Utils utils;
   CollagerController controller;
   ArrayList<ArrayList<ArrayList<Pixel>>> layeredPixels;
-
   TextView view;
 
+  /**
+   * First constructor for the Project class. This is used for creating a
+   * new project.
+   * @param name represents the title given to a project.
+   * @param height represents the height of a frame for the project.
+   * @param width represents the width of a frame for the project.
+   * @param state represents the current state of the game.
+   * @param controller  represents the controller class that run methods for the main.
+   */
   public Project(String name, int height, int width, CollagerState state, CollagerController controller) {
     this.state = state;
     this.controller = controller;
@@ -37,6 +49,17 @@ public class Project {
     this.layeredPixels = new ArrayList<ArrayList<ArrayList<Pixel>>>();
   }
 
+  /**
+   * Second constructor for the Project class. This constructor is used for
+   * loading an existing project in.
+   * @param name represents the title given to a project.
+   * @param height represents the height of a frame for the project.
+   * @param width represents the width of a frame for the project.
+   * @param maxValue represents the max value of a Pixel.
+   * @param layers represents the layer(s) in a project.
+   * @param state represents the current state of the game.
+   * @param controller represents the controller class that run methods for the main.
+   */
   public Project(String name, int height, int width, int maxValue, ArrayList<Layer> layers, CollagerState state, CollagerController controller) {
     this.state = state;
     this.controller = controller;
@@ -50,10 +73,19 @@ public class Project {
     this.layeredPixels = new ArrayList<ArrayList<ArrayList<Pixel>>>();
   }
 
+  /**
+   * A method that converts the project into a string by returning
+   * the project name.
+   * @return the name of the project.
+   */
   public String toString() {
     return this.name;
   }
 
+  /**
+   * A method that creates the first layer in a project. This consists of
+   * a white background with a unique height and width.
+   */
   public void addInitialLayer() {
     ArrayList<ArrayList<Pixel>> pixels = new ArrayList<ArrayList<Pixel>>();
     for (int i = 0; i < this.height; i++) {
@@ -62,9 +94,13 @@ public class Project {
         pixels.get(i).add(new Pixel(255, 255, 255, 255, this.state, this.controller));
       }
     }
-    this.layers.add(new Layer(pixels, "Initial"));
+    this.layers.add(new Layer(pixels, "initial-layer"));
   }
 
+  /**
+   * A method that creates a new layer to an existing project.
+   * @param name represents the title of the new layer.
+   */
   public void addLayer(String name) {
     ArrayList<ArrayList<Pixel>> pixels = new ArrayList<ArrayList<Pixel>>();
     for (int i = 0; i < this.height; i++) {
@@ -76,7 +112,15 @@ public class Project {
     this.layers.add(0, new Layer(pixels, name));
   }
 
+  /**
+   * A method that saves an image as a PPM.
+   * @param input represents the name of the
+   *              file given by the user.
+   */
   public void saveImage(String[] input) {
+    for (int d = 0; d < this.layers.size(); d++) {
+      this.setFilter(this.layers.get(d).name, this.layers.get(d).getCurrentFilter());
+    }
     String name = input[1];
     if (this.layers.size() == 1) {
       this.utils.saveImageToFile(this.height, this.width, this.maxValue, this.layers.get(0).pixels, name);
@@ -112,6 +156,14 @@ public class Project {
     this.utils.saveImageToFile(this.height, this.width, this.maxValue, finalArray, name);
   }
 
+  /**
+   * A method that computes prime values from RGBA values.
+   * This is done with a formula provided.
+   * @param top represents the layer above the bottom layer.
+   * @param bottom represents the layer below the top layer.
+   * @return a new Pixel that represents the RGBA value with the alpha
+   * formula applied.
+   */
   public Pixel formula (Pixel top, Pixel bottom) {
     if (top.alpha == 0 && bottom.alpha > 0) {
       return bottom;
@@ -127,7 +179,7 @@ public class Project {
     }
     int aDoublePrime = (top.alpha + bottom.alpha/255 * (1 - (top.alpha/255)));
     int aPrime = aDoublePrime * 255;
-    int rPrime = (top.alpha/255 * top.red 
+    int rPrime = (top.alpha/255 * top.red
             + bottom.red * (bottom.alpha/255)
             * (1 - top.alpha/255)) * (1/aDoublePrime);
     int gPrime = (top.alpha/255 * top.green
@@ -136,9 +188,21 @@ public class Project {
     int bPrime = (top.alpha/255 * top.blue
             + bottom.blue * (bottom.alpha/255)
             * (1 - top.alpha/255)) * (1/aDoublePrime);
-    
+
     return new Pixel(rPrime, gPrime, bPrime, aPrime, this.state, this.controller);
   }
+
+  /**
+   * A method that allows a user to add a PPM image to a given layer.
+   * @param layerName represents the layer that the user wants to add
+   *                  and image to.
+   * @param imageName represents the file path to the image.
+   * @param xPosition represents the desired x-position of the image.
+   *                  This begins in the top left corner.
+   * @param yPosition represents the desired y-position of the image.
+   *                  This begins in the top left corner, and then moves
+   *                  down.
+   */
   public void addImageToLayer(String layerName, String imageName, int xPosition, int yPosition) {
     ImageUtil imageUtil = new ImageUtil(this.state, this.controller);
     int layerPos = -1;
@@ -175,7 +239,8 @@ public class Project {
       newLayer.add(new ArrayList<Pixel>());
       for (int b = 0; b < newPixels.get(a).size(); b++) {
         if (a >= yPosition && b >= xPosition
-                && this.state.imageToBeAdded.size() > placeCounterA && this.state.imageToBeAdded.get(placeCounterA).size() > placeCounterB) {
+                && this.state.imageToBeAdded.size() > placeCounterA &&
+                this.state.imageToBeAdded.get(placeCounterA).size() > placeCounterB) {
           newLayer.get(a).add(this.state.imageToBeAdded.get(placeCounterA).get(placeCounterB));
           placeCounterB = placeCounterB + 1;
         }
@@ -188,26 +253,47 @@ public class Project {
       }
     }
     this.layers.get(layerPos).pixels = newLayer;
-    this.setFilter(this.layers.get(layerPos).name, this.layers.get(layerPos).filterOnCurrentLayer);
   }
 
+  /**
+   * A method that gets the layers in a project.
+   * @return an ArrayList of layers.
+   */
   public ArrayList<Layer> getLayers() {
     return this.layers;
   }
 
+  /**
+   * A method that retrieves the height of the project.
+   * @return the height of the initial layer.
+   */
   public int getHeight() {
     return this.height;
   }
 
+  /**
+   * A method retrieves the width of the project.
+   * @return the width of the intial layer.
+   */
   public int getWidth() {
     return this.width;
   }
 
+  /**
+   * A method that retrieves the max value of the RGB values.
+   * @return the max value of the RGB values.
+   */
   public int getMaxValue() {
     return this.maxValue;
   }
 
-  public void setFilter(String layerName, String filterOption) {
+  /**
+   * A method that changes the name of a filter, so that when
+   * it is applied, the filter can be saved on the layer.
+   * @param layerName represents the name of the layer.
+   * @param filterOption represents which filter is being choosen.
+   */
+  public void markFilter(String layerName, String filterOption) {
     int layerPos = -1;
     for (int i = 0; i < this.layers.size(); i++) {
       if (layerName.equals(this.layers.get(i).name)) {
@@ -223,11 +309,30 @@ public class Project {
         throw new IllegalStateException(e.getMessage());
       }
     }
-    if (this.layers.get(layerPos).filtered) {
-      this.layers.get(layerPos).makeLayerNormal();
+    this.layers.get(layerPos).markFilter(filterOption);
+
+  }
+
+  /**
+   * A method that applies a unique filter to a given layer.
+   * @param layerName represents the name of the layer.
+   * @param filterOption represents which filter is being chosen to be applied.
+   */
+  public void setFilter(String layerName, String filterOption) {
+    int layerPos = -1;
+    for (int i = 0; i < this.layers.size(); i++) {
+      if (layerName.equals(this.layers.get(i).name)) {
+        layerPos = i;
+      }
     }
-    if (!this.layers.get(layerPos).filtered) {
-      this.layers.get(layerPos).backupLayer();
+    if (layerPos == -1) {
+      try {
+        this.view.destination.append("Given Layer not found. Re-Enter command." + "\n");
+        return;
+      }
+      catch (Exception e) {
+        throw new IllegalStateException(e.getMessage());
+      }
     }
     if (filterOption.equals("normal")) {}
 
@@ -263,7 +368,6 @@ public class Project {
       try {
         this.view.destination.append("Invalid Filter Option. Reverted layer to normal.");
         this.setFilter(layerName, this.layers.get(layerPos).filterOnCurrentLayer);
-        this.layers.get(layerPos).filtered = false;
         this.layers.get(layerPos).filterOnCurrentLayer = "normal";
       }
       catch (Exception e) {

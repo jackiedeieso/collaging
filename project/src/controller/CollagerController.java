@@ -16,16 +16,30 @@ import state.CollagerState;
 import utils.Utils;
 import view.TextView;
 
+/**
+ * A class representation of the controller for the Collager.
+ */
 public class CollagerController {
 
   CollagerState state;
-
   TextView view;
-  public CollagerController(CollagerState state, TextView view) {
+  Scanner sc;
+
+  /**
+   * The constructor for the CollagerController class.
+   * @param state represents the current state of the game.
+   * @param view represents the control for the output for a user.
+   */
+  public CollagerController(CollagerState state, TextView view, Scanner sc) {
     this.state = state;
     this.view = view;
+    this.sc = sc;
   }
 
+  /**
+   * A method that creates a new project for
+   * @param input represent the user input for height and width.
+   */
   public void makeNewProject(String[] input) {
     int height;
     int width;
@@ -42,23 +56,33 @@ public class CollagerController {
         throw new IllegalStateException(f.getMessage());
       }
     }
+    if (height < 0 || width < 0) {
+      try {
+        this.view.destination.append("Height and Width must be greater then 0" + "\n");
+        return;
+      }
+      catch (Exception exception) {
+        throw new IllegalStateException(exception.getMessage());
+      }
+    }
     this.state.currentProject = new Project("C1", height, width, this.state, this);
     this.state.currentProject.addInitialLayer();
     this.state.active = true;
-
   }
 
+  /**
+   * A method that, prompted by the user, saves a project to a .txt file.
+   */
   public void saveProject() {
     File save;
     PrintWriter pw;
-    Scanner sc = new Scanner(System.in);
     try {
       this.view.destination.append("Name the file. (no extension, just a name)" + "\n");
     }
     catch (Exception e) {
       throw new IllegalStateException(e.getMessage());
     }
-    String fileName = sc.next();
+    String fileName = this.sc.next();
     try {
       save = new File(fileName + ".txt");
     }
@@ -81,7 +105,7 @@ public class CollagerController {
     pw.write(this.state.currentProject.getWidth() + " " + this.state.currentProject.getHeight() + "\n");
     pw.write(this.state.currentProject.getMaxValue() + "\n");
     for (int i = 0; i < this.state.currentProject.getLayers().size(); i++) {
-      pw.write(this.state.currentProject.getLayers().get(i).toString() + "\n");
+      pw.write(this.state.currentProject.getLayers().get(i).toString() + " " + this.state.currentProject.getLayers().get(i).getCurrentFilter() + "\n");
       for (int k = 0; k < this.state.currentProject.getHeight(); k++) {
         for (int j = 0; j < this.state.currentProject.getWidth(); j++) {
           ArrayList<Integer> x = this.state.currentProject.getLayers().get(i).getPixels().get(k).get(j).getRGBA();
@@ -91,9 +115,13 @@ public class CollagerController {
       }
     }
     pw.close();
-
   }
 
+  /**
+   * A method that loads an existing project in. The user will be able to make
+   * changes to this project if desired.
+   * @param input represents the desired file the user loads in.
+   */
   public void loadProject(String[] input) {
     if (input.length <= 1) {
       try {
@@ -104,9 +132,9 @@ public class CollagerController {
         throw new IllegalStateException(e.getMessage());
       }
     }
-    Scanner sc;
+    Scanner scLoading;
     try {
-      sc = new Scanner(new FileInputStream(input[1] + ".txt"));
+      scLoading = new Scanner(new FileInputStream(input[1] + ".txt"));
     }
     catch (FileNotFoundException e) {
       try {
@@ -118,15 +146,15 @@ public class CollagerController {
       }
     }
     StringBuilder builder = new StringBuilder();
-    while (sc.hasNextLine()) {
-      String s = sc.nextLine();
+    while (scLoading.hasNextLine()) {
+      String s = scLoading.nextLine();
       if (s.charAt(0)!='#') {
         builder.append(s+System.lineSeparator());
       }
     }
-    sc = new Scanner(builder.toString());
+    scLoading = new Scanner(builder.toString());
     String name;
-    name = sc.next();
+    name = scLoading.next();
     if (!name.equals("C1")) {
       try {
         view.destination.append("Invalid collager file! choose a different file" + "\n");
@@ -136,29 +164,34 @@ public class CollagerController {
         throw new IllegalStateException(e.getMessage());
       }
     }
-    int width = sc.nextInt();
-    int height = sc.nextInt();
-    int maxValue = sc.nextInt();
+    int width = scLoading.nextInt();
+    int height = scLoading.nextInt();
+    int maxValue = scLoading.nextInt();
     ArrayList<Layer> layers = new ArrayList<Layer>();
     do {
-      String layerName = sc.next();
+      String layerName = scLoading.next();
+      String filterName = scLoading.next();
       ArrayList<ArrayList<Pixel>> pixels = new ArrayList<ArrayList<Pixel>>();
       for (int i = 0; i < height; i++) {
         pixels.add(new ArrayList<Pixel>());
         for (int k = 0; k < width; k++) {
-          int r = sc.nextInt();
-          int g = sc.nextInt();
-          int b = sc.nextInt();
-          int a = sc.nextInt();
+          int r = scLoading.nextInt();
+          int g = scLoading.nextInt();
+          int b = scLoading.nextInt();
+          int a = scLoading.nextInt();
           pixels.get(i).add(new Pixel(r, g, b, a, this.state, this));
         }
       }
-      layers.add(new Layer(pixels, layerName));
-    } while (sc.hasNext());
+      layers.add(new Layer(pixels, layerName, filterName));
+    } while (scLoading.hasNext());
     this.state.currentProject = new Project("C1", height, width, maxValue, layers, this.state, this);
     this.state.active = true;
   }
 
+  /**
+   * A method that allows a user to add a new layer to an existing project.
+   * @param input represents the name of the layer.
+   */
   public void addLayer(String[] input) {
     if (input.length > 1) {
       this.state.currentProject.addLayer(input[1]);
@@ -173,7 +206,11 @@ public class CollagerController {
     }
   }
 
-
+  /**
+   * A method that saves an image to a directory given by the user.
+   * @param input represents the name of the image the user wants to save
+   *              with the file extension.
+   */
   public void saveImage(String[] input) {
     if (input.length <= 1) {
       try {
@@ -189,6 +226,11 @@ public class CollagerController {
     }
   }
 
+  /**
+   * A method that adds an image to an existing layer.
+   * @param splited represents the layerName, imageName, xPosition,
+   *                and yPosition.
+   */
   public void addImageToLayer(String[] splited) {
     String layerName;
     String imageName;
@@ -211,6 +253,10 @@ public class CollagerController {
     }
   }
 
+  /**
+   * A method which changes the image to have the desired filter.
+   * @param splited represents filterName and layerName, input by the user.
+   */
   public void setFilter(String[] splited) {
     if (splited.length != 3) {
       try {
@@ -223,6 +269,6 @@ public class CollagerController {
     }
     String layerName = splited[1];
     String filterOption = splited[2];
-    this.state.currentProject.setFilter(layerName, filterOption);
+    this.state.currentProject.markFilter(layerName, filterOption);
   }
 }

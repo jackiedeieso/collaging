@@ -14,12 +14,17 @@ import view.TextView;
 import static org.junit.Assert.assertEquals;
 
 public class Tests {
+  Scanner sc;
+
+  public void defineScanner() {
+    this.sc = new Scanner(System.in);
+  }
 
   @Test
   public void testState() {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
-    CollagerController controller = new CollagerController(state, view);
+    CollagerController controller = new CollagerController(state, view, this.sc);
     assertEquals(state.active, false);
     view.state.active = true;
     assertEquals(state.active, true);
@@ -32,7 +37,7 @@ public class Tests {
   public void testMakeNewProject() {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
-    CollagerController controller = new CollagerController(state, view);
+    CollagerController controller = new CollagerController(state, view, this.sc);
     String response = "new-project 400 500";
     Utils utils = new Utils(state, controller);
     assertEquals(state.currentProject, null);
@@ -49,7 +54,7 @@ public class Tests {
   public void testLoadProject() {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
-    CollagerController controller = new CollagerController(state, view);
+    CollagerController controller = new CollagerController(state, view, this.sc);
     String response = "load-project layers.txt";
     Utils utils = new Utils(state, controller);
     assertEquals(state.currentProject, null);
@@ -65,7 +70,7 @@ public class Tests {
   public void testAddLayer() {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
-    CollagerController controller = new CollagerController(state, view);
+    CollagerController controller = new CollagerController(state, view, this.sc);
     String response = "add-layer layer1";
     Utils utils = new Utils(state, controller);
     utils.possibleOptions("new-project 20 10");
@@ -77,7 +82,7 @@ public class Tests {
   public void testSaveImage() {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
-    CollagerController controller = new CollagerController(state, view);
+    CollagerController controller = new CollagerController(state, view, this.sc);
     Utils utils = new Utils(state, controller);
     utils.possibleOptions("new-project 20 10");
     utils.possibleOptions("add-layer dub");
@@ -91,7 +96,7 @@ public class Tests {
   public void testFormula() {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
-    CollagerController controller = new CollagerController(state, view);
+    CollagerController controller = new CollagerController(state, view, this.sc);
     Utils utils = new Utils(state, controller);
     utils.possibleOptions("new-project 1000 1000");
     Pixel pixel1 = new Pixel(173, 179, 151, 255, state, controller);
@@ -109,7 +114,7 @@ public class Tests {
   public void testBrightenValue() {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
-    CollagerController controller = new CollagerController(state, view);
+    CollagerController controller = new CollagerController(state, view, this.sc);
     String input = "new-project 800 600";
     controller.makeNewProject(input.split(" "));
     input = "add-image-to-layer Initial sample.ppm 0 0";
@@ -122,7 +127,7 @@ public class Tests {
   public void testBrightenLuma() {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
-    CollagerController controller = new CollagerController(state, view);
+    CollagerController controller = new CollagerController(state, view, this.sc);
     String input = "new-project 800 600";
     controller.makeNewProject(input.split(" "));
     input = "add-image-to-layer Initial sample.ppm 0 0";
@@ -135,7 +140,7 @@ public class Tests {
   public void testBrightenIntensity() {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
-    CollagerController controller = new CollagerController(state, view);
+    CollagerController controller = new CollagerController(state, view, this.sc);
     String input = "new-project 800 600";
     controller.makeNewProject(input.split(" "));
     input = "add-image-to-layer Initial sample.ppm 0 0";
@@ -148,7 +153,7 @@ public class Tests {
   public void testDarkenValue() {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
-    CollagerController controller = new CollagerController(state, view);
+    CollagerController controller = new CollagerController(state, view, this.sc);
     String input = "new-project 800 600";
     controller.makeNewProject(input.split(" "));
     input = "add-image-to-layer Initial sample.ppm 0 0";
@@ -161,7 +166,7 @@ public class Tests {
   public void testDarkenLuma() {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
-    CollagerController controller = new CollagerController(state, view);
+    CollagerController controller = new CollagerController(state, view, this.sc);
     String input = "new-project 800 600";
     controller.makeNewProject(input.split(" "));
     input = "add-image-to-layer Initial sample.ppm 0 0";
@@ -174,7 +179,7 @@ public class Tests {
   public void testDarkenIntensity() {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
-    CollagerController controller = new CollagerController(state, view);
+    CollagerController controller = new CollagerController(state, view, this.sc);
     String input = "new-project 800 600";
     controller.makeNewProject(input.split(" "));
     input = "add-image-to-layer Initial sample.ppm 0 0";

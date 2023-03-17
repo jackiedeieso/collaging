@@ -11,15 +11,18 @@ import state.CollagerState;
 
 
 /**
- * This class contains utility methods to read a PPM image from file and simply print its contents. Feel free to change this method 
- *  as required.
+ * This class contains utility methods to read a PPM image from file and simply print its contents.
  */
 public class ImageUtil {
 
   CollagerState state;
-
   CollagerController controller;
 
+  /**
+   * This is the constructor for the ImageUtil class, which
+   * @param state
+   * @param controller
+   */
   public ImageUtil(CollagerState state, CollagerController controller) {
     this.state = state;
     this.controller = controller;
@@ -27,7 +30,6 @@ public class ImageUtil {
 
   /**
    * Read an image file in the PPM format and print the colors.
-   *
    * @param filename the path of the file. 
    */
   public void readPPM(String filename) {

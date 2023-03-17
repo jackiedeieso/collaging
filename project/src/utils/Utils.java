@@ -11,6 +11,9 @@ import controller.CollagerController;
 import state.CollagerState;
 import view.TextView;
 
+/**
+ * class for Utils
+ */
 public class Utils {
   public int maxValue;
   public CollagerState state;
@@ -22,13 +25,19 @@ public class Utils {
     this.controller = controller;
   }
   public void possibleOptions(String response) {
+    boolean throwMessage = true;
     TextView view = new TextView(this.state);
     String[] splited = response.split(" ");
     if (splited[0].equals("new-project")) {
       this.controller.makeNewProject(splited);
+      throwMessage = false;
     }
     if (splited[0].equals("load-project")) {
       this.controller.loadProject(splited);
+      throwMessage = false;
+    }
+    if (splited[0].equals("quit")) {
+      throwMessage = false;
     }
     if (this.state.active) {
       if (splited[0].equals("save-project")) {
@@ -47,7 +56,7 @@ public class Utils {
         this.controller.setFilter(splited);
       }
     }
-    if (!this.state.active) {
+    if (!this.state.active && throwMessage) {
       if (splited[0].equals("save-project") || splited[0].equals("add-layer")
               || splited[0].equals("save-image") || splited[0].equals("add-image-to-layer")) {
         try {

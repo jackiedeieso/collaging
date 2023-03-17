@@ -3,40 +3,55 @@ package classes;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Class which represents a singular layer in a project.
+ */
 public class Layer {
   ArrayList<ArrayList<Pixel>> pixels;
   String name;
-
-  ArrayList<ArrayList<Pixel>> normalPixels;
-
-  boolean filtered;
-
   String filterOnCurrentLayer;
 
+  /**
+   * This is the constructor for the Layer class.
+   * @param pixels represents an image, in pixels.
+   * @param name represents the name which is given to.
+   */
   public Layer(ArrayList<ArrayList<Pixel>> pixels, String name) {
     this.pixels = pixels;
     this.name = name;
-    this.normalPixels = new ArrayList<ArrayList<Pixel>>();
-    this.filtered = false;
     this.filterOnCurrentLayer = "normal";
   }
 
+  public Layer(ArrayList<ArrayList<Pixel>> pixels, String name, String filterOnCurrentLayer) {
+    this.pixels = pixels;
+    this.name = name;
+    this.filterOnCurrentLayer = filterOnCurrentLayer;
+
+  }
+
+  /**
+   * A method used when called in other classes in order to
+   * get the pixels in a given layer.
+   * @return 2D array list of pixels.
+   */
   public ArrayList<ArrayList<Pixel>> getPixels() {
     return this.pixels;
   }
 
+  /**
+   * A method used when called in other classs in order to
+   * get the name of a given layer
+   * @return the name of the layer
+   */
   public String toString() {
     return this.name;
   }
 
-  public void backupLayer() {
-    this.normalPixels = this.pixels;
-  }
-
-  public void makeLayerNormal() {
-    this.pixels = this.normalPixels;
-  }
-
+  /**
+   * A method which changes the filter color of a given layer.
+   * Once a color is input, turns the rest of the colors to 0.
+   * @param color represents either red, green, or blue.
+   */
   public void changeComponent(String color) {
     for (int i = 0; i < this.pixels.size(); i++) {
       for (int k = 0; k < this.pixels.get(i).size(); k++) {
@@ -56,18 +71,19 @@ public class Layer {
     }
     if (color.equals("Red")) {
       this.filterOnCurrentLayer = "red-component";
-      this.filtered = true;
     }
     if (color.equals("Green")) {
       this.filterOnCurrentLayer = "green-component";
-      this.filtered = true;
     }
     if (color.equals("Blue")) {
       this.filterOnCurrentLayer = "blue-component";
-      this.filtered = true;
     }
   }
 
+  /**
+   * A method used to brighten a layer. This is done by increasing each
+   * number by the max value in each RGB value.
+   */
   public void brightenValue() {
     for (int i = 0; i < this.pixels.size(); i++) {
       for (int k = 0; k < this.pixels.get(i).size(); k++) {
@@ -75,9 +91,12 @@ public class Layer {
       }
     }
     this.filterOnCurrentLayer = "brighten-value";
-    this.filtered = true;
   }
 
+  /**
+   * A method that brightens a layer by the average of the RGB
+   * values.
+   */
   public void brightenIntensity() {
     for (int i = 0; i < this.pixels.size(); i++) {
       for (int j = 0; j < this.getPixels().get(i).size(); j++) {
@@ -85,19 +104,26 @@ public class Layer {
       }
     }
     this.filterOnCurrentLayer = "brighten-intensity";
-    this.filtered = true;
   }
 
+  /**
+   * A method that brightens a layer by the luma value, which is represented
+   * by the weighted sum of the 3 RGB values: 0.2126r + 0.7152g + 0.0722b,
+   * where r is the red value, g is the green value, and b is the blue value.
+   */
   public void brightenLuma() {
     for (int i = 0; i < this.pixels.size(); i++) {
       for (int j = 0; j < this.getPixels().get(i).size(); j++) {
-        this.pixels.get(i).get(j).brightenPixelIntensity();
+        this.pixels.get(i).get(j).brightenPixelLuma();
       }
     }
     this.filterOnCurrentLayer = "brighten-luma";
-    this.filtered = true;
   }
 
+  /**
+   * A method that darkens a layer based on the minimum value of a given
+   * pixel. Each value in the pixel is subtracted by this minimum value.
+   */
   public void darkenValue() {
     for (int i = 0; i < this.pixels.size(); i++) {
       for (int j = 0; j < this.getPixels().get(i).size(); j++) {
@@ -105,9 +131,12 @@ public class Layer {
       }
     }
     this.filterOnCurrentLayer = "darken-value";
-    this.filtered = true;
   }
 
+  /**
+   * A method that darkens a pixel based on the average value of the pixel.
+   * The average is subtracted from the RGB values.
+   */
   public void darkenIntensity() {
     for (int i = 0; i < this.pixels.size(); i++) {
       for (int j = 0; j < this.getPixels().get(i).size(); j++) {
@@ -115,9 +144,14 @@ public class Layer {
       }
     }
     this.filterOnCurrentLayer = "darken-intensity";
-    this.filtered = true;
   }
 
+  /**
+   * A method that darkens a layer by the luma value, which is represented
+   * by the weighted sum of the 3 RGB values: 0.2126r + 0.7152g + 0.0722b,
+   * where r is the red value, g is the green value, and b is the blue value.
+   * This value is then subtracted from the RGB values.
+   */
   public void darkenLuma() {
     for (int i = 0; i < this.pixels.size(); i++) {
       for (int j = 0; j < this.getPixels().get(i).size(); j++) {
@@ -125,7 +159,24 @@ public class Layer {
       }
     }
     this.filterOnCurrentLayer = "darken-luma";
-    this.filtered = true;
+  }
+
+  /**
+   * A method that labels the current layers filter.
+   * @param filterOption represents which filter is being used on
+   *                     a given layer.
+   */
+  public void markFilter(String filterOption) {
+    this.filterOnCurrentLayer = filterOption;
+  }
+
+  /**
+   * A method that is used for other classes in order to determine
+   * the filter on a given layer.
+   * @return filter of a layer.
+   */
+  public String getCurrentFilter() {
+    return this.filterOnCurrentLayer;
   }
 }
 
