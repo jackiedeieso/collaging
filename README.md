@@ -7,10 +7,9 @@ In order to create a proper design for this assignment, we considered various co
 
 # Classes & Interfaces 
 
-* Layer
-    Layer
+* Layer: The class Layer is used as a representation of a layer in a project. There is an initial layer when a new project is created - titled initial-layer - which represents the bottom-most layer in the project. This layer has a unique height and width input by the user. The first layer is then created, which is simply a plain white background. After the initial creation of the intial layer, the user is able to add layers. When a user creates their own layer, they are able to give it a unique name. This class is constructed such that it has two constructors, one for the initial layer of the game - which will be the same every time, except for width and height - and one for when the users wants to create a new layer. This allows for structure within the initial layer, and flexibilty in the unique layers.
 
-* Pixel
+* Pixel: 
 
 * Project
 
