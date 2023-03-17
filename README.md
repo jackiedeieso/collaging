@@ -11,9 +11,9 @@ In order to create a proper design for this assignment, we considered various co
 
 * Pixel: The class Pixel is used as a representation for a Pixel in the project. There are two different types of Pixels, three-component pixels and four-component pixels. For three component pixels, there is a red value, a green value, and a blue value. For four-component Pixels, it is RGB values, with an additional value: the Alpha value. This value determines how transparent a given Pixel is. In this class, there are three different constructors. The first constructor is made for three-component pixels, and simply sets the alpha value to 255. The second constructor is used for four-component pixels, and allows for a unique alpha value to be interpreted. For the last constructor, we decided to create an empty constructor. We were experiencing a bug, and this got rid of the bug. 
 
-* Project: 
+* Project: The class Project is a representation of a singular project. A project contains multiple layers, which may or may not have images. This class is what controls all of the commands that allow a user to make a project, load a project in, save a project, save an image, add a layer, and add an image to a layer. There are two constructors, one that is used for creating a new project, and another for loading an existing project into the program.  
 
-* CollagerController
+* CollagerController: The class CollagerController is the interactive command line for the program. This allows the user to input commands and receive output. This has been particularly helpful in the debugging process, and allows for a user interaction with the program.
 
 * Main
 
