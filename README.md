@@ -15,12 +15,12 @@ In order to create a proper design for this assignment, we considered various co
 
 * CollagerController: The class CollagerController is the interactive command line for the program. This allows the user to input commands and receive output. This has been particularly helpful in the debugging process, and allows for a user interaction with the program.
 
-* Main
+* Main: The class Main runs the program in its entirety. Once the user enters a command, the Main sends the user's input to the Utilities class, where the information is split up and sent to the correct method in the controller.
 
-* CollagerState
+* CollagerState: the class CollagerState serves as a place where the current project data is held. It allows multiple class and methods to affect the same project object, without a direct connection. 
 
-* ImageUtil --> matt
+* ImageUtil: the class ImageUtil contains the method readPPM, which reads a PPM file, and saves it so it can be added to a layer. 
 
-* ImageUtils --> matt
+* Utils: the class Utils is where miscellaneous helper methods are placed.  
 
-* TextView 
+* TextView: the class TextView controls what the program responds with when a user inputs a command. This is also used when the user types in an incorrect command, which will prompt the user to type in a valid command.
