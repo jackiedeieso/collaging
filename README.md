@@ -9,9 +9,9 @@ In order to create a proper design for this assignment, we considered various co
 
 * Layer: The class Layer is used as a representation of a layer in a project. There is an initial layer when a new project is created - titled initial-layer - which represents the bottom-most layer in the project. This layer has a unique height and width input by the user. The first layer is then created, which is simply a plain white background. After the initial creation of the intial layer, the user is able to add layers. When a user creates their own layer, they are able to give it a unique name. This class is constructed such that it has two constructors, one for the initial layer of the game - which will be the same every time, except for width and height - and one for when the users wants to create a new layer. This allows for structure within the initial layer, and flexibilty in the unique layers.
 
-* Pixel: 
+* Pixel: The class Pixel is used as a representation for a Pixel in the project. There are two different types of Pixels, three-component pixels and four-component pixels. For three component pixels, there is a red value, a green value, and a blue value. For four-component Pixels, it is RGB values, with an additional value: the Alpha value. This value determines how transparent a given Pixel is. In this class, there are three different constructors. The first constructor is made for three-component 
 
-* Project
+* Project: 
 
 * CollagerController
 
@@ -19,8 +19,8 @@ In order to create a proper design for this assignment, we considered various co
 
 * CollagerState
 
-* ImageUtil
+* ImageUtil --> matt
 
-* ImageUtils
+* ImageUtils --> matt
 
 * TextView 
