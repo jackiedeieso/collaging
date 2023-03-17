@@ -24,3 +24,21 @@ In order to create a proper design for this assignment, we considered various co
 * Utils: the class Utils is where miscellaneous helper methods are placed.  
 
 * TextView: the class TextView controls what the program responds with when a user inputs a command. This is also used when the user types in an incorrect command, which will prompt the user to type in a valid command.
+
+#Command List
+
+*new-project canvas-height canvas-width: Creates a new project file. The new project comes with one layer, which is named "initial-layer" and can be accessed with that name.
+
+*load-project path-to-project-file: loads a .txt file with the right format into the program. (The project files are saved as .txt).
+
+*save-project: saves a project in a .txt format. After running this command, the program asks for a name, this name will be used to name the project file.
+
+*add-layer layer-name: adds a layer with the name that is given by the user. This layer automatically goes to the top of the layer-list.
+
+*add-image-to-layer layer-name image-name x-pos y-pos: adds a ppm image to the given layer. The top left corner of the ppm is placed at (x-pos, y-pos).
+
+*set-filter layer-name filter-option: This command marks a layer as having the given filter. When save-image is used, the filter is applied to the layer. The filters that can be used are normal, red-component, green-component, blue-component, brighten-value, brighten-intensity, brighten-luma, darken-value, darken-intensity, and darken-luma.
+
+*save-image file-name: Saves the project as a ppm file with the given file-name. This method also applies all filters to their layers.
+
+*quit: ends the program and quits out.
