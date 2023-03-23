@@ -5,7 +5,7 @@ import java.util.Scanner;
 import java.io.FileNotFoundException;
 import java.io.FileInputStream;
 
-import classes.Pixel;
+import classes.PixelRGB;
 import controller.CollagerController;
 import state.CollagerState;
 
@@ -64,14 +64,14 @@ public class ImageUtil {
     int width = sc.nextInt();
     int height = sc.nextInt();
     int maxValue = sc.nextInt();
-    ArrayList<ArrayList<Pixel>> convertedPixels = new ArrayList<ArrayList<Pixel>>();
+    ArrayList<ArrayList<PixelRGB>> convertedPixels = new ArrayList<ArrayList<PixelRGB>>();
     for (int i = 0; i < height; i++) {
-      convertedPixels.add(new ArrayList<Pixel>());
+      convertedPixels.add(new ArrayList<PixelRGB>());
       for (int j = 0; j < width; j++) {
         int r = sc.nextInt();
         int g = sc.nextInt();
         int b = sc.nextInt();
-        convertedPixels.get(i).add(new Pixel(r, g, b, this.state, this.controller));
+        convertedPixels.get(i).add(new PixelRGB(r, g, b, this.state, this.controller));
       }
     }
     this.state.imageToBeAdded = convertedPixels;

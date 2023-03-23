@@ -5,7 +5,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-import classes.Pixel;
+import classes.PixelRGB;
 import controller.CollagerController;
 import state.CollagerState;
 import view.TextView;
@@ -98,7 +98,7 @@ public class Utils {
    * @param name represents the name of the image.
    */
   public void saveImageToFile(int height, int width, int maxValue,
-                              ArrayList<ArrayList<Pixel>> pixels, String name) {
+                              ArrayList<ArrayList<PixelRGB>> pixels, String name) {
     TextView view = new TextView(this.state);
     File save;
     PrintWriter pw;

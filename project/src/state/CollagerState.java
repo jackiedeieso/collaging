@@ -3,7 +3,7 @@ package state;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import classes.Pixel;
+import classes.PixelRGB;
 import classes.Project;
 
 /**
@@ -12,7 +12,7 @@ import classes.Project;
 public class CollagerState {
   public boolean active;
   public Project currentProject;
-  public ArrayList<ArrayList<Pixel>> imageToBeAdded;
+  public ArrayList<ArrayList<PixelRGB>> imageToBeAdded;
 
   public ArrayList<String> possibleFilters;
 
@@ -22,7 +22,7 @@ public class CollagerState {
    */
   public CollagerState() {
     this.active = false;
-    this.imageToBeAdded = new ArrayList<ArrayList<Pixel>>();
+    this.imageToBeAdded = new ArrayList<ArrayList<PixelRGB>>();
     this.possibleFilters = new ArrayList<String>(Arrays.asList(
             "normal", "red-component", "green-component", "blue-component",
             "brighten-value", "brighten-luma", "brighten-intensity",

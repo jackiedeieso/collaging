@@ -17,11 +17,11 @@ public class Project {
   int height;
   int width;
   int maxValue;
-  ArrayList<Layer> layers;
+  ArrayList<LayerRGB> layers;
   CollagerState state;
   Utils utils;
   CollagerController controller;
-  ArrayList<ArrayList<ArrayList<Pixel>>> layeredPixels;
+  ArrayList<ArrayList<ArrayList<PixelRGB>>> layeredPixels;
   TextView view;
 
   /**
@@ -44,8 +44,8 @@ public class Project {
     this.width = width;
     this.maxValue = utils.maxValue;
     this.view = new TextView(this.state);
-    this.layers = new ArrayList<Layer>();
-    this.layeredPixels = new ArrayList<ArrayList<ArrayList<Pixel>>>();
+    this.layers = new ArrayList<LayerRGB>();
+    this.layeredPixels = new ArrayList<ArrayList<ArrayList<PixelRGB>>>();
   }
 
   /**
@@ -55,13 +55,13 @@ public class Project {
    * @param name       represents the title given to a project.
    * @param height     represents the height of a frame for the project.
    * @param width      represents the width of a frame for the project.
-   * @param maxValue   represents the max value of a Pixel.
+   * @param maxValue   represents the max value of a PixelRGB.
    * @param layers     represents the layer(s) in a project.
    * @param state      represents the current state of the game.
    * @param controller represents the controller class that run methods for the main.
    */
   public Project(String name, int height, int width, int maxValue,
-                 ArrayList<Layer> layers, CollagerState state,
+                 ArrayList<LayerRGB> layers, CollagerState state,
                  CollagerController controller) {
     this.state = state;
     this.controller = controller;
@@ -72,7 +72,7 @@ public class Project {
     this.maxValue = maxValue;
     this.view = new TextView(this.state);
     this.layers = layers;
-    this.layeredPixels = new ArrayList<ArrayList<ArrayList<Pixel>>>();
+    this.layeredPixels = new ArrayList<ArrayList<ArrayList<PixelRGB>>>();
   }
 
   /**
@@ -90,14 +90,14 @@ public class Project {
    * a white background with a unique height and width.
    */
   public void addInitialLayer() {
-    ArrayList<ArrayList<Pixel>> pixels = new ArrayList<ArrayList<Pixel>>();
+    ArrayList<ArrayList<PixelRGB>> pixels = new ArrayList<ArrayList<PixelRGB>>();
     for (int i = 0; i < this.height; i++) {
-      pixels.add(new ArrayList<Pixel>());
+      pixels.add(new ArrayList<PixelRGB>());
       for (int k = 0; k < this.width; k++) {
-        pixels.get(i).add(new Pixel(255, 255, 255, 255, this.state, this.controller));
+        pixels.get(i).add(new PixelRGB(255, 255, 255, 255, this.state, this.controller));
       }
     }
-    this.layers.add(new Layer(pixels, "initial-layer"));
+    this.layers.add(new LayerRGB(pixels, "initial-layer"));
   }
 
   /**
@@ -106,14 +106,14 @@ public class Project {
    * @param name represents the title of the new layer.
    */
   public void addLayer(String name) {
-    ArrayList<ArrayList<Pixel>> pixels = new ArrayList<ArrayList<Pixel>>();
+    ArrayList<ArrayList<PixelRGB>> pixels = new ArrayList<ArrayList<PixelRGB>>();
     for (int i = 0; i < this.height; i++) {
-      pixels.add(new ArrayList<Pixel>());
+      pixels.add(new ArrayList<PixelRGB>());
       for (int k = 0; k < this.width; k++) {
-        pixels.get(i).add(new Pixel(255, 255, 255, 0, this.state, this.controller));
+        pixels.get(i).add(new PixelRGB(255, 255, 255, 0, this.state, this.controller));
       }
     }
-    this.layers.add(0, new Layer(pixels, name));
+    this.layers.add(0, new LayerRGB(pixels, name));
   }
 
   /**
@@ -133,17 +133,17 @@ public class Project {
       return;
     }
     for (int i = 0; i < this.layers.get(0).pixels.size(); i++) {
-      this.layeredPixels.add(new ArrayList<ArrayList<Pixel>>());
+      this.layeredPixels.add(new ArrayList<ArrayList<PixelRGB>>());
       for (int k = 0; k < this.layers.get(0).pixels.get(0).size(); k++) {
-        this.layeredPixels.get(i).add(new ArrayList<Pixel>());
+        this.layeredPixels.get(i).add(new ArrayList<PixelRGB>());
         for (int j = 0; j < this.layers.size(); j++) {
           this.layeredPixels.get(i).get(k).add(this.layers.get(j).pixels.get(i).get(k));
         }
       }
     }
-    ArrayList<Pixel> fillRow = new ArrayList<Pixel>();
-    ArrayList<ArrayList<Pixel>> finalArray = new ArrayList<ArrayList<Pixel>>();
-    Pixel pixPrime = new Pixel();
+    ArrayList<PixelRGB> fillRow = new ArrayList<PixelRGB>();
+    ArrayList<ArrayList<PixelRGB>> finalArray = new ArrayList<ArrayList<PixelRGB>>();
+    PixelRGB pixPrime = new PixelRGB();
     for (int i = 0; i < this.layeredPixels.size(); i++) {
       for (int k = 0; k < this.layeredPixels.get(i).size(); k++) {
         for (int j = 0; j < this.layeredPixels.get(i).get(k).size() - 1; j++) {
@@ -158,7 +158,7 @@ public class Project {
         fillRow.add(pixPrime);
       }
       finalArray.add(fillRow);
-      fillRow = new ArrayList<Pixel>();
+      fillRow = new ArrayList<PixelRGB>();
     }
     this.utils.saveImageToFile(this.height, this.width, this.maxValue, finalArray, name);
   }
@@ -169,10 +169,10 @@ public class Project {
    *
    * @param top    represents the layer above the bottom layer.
    * @param bottom represents the layer below the top layer.
-   * @return a new Pixel that represents the RGBA value with the alpha
+   * @return a new PixelRGB that represents the RGBA value with the alpha
    *         formula applied.
    */
-  public Pixel formula(Pixel top, Pixel bottom) {
+  public PixelRGB formula(PixelRGB top, PixelRGB bottom) {
     if (top.alpha == 0 && bottom.alpha > 0) {
       return bottom;
     }
@@ -209,7 +209,7 @@ public class Project {
     int bPrimeInt = (int) bPrime;
     int aPrimeInt = (int) aPrime;
 
-    return new Pixel(rPrimeInt, gPrimeInt, bPrimeInt, aPrimeInt, this.state, this.controller);
+    return new PixelRGB(rPrimeInt, gPrimeInt, bPrimeInt, aPrimeInt, this.state, this.controller);
   }
 
   /**
@@ -242,14 +242,14 @@ public class Project {
     }
     if (layerPos == -1) {
       try {
-        this.view.destination.append("Given Layer not found. Re-Enter command." + "\n");
+        this.view.destination.append("Given LayerRGB not found. Re-Enter command." + "\n");
         return;
       } catch (Exception e) {
         throw new IllegalStateException(e.getMessage());
       }
     }
     imageUtil.readPPM(imageName);
-    if (this.state.imageToBeAdded.equals(new ArrayList<ArrayList<Pixel>>())) {
+    if (this.state.imageToBeAdded.equals(new ArrayList<ArrayList<PixelRGB>>())) {
       try {
         this.view.destination.append("Image can not be found. Re-Enter command." + "\n");
         return;
@@ -257,13 +257,13 @@ public class Project {
         throw new IllegalStateException(e.getMessage());
       }
     }
-    ArrayList<ArrayList<Pixel>> newPixels = this.layers.get(layerPos).pixels;
-    ArrayList<ArrayList<Pixel>> newLayer = new ArrayList<ArrayList<Pixel>>();
+    ArrayList<ArrayList<PixelRGB>> newPixels = this.layers.get(layerPos).pixels;
+    ArrayList<ArrayList<PixelRGB>> newLayer = new ArrayList<ArrayList<PixelRGB>>();
     int placeCounterA = 0;
     int placeCounterB = 0;
     for (int a = 0; a < newPixels.size(); a++) {
       placeCounterB = 0;
-      newLayer.add(new ArrayList<Pixel>());
+      newLayer.add(new ArrayList<PixelRGB>());
       for (int b = 0; b < newPixels.get(a).size(); b++) {
         if (a >= yPosition && b >= xPosition
                 && this.state.imageToBeAdded.size() > placeCounterA
@@ -286,7 +286,7 @@ public class Project {
    *
    * @return an ArrayList of layers.
    */
-  public ArrayList<Layer> getLayers() {
+  public ArrayList<LayerRGB> getLayers() {
     return this.layers;
   }
 
@@ -333,7 +333,7 @@ public class Project {
     }
     if (layerPos == -1) {
       try {
-        this.view.destination.append("Given Layer not found. Re-Enter command." + "\n");
+        this.view.destination.append("Given LayerRGB not found. Re-Enter command." + "\n");
         return;
       } catch (Exception e) {
         throw new IllegalStateException(e.getMessage());
@@ -358,7 +358,7 @@ public class Project {
     }
     if (layerPos == -1) {
       try {
-        this.view.destination.append("Given Layer not found. Re-Enter command." + "\n");
+        this.view.destination.append("Given LayerRGB not found. Re-Enter command." + "\n");
         return;
       } catch (Exception e) {
         throw new IllegalStateException(e.getMessage());

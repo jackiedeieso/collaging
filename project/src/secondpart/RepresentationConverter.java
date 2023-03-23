@@ -1,3 +1,4 @@
+package secondpart;
 
 /**
  * This class contains utility methods to convert an RGB representation

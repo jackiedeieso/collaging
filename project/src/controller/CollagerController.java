@@ -8,8 +8,8 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import classes.Layer;
-import classes.Pixel;
+import classes.LayerRGB;
+import classes.PixelRGB;
 import classes.Project;
 import state.CollagerState;
 import view.TextView;
@@ -172,22 +172,22 @@ public class CollagerController {
     int width = scLoading.nextInt();
     int height = scLoading.nextInt();
     int maxValue = scLoading.nextInt();
-    ArrayList<Layer> layers = new ArrayList<Layer>();
+    ArrayList<LayerRGB> layers = new ArrayList<LayerRGB>();
     do {
       String layerName = scLoading.next();
       String filterName = scLoading.next();
-      ArrayList<ArrayList<Pixel>> pixels = new ArrayList<ArrayList<Pixel>>();
+      ArrayList<ArrayList<PixelRGB>> pixels = new ArrayList<ArrayList<PixelRGB>>();
       for (int i = 0; i < height; i++) {
-        pixels.add(new ArrayList<Pixel>());
+        pixels.add(new ArrayList<PixelRGB>());
         for (int k = 0; k < width; k++) {
           int r = scLoading.nextInt();
           int g = scLoading.nextInt();
           int b = scLoading.nextInt();
           int a = scLoading.nextInt();
-          pixels.get(i).add(new Pixel(r, g, b, a, this.state, this));
+          pixels.get(i).add(new PixelRGB(r, g, b, a, this.state, this));
         }
       }
-      layers.add(new Layer(pixels, layerName, filterName));
+      layers.add(new LayerRGB(pixels, layerName, filterName));
     }
     while (scLoading.hasNext());
     this.state.currentProject = new Project("C1", height, width, maxValue,
