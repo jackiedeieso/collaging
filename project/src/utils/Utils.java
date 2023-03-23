@@ -5,10 +5,13 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+import javax.swing.*;
+
 import classes.PixelRGB;
 import controller.CollagerController;
 import state.CollagerState;
 import view.TextView;
+import graphics.Frame;
 
 /**
  * class for Utils.
@@ -133,5 +136,13 @@ public class Utils {
       pw.write("\n");
     }
     pw.close();
+  }
+
+  public void startGUI() {
+    Frame.setDefaultLookAndFeelDecorated(false);
+    Frame frame = new Frame();
+    
+    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setVisible(true);
   }
 }

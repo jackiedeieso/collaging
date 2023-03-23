@@ -23,6 +23,7 @@ public class Project {
   CollagerController controller;
   ArrayList<ArrayList<ArrayList<PixelRGB>>> layeredPixels;
   TextView view;
+  String blendingFilter;
 
   /**
    * First constructor for the Project class. This is used for creating a

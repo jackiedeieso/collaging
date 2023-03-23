@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Scanner;
 import controller.CollagerController;
+import graphics.Frame;
 import state.CollagerState;
 import utils.Utils;
 import view.TextView;

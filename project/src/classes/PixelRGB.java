@@ -74,6 +74,15 @@ public class PixelRGB implements PixelType {
   }
 
   /**
+   * Fourth constructor for the PixelRGB class. Converts an
+   * HSL pixel to a RGB pixel.
+   * @param pixelHSL The HSL implementation of the new pixel.
+   */
+  public PixelRGB(PixelHSL pixelHSL) {
+    this.convertHSLtoRGB(pixelHSL);
+  }
+
+  /**
    * A method with the purpose of creating a new ArrayList of each PixelRGB's
    * values.
    *
@@ -228,5 +237,25 @@ public class PixelRGB implements PixelType {
     this.green = this.green - lumaInt;
     this.blue = this.blue - lumaInt;
     this.checkRGBLimitZero();
+  }
+
+  public void convertHSLtoRGB(PixelHSL pixelHSL) {
+    double r = convertFn(pixelHSL.hue, pixelHSL.saturation, pixelHSL.lightness, 0) * 255;
+    double g = convertFn(pixelHSL.hue, pixelHSL.saturation, pixelHSL.lightness, 8) * 255;
+    double b = convertFn(pixelHSL.hue, pixelHSL.saturation, pixelHSL.lightness, 4) * 255;
+    this.red = (int) r;
+    this.green = (int) g;
+    this.blue = (int) b;
+  }
+
+  /*
+   * Helper method that performs the translation from the HSL polygonal
+   * model to the more familiar RGB model
+   */
+  private static double convertFn(double hue, double saturation, double lightness, int n) {
+    double k = (n + (hue/30)) % 12;
+    double a  = saturation * Math.min(lightness, 1 - lightness);
+
+    return lightness - a * Math.max(-1, Math.min(k - 3, Math.min(9 - k, 1)));
   }
 }
