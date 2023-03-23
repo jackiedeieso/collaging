@@ -1,4 +1,5 @@
 package main;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Scanner;
@@ -17,27 +18,32 @@ public class Main {
    * @throws IOException if there is nothing in args.
    */
   public static void main(String []args) throws IOException {
+    CollagerState state = new CollagerState();
+    TextView view = new TextView(state);
     if (args.length == 0) {
-      System.out.println("Please put in Arguments.");
-      System.out.println("Put user if you'd like to input commands manually.");
-      System.out.println("Put commands if you'd like the commands to be input automatically");
+      try {
+        view.destination.append("Please put in Arguments.");
+        view.destination.append("Put user if you'd like to input commands manually.");
+        view.destination.append("Put commands if you'd like "
+                + "the commands to be input automatically");
+      }
+      catch (Exception e) {
+        throw new IllegalStateException(e.getMessage());
+      }
     }
     else if (args[0].equals("commands") && args.length == 2) {
       Scanner sc = new Scanner(new FileInputStream(args[1]));
-      CollagerState state = new CollagerState();
-      TextView view = new TextView(state);
       CollagerController controller = new CollagerController(state, view, sc);
       Utils utils = new Utils(state, controller);
       String response = "";
       do {
         response = sc.nextLine();
         utils.possibleOptions(response);
-      } while (!response.toLowerCase().equals("quit"));
+      }
+      while (!response.equalsIgnoreCase("quit"));
     }
     else if (args[0].equals("user")) {
-      CollagerState state = new CollagerState();
       Scanner sc = new Scanner(System.in);
-      TextView view = new TextView(state);
       CollagerController controller = new CollagerController(state, view, sc);
       Utils utils = new Utils(state, controller);
       String response = "";
@@ -50,12 +56,19 @@ public class Main {
         }
         response = sc.nextLine();
         utils.possibleOptions(response);
-      } while (!response.toLowerCase().equals("quit"));
+      }
+      while (!response.equalsIgnoreCase("quit"));
     }
     else {
-      System.out.println("Please change Arguments.");
-      System.out.println("Put user if you'd like to input commands manually.");
-      System.out.println("Put commands followed by the file path if you'd like the commands to be input automatically");
+      try {
+        view.destination.append("Please change Arguments.");
+        view.destination.append("Put user if you'd like to input commands manually.");
+        view.destination.append("Put commands followed by the file path if you'd like \" +\n"
+                + "\"the commands to be input automatically");
+      }
+      catch (Exception e) {
+        throw new IllegalStateException(e.getMessage());
+      }
     }
   }
 }

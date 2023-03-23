@@ -38,7 +38,7 @@ public class CollagerController {
   }
 
   /**
-   * A method that creates a new project for
+   * A method that creates a new project for the user.
    * @param input represent the user input for height and width.
    */
   public void makeNewProject(String[] input) {
@@ -103,13 +103,16 @@ public class CollagerController {
       throw new IllegalStateException(e.getMessage());
     }
     pw.write(this.state.currentProject.toString() + "\n");
-    pw.write(this.state.currentProject.getWidth() + " " + this.state.currentProject.getHeight() + "\n");
+    pw.write(this.state.currentProject.getWidth() + " "
+            + this.state.currentProject.getHeight() + "\n");
     pw.write(this.state.currentProject.getMaxValue() + "\n");
     for (int i = 0; i < this.state.currentProject.getLayers().size(); i++) {
-      pw.write(this.state.currentProject.getLayers().get(i).toString() + " " + this.state.currentProject.getLayers().get(i).getCurrentFilter() + "\n");
+      pw.write(this.state.currentProject.getLayers().get(i).toString() + " "
+              + this.state.currentProject.getLayers().get(i).getCurrentFilter() + "\n");
       for (int k = 0; k < this.state.currentProject.getHeight(); k++) {
         for (int j = 0; j < this.state.currentProject.getWidth(); j++) {
-          ArrayList<Integer> x = this.state.currentProject.getLayers().get(i).getPixels().get(k).get(j).getRGBA();
+          ArrayList<Integer> x = this.state.currentProject
+                  .getLayers().get(i).getPixels().get(k).get(j).getRGBA();
           pw.write(x.get(0) + " " + x.get(1) + " " + x.get(2) + " " + x.get(3) + " ");
         }
         pw.write("\n");
@@ -150,8 +153,8 @@ public class CollagerController {
     StringBuilder builder = new StringBuilder();
     while (scLoading.hasNextLine()) {
       String s = scLoading.nextLine();
-      if (s.charAt(0)!='#') {
-        builder.append(s+System.lineSeparator());
+      if (s.charAt(0) != '#') {
+        builder.append(s + System.lineSeparator());
       }
     }
     scLoading = new Scanner(builder.toString());
@@ -185,8 +188,10 @@ public class CollagerController {
         }
       }
       layers.add(new Layer(pixels, layerName, filterName));
-    } while (scLoading.hasNext());
-    this.state.currentProject = new Project("C1", height, width, maxValue, layers, this.state, this);
+    }
+    while (scLoading.hasNext());
+    this.state.currentProject = new Project("C1", height, width, maxValue,
+            layers, this.state, this);
     this.state.active = true;
   }
 

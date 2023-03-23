@@ -1,0 +1,17 @@
+new-project 100 100
+add-layer blue-layer
+add-image-to-layer blue-layer res/sample.ppm 0 0
+set-filter blue-layer blue-component
+add-layer red-layer
+add-image-to-layer red-layer res/sample.ppm 20 20
+set-filter red-layer red-component
+add-layer brightened-layer
+add-image-to-layer brightened-layer res/sample.ppm 40 40
+set-filter brightened-layer brighten-luma
+add-layer darkened-layer
+add-image-to-layer darkened-layer res/sample.ppm 60 60
+set-filter darkened-layer darken-value
+save-project
+res/CommandsProject
+save-image res/CommandsProject.ppm
+quit

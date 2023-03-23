@@ -1,4 +1,5 @@
 package state;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -22,7 +23,9 @@ public class CollagerState {
   public CollagerState() {
     this.active = false;
     this.imageToBeAdded = new ArrayList<ArrayList<Pixel>>();
-    this.possibleFilters = new ArrayList<String>(Arrays.asList("normal", "red-component", "green-component", "blue-component",
-            "brighten-value", "brighten-luma", "brighten-intensity", "darken-value", "darken-luma", "darken-intensity"));
+    this.possibleFilters = new ArrayList<String>(Arrays.asList(
+            "normal", "red-component", "green-component", "blue-component",
+            "brighten-value", "brighten-luma", "brighten-intensity",
+                    "darken-value", "darken-luma", "darken-intensity"));
   }
 }

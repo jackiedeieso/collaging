@@ -15,6 +15,10 @@ import utils.Utils;
 import view.TextView;
 import static org.junit.Assert.assertEquals;
 
+/**
+ * Class representation of the tests used to check if the program is
+ * running properly.
+ */
 public class Tests {
   Scanner sc;
 
@@ -41,7 +45,8 @@ public class Tests {
     assertEquals(state.currentProject, null);
     utils.possibleOptions(response);
     assertEquals(state.currentProject.toString(), "C1");
-    assertEquals(state.currentProject.getLayers().get(0).getPixels().get(0).get(0).getRGB(), new ArrayList<Integer>(Arrays.asList(255, 255, 255)));
+    assertEquals(state.currentProject.getLayers().get(0).getPixels().get(0).get(0).getRGB(),
+            new ArrayList<Integer>(Arrays.asList(255, 255, 255)));
     assertEquals(state.currentProject.getLayers().size(), 1);
     assertEquals(state.currentProject.getLayers().get(0).getPixels().size(), 400);
     assertEquals(state.currentProject.getHeight(), 400);
@@ -53,7 +58,7 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    String response = "load-project testLoadProject";
+    String response = "load-project res/testLoadProject";
     assertEquals(state.currentProject, null);
     controller.loadProject(response.split(" "));
     assertEquals(state.currentProject.getHeight(), 20);
@@ -83,9 +88,9 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    controller.loadProject("load-project onlyRed".split(" "));
-    controller.saveImage("save-image testSaveImage.ppm".split(" "));
-    Scanner savedImageScanner = new Scanner(new FileInputStream("testSaveImage.ppm"));
+    controller.loadProject("load-project res/onlyRed".split(" "));
+    controller.saveImage("save-image res/testSaveImage.ppm".split(" "));
+    Scanner savedImageScanner = new Scanner(new FileInputStream("res/testSaveImage.ppm"));
     savedImageScanner.next();
     savedImageScanner.nextInt();
     savedImageScanner.nextInt();
@@ -117,9 +122,11 @@ public class Tests {
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
     controller.makeNewProject("new-project 800 600".split(" "));
-    assertEquals(state.currentProject.getLayers().get(0).getPixels().get(0).get(0).toString(), "(255, 255, 255, 255)");
-    controller.addImageToLayer("add-image-to-layer initial-layer sample.ppm 0 0".split(" "));
-    assertEquals(state.currentProject.getLayers().get(0).getPixels().get(0).get(0).toString(), "(173, 179, 151, 255)");
+    assertEquals(state.currentProject.getLayers().get(0).getPixels().get(0).get(0).toString(),
+            "(255, 255, 255, 255)");
+    controller.addImageToLayer("add-image-to-layer initial-layer res/sample.ppm 0 0".split(" "));
+    assertEquals(state.currentProject.getLayers().get(0).getPixels().get(0).get(0).toString(),
+            "(173, 179, 151, 255)");
   }
 
   @Test
@@ -153,8 +160,8 @@ public class Tests {
     ArrayList<ArrayList<Pixel>> pixels = new ArrayList<ArrayList<Pixel>>();
     pixels.add(new ArrayList<Pixel>());
     pixels.get(0).add(new Pixel(100, 100, 100, 255, state, controller));
-    util.saveImageToFile(1, 1, 255, pixels, "onePixelTest.ppm");
-    Scanner saveImageScanner = new Scanner(new FileInputStream("onePixelTest.ppm"));
+    util.saveImageToFile(1, 1, 255, pixels, "res/onePixelTest.ppm");
+    Scanner saveImageScanner = new Scanner(new FileInputStream("res/onePixelTest.ppm"));
     saveImageScanner.next();
     saveImageScanner.nextInt();
     saveImageScanner.nextInt();
@@ -298,7 +305,7 @@ public class Tests {
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
     ImageUtil imageUtils = new ImageUtil(state, controller);
-    imageUtils.readPPM("sample.ppm");
+    imageUtils.readPPM("res/sample.ppm");
     assertEquals(state.imageToBeAdded.get(0).get(0).toString(), "(173, 179, 151, 255)");
   }
 
@@ -307,10 +314,10 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    controller.loadProject("load-project testerProject".split(" "));
+    controller.loadProject("load-project res/testerProject".split(" "));
     controller.setFilter("set-filter initial-layer red-component".split(" "));
-    controller.saveImage("save-image testProject.ppm".split(" "));
-    Scanner regularScanner = new Scanner(new FileInputStream("testProject.ppm"));
+    controller.saveImage("save-image res/testProject.ppm".split(" "));
+    Scanner regularScanner = new Scanner(new FileInputStream("res/testProject.ppm"));
     regularScanner.next();
     regularScanner.nextInt();
     regularScanner.nextInt();
@@ -325,10 +332,10 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    controller.loadProject("load-project testerProject".split(" "));
+    controller.loadProject("load-project res/testerProject".split(" "));
     controller.setFilter("set-filter initial-layer green-component".split(" "));
-    controller.saveImage("save-image testProject.ppm".split(" "));
-    Scanner regularScanner = new Scanner(new FileInputStream("testProject.ppm"));
+    controller.saveImage("save-image res/testProject.ppm".split(" "));
+    Scanner regularScanner = new Scanner(new FileInputStream("res/testProject.ppm"));
     regularScanner.next();
     regularScanner.nextInt();
     regularScanner.nextInt();
@@ -343,10 +350,10 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    controller.loadProject("load-project testerProject".split(" "));
+    controller.loadProject("load-project res/testerProject".split(" "));
     controller.setFilter("set-filter initial-layer blue-component".split(" "));
-    controller.saveImage("save-image testProject.ppm".split(" "));
-    Scanner regularScanner = new Scanner(new FileInputStream("testProject.ppm"));
+    controller.saveImage("save-image res/testProject.ppm".split(" "));
+    Scanner regularScanner = new Scanner(new FileInputStream("res/testProject.ppm"));
     regularScanner.next();
     regularScanner.nextInt();
     regularScanner.nextInt();
@@ -361,10 +368,10 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    controller.loadProject("load-project testerProject".split(" "));
+    controller.loadProject("load-project res/testerProject".split(" "));
     controller.setFilter("set-filter initial-layer brighten-value".split(" "));
-    controller.saveImage("save-image testProject.ppm".split(" "));
-    Scanner regularScanner = new Scanner(new FileInputStream("sample.ppm"));
+    controller.saveImage("save-image res/testProject.ppm".split(" "));
+    Scanner regularScanner = new Scanner(new FileInputStream("res/sample.ppm"));
     regularScanner.next();
     regularScanner.nextInt();
     regularScanner.nextInt();
@@ -372,7 +379,7 @@ public class Tests {
     int oldRed = regularScanner.nextInt();
     int oldGreen = regularScanner.nextInt();
     int oldBlue = regularScanner.nextInt();
-    Scanner brightenValueScanner = new Scanner(new FileInputStream("testProject.ppm"));
+    Scanner brightenValueScanner = new Scanner(new FileInputStream("res/testProject.ppm"));
     brightenValueScanner.next();
     brightenValueScanner.nextInt();
     brightenValueScanner.nextInt();
@@ -388,20 +395,15 @@ public class Tests {
     assertEquals(newBlue, 255);
   }
 
-
-
-
-
-
   @Test
   public void testBrightenLuma() throws FileNotFoundException {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    controller.loadProject("load-project testerProject".split(" "));
+    controller.loadProject("load-project res/testerProject".split(" "));
     controller.setFilter("set-filter initial-layer brighten-luma".split(" "));
-    controller.saveImage("save-image testProject.ppm".split(" "));
-    Scanner regularScanner = new Scanner(new FileInputStream("sample.ppm"));
+    controller.saveImage("save-image res/testProject.ppm".split(" "));
+    Scanner regularScanner = new Scanner(new FileInputStream("res/sample.ppm"));
     regularScanner.next();
     regularScanner.nextInt();
     regularScanner.nextInt();
@@ -409,7 +411,7 @@ public class Tests {
     int oldRed = regularScanner.nextInt();
     int oldGreen = regularScanner.nextInt();
     int oldBlue = regularScanner.nextInt();
-    Scanner brightenValueScanner = new Scanner(new FileInputStream("testProject.ppm"));
+    Scanner brightenValueScanner = new Scanner(new FileInputStream("res/testProject.ppm"));
     brightenValueScanner.next();
     brightenValueScanner.nextInt();
     brightenValueScanner.nextInt();
@@ -430,10 +432,10 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    controller.loadProject("load-project testerProject".split(" "));
+    controller.loadProject("load-project res/testerProject".split(" "));
     controller.setFilter("set-filter initial-layer brighten-intensity".split(" "));
-    controller.saveImage("save-image testProject.ppm".split(" "));
-    Scanner regularScanner = new Scanner(new FileInputStream("sample.ppm"));
+    controller.saveImage("save-image res/testProject.ppm".split(" "));
+    Scanner regularScanner = new Scanner(new FileInputStream("res/sample.ppm"));
     regularScanner.next();
     regularScanner.nextInt();
     regularScanner.nextInt();
@@ -441,7 +443,7 @@ public class Tests {
     int oldRed = regularScanner.nextInt();
     int oldGreen = regularScanner.nextInt();
     int oldBlue = regularScanner.nextInt();
-    Scanner brightenValueScanner = new Scanner(new FileInputStream("testProject.ppm"));
+    Scanner brightenValueScanner = new Scanner(new FileInputStream("res/testProject.ppm"));
     brightenValueScanner.next();
     brightenValueScanner.nextInt();
     brightenValueScanner.nextInt();
@@ -462,10 +464,10 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    controller.loadProject("load-project testerProject".split(" "));
+    controller.loadProject("load-project res/testerProject".split(" "));
     controller.setFilter("set-filter initial-layer darken-value".split(" "));
-    controller.saveImage("save-image testProject.ppm".split(" "));
-    Scanner regularScanner = new Scanner(new FileInputStream("sample.ppm"));
+    controller.saveImage("save-image res/testProject.ppm".split(" "));
+    Scanner regularScanner = new Scanner(new FileInputStream("res/sample.ppm"));
     regularScanner.next();
     regularScanner.nextInt();
     regularScanner.nextInt();
@@ -473,7 +475,7 @@ public class Tests {
     int oldRed = regularScanner.nextInt();
     int oldGreen = regularScanner.nextInt();
     int oldBlue = regularScanner.nextInt();
-    Scanner brightenValueScanner = new Scanner(new FileInputStream("testProject.ppm"));
+    Scanner brightenValueScanner = new Scanner(new FileInputStream("res/testProject.ppm"));
     brightenValueScanner.next();
     brightenValueScanner.nextInt();
     brightenValueScanner.nextInt();
@@ -494,10 +496,10 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    controller.loadProject("load-project testerProject".split(" "));
+    controller.loadProject("load-project res/testerProject".split(" "));
     controller.setFilter("set-filter initial-layer darken-luma".split(" "));
-    controller.saveImage("save-image testProject.ppm".split(" "));
-    Scanner regularScanner = new Scanner(new FileInputStream("sample.ppm"));
+    controller.saveImage("save-image res/testProject.ppm".split(" "));
+    Scanner regularScanner = new Scanner(new FileInputStream("res/sample.ppm"));
     regularScanner.next();
     regularScanner.nextInt();
     regularScanner.nextInt();
@@ -505,7 +507,7 @@ public class Tests {
     int oldRed = regularScanner.nextInt();
     int oldGreen = regularScanner.nextInt();
     int oldBlue = regularScanner.nextInt();
-    Scanner brightenValueScanner = new Scanner(new FileInputStream("testProject.ppm"));
+    Scanner brightenValueScanner = new Scanner(new FileInputStream("res/testProject.ppm"));
     brightenValueScanner.next();
     brightenValueScanner.nextInt();
     brightenValueScanner.nextInt();
@@ -526,10 +528,10 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    controller.loadProject("load-project testerProject".split(" "));
+    controller.loadProject("load-project res/testerProject".split(" "));
     controller.setFilter("set-filter initial-layer darken-intensity".split(" "));
-    controller.saveImage("save-image testProject.ppm".split(" "));
-    Scanner regularScanner = new Scanner(new FileInputStream("sample.ppm"));
+    controller.saveImage("save-image res/testProject.ppm".split(" "));
+    Scanner regularScanner = new Scanner(new FileInputStream("res/sample.ppm"));
     regularScanner.next();
     regularScanner.nextInt();
     regularScanner.nextInt();
@@ -537,7 +539,7 @@ public class Tests {
     int oldRed = regularScanner.nextInt();
     int oldGreen = regularScanner.nextInt();
     int oldBlue = regularScanner.nextInt();
-    Scanner brightenValueScanner = new Scanner(new FileInputStream("testProject.ppm"));
+    Scanner brightenValueScanner = new Scanner(new FileInputStream("res/testProject.ppm"));
     brightenValueScanner.next();
     brightenValueScanner.nextInt();
     brightenValueScanner.nextInt();

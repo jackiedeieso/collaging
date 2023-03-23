@@ -12,7 +12,10 @@ import utils.Utils;
  * which is used to determine the color of the pixel.
  */
 public class Pixel {
-  int red, green, blue, alpha;
+  int red;
+  int green;
+  int blue;
+  int alpha;
   CollagerState state;
   CollagerController controller;
   Utils utils;
@@ -20,10 +23,11 @@ public class Pixel {
   /**
    * First constructor for the Pixel class. This constructor is used for
    * pixels with three components.
-   * @param red represents the red value of RGB.
-   * @param green represents the green value of RGB.
-   * @param blue represents the blue value of RGB.
-   * @param state represents the full state of the game.
+   *
+   * @param red        represents the red value of RGB.
+   * @param green      represents the green value of RGB.
+   * @param blue       represents the blue value of RGB.
+   * @param state      represents the full state of the game.
    * @param controller represents the controller class that run methods for the main.
    */
   public Pixel(int red, int green, int blue, CollagerState state, CollagerController controller) {
@@ -38,14 +42,16 @@ public class Pixel {
 
   /**
    * Second constructor for the Pixel class. This constructor is used for four component pixels.
-   * @param red represents the red component of the RGB value.
-   * @param green represents the green component of the RGB value.
-   * @param blue represents the blue components of the RGB value.
-   * @param alpha represents the transparency component of a Pixel.
-   * @param state represents the full state of the game.
+   *
+   * @param red        represents the red component of the RGB value.
+   * @param green      represents the green component of the RGB value.
+   * @param blue       represents the blue components of the RGB value.
+   * @param alpha      represents the transparency component of a Pixel.
+   * @param state      represents the full state of the game.
    * @param controller represents the controller class that run methods for the main.
    */
-  public Pixel(int red, int green, int blue, int alpha, CollagerState state, CollagerController controller) {
+  public Pixel(int red, int green, int blue, int alpha,
+               CollagerState state, CollagerController controller) {
     this.state = state;
     this.controller = controller;
     this.utils = new Utils(this.state, this.controller);
@@ -56,15 +62,20 @@ public class Pixel {
   }
 
   /**
-   * Third constructor for the Pixel class. Empty constructor created
-   * because of an error we were receiving.
+   * Third constructor for the Pixel class. It is empty because the
+   * saveImage() method needed a pixel variable that had to be initialized.
    */
   public Pixel() {
+    /*
+    This constructor is empty because the saveImage() method needed
+    a pixel variable that had to be initialized.
+     */
   }
 
   /**
    * A method with the purpose of creating a new ArrayList of each Pixel's
    * values.
+   *
    * @return An ArrayList of the RGB components of a Pixel.
    */
   public ArrayList<Integer> getRGB() {
@@ -74,6 +85,7 @@ public class Pixel {
   /**
    * A method used for four-component Pixel values, which creates a new ArrayList
    * of each Pixel's values.
+   *
    * @return
    */
   public ArrayList<Integer> getRGBA() {
@@ -82,6 +94,7 @@ public class Pixel {
 
   /**
    * Creates a combined string of the Pixel.
+   *
    * @return a string of the Pixel RGBA.
    */
   public String toString() {
@@ -92,12 +105,13 @@ public class Pixel {
    * Converting a three-component pixel into a four-component
    * pixel, adding the alpha value and creating a transparency
    * effect.
+   *
    * @return An array of the changed RGB values.
    */
   public ArrayList<Integer> getRGBAConvertRGB() {
-    int redPrime = this.red * this.alpha/255;
-    int greenPrime = this.green * this.alpha/255;
-    int bluePrime = this.blue * this.alpha/255;
+    int redPrime = this.red * this.alpha / 255;
+    int greenPrime = this.green * this.alpha / 255;
+    int bluePrime = this.blue * this.alpha / 255;
     return new ArrayList<Integer>(Arrays.asList(redPrime, greenPrime, bluePrime));
   }
 
@@ -138,8 +152,8 @@ public class Pixel {
    * number by the max value in each RGB value.
    */
   public void brightenPixelValue() {
-    int arr[] = {this.red, this.green, this.blue};
-    int value =  Arrays.stream(arr).max().getAsInt();
+    int[] arr = {this.red, this.green, this.blue};
+    int value = Arrays.stream(arr).max().getAsInt();
     this.red = this.red + value;
     this.green = this.green + value;
     this.blue = this.blue + value;
@@ -151,7 +165,7 @@ public class Pixel {
    * values.
    */
   public void brightenPixelIntensity() {
-    int arr[] = {this.red, this.green, this.blue};
+    int[] arr = {this.red, this.green, this.blue};
     int avg = (this.red + this.green + this.blue) / 3;
     this.red = this.red + avg;
     this.green = this.green + avg;
@@ -165,8 +179,8 @@ public class Pixel {
    * where r is the red value, g is the green value, and b is the blue value.
    */
   public void brightenPixelLuma() {
-    double luma  = (0.2126 * this.red) + (0.7153 * this.green) * (0.0722 * this.blue);
-    int lumaInt = (int)luma; // turns luma into an int
+    double luma = (0.2126 * this.red) + (0.7153 * this.green) * (0.0722 * this.blue);
+    int lumaInt = (int) luma; // turns luma into an int
     this.red = this.red + lumaInt;
     this.green = this.green + lumaInt;
     this.blue = this.blue + lumaInt;
@@ -178,8 +192,8 @@ public class Pixel {
    * pixel. Each value in the pixel is subtracted by this minimum value.
    */
   public void darkenPixelValue() {
-    int arr[] = {this.red, this.green, this.blue};
-    int value =  Arrays.stream(arr).min().getAsInt(); // max or min?
+    int[] arr = {this.red, this.green, this.blue};
+    int value = Arrays.stream(arr).min().getAsInt(); // max or min?
     this.red = this.red - value;
     this.green = this.green - value;
     this.blue = this.blue - value;
@@ -191,7 +205,7 @@ public class Pixel {
    * The average is subtracted from the RGB values.
    */
   public void darkenPixelIntensity() {
-    int arr[] = {this.red, this.green, this.blue};
+    int[] arr = {this.red, this.green, this.blue};
     int avg = (this.red + this.green + this.blue) / 3;
     this.red = this.red - avg;
     this.green = this.green - avg;
@@ -206,8 +220,8 @@ public class Pixel {
    * This value is then subtracted from the RGB values.
    */
   public void darkenPixelLuma() {
-    double luma  = (0.2126 * this.red) + (0.7153 * this.green) * (0.0722 * this.blue);
-    int lumaInt = (int)luma; // turns luma into an int
+    double luma = (0.2126 * this.red) + (0.7153 * this.green) * (0.0722 * this.blue);
+    int lumaInt = (int) luma; // turns luma into an int
 
     this.red = this.red - lumaInt;
     this.green = this.green - lumaInt;

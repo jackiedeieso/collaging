@@ -27,13 +27,15 @@ public class Project {
   /**
    * First constructor for the Project class. This is used for creating a
    * new project.
-   * @param name represents the title given to a project.
-   * @param height represents the height of a frame for the project.
-   * @param width represents the width of a frame for the project.
-   * @param state represents the current state of the game.
-   * @param controller  represents the controller class that run methods for the main.
+   *
+   * @param name       represents the title given to a project.
+   * @param height     represents the height of a frame for the project.
+   * @param width      represents the width of a frame for the project.
+   * @param state      represents the current state of the game.
+   * @param controller represents the controller class that run methods for the main.
    */
-  public Project(String name, int height, int width, CollagerState state, CollagerController controller) {
+  public Project(String name, int height, int width, CollagerState state,
+                 CollagerController controller) {
     this.state = state;
     this.controller = controller;
     this.utils = new Utils(this.state, this.controller);
@@ -49,15 +51,18 @@ public class Project {
   /**
    * Second constructor for the Project class. This constructor is used for
    * loading an existing project in.
-   * @param name represents the title given to a project.
-   * @param height represents the height of a frame for the project.
-   * @param width represents the width of a frame for the project.
-   * @param maxValue represents the max value of a Pixel.
-   * @param layers represents the layer(s) in a project.
-   * @param state represents the current state of the game.
+   *
+   * @param name       represents the title given to a project.
+   * @param height     represents the height of a frame for the project.
+   * @param width      represents the width of a frame for the project.
+   * @param maxValue   represents the max value of a Pixel.
+   * @param layers     represents the layer(s) in a project.
+   * @param state      represents the current state of the game.
    * @param controller represents the controller class that run methods for the main.
    */
-  public Project(String name, int height, int width, int maxValue, ArrayList<Layer> layers, CollagerState state, CollagerController controller) {
+  public Project(String name, int height, int width, int maxValue,
+                 ArrayList<Layer> layers, CollagerState state,
+                 CollagerController controller) {
     this.state = state;
     this.controller = controller;
     this.utils = new Utils(this.state, this.controller);
@@ -73,6 +78,7 @@ public class Project {
   /**
    * A method that converts the project into a string by returning
    * the project name.
+   *
    * @return the name of the project.
    */
   public String toString() {
@@ -96,6 +102,7 @@ public class Project {
 
   /**
    * A method that creates a new layer to an existing project.
+   *
    * @param name represents the title of the new layer.
    */
   public void addLayer(String name) {
@@ -111,6 +118,7 @@ public class Project {
 
   /**
    * A method that saves an image as a PPM.
+   *
    * @param input represents the name of the
    *              file given by the user.
    */
@@ -120,7 +128,8 @@ public class Project {
     }
     String name = input[1];
     if (this.layers.size() == 1) {
-      this.utils.saveImageToFile(this.height, this.width, this.maxValue, this.layers.get(0).pixels, name);
+      this.utils.saveImageToFile(this.height, this.width, this.maxValue,
+              this.layers.get(0).pixels, name);
       return;
     }
     for (int i = 0; i < this.layers.get(0).pixels.size(); i++) {
@@ -139,7 +148,8 @@ public class Project {
       for (int k = 0; k < this.layeredPixels.get(i).size(); k++) {
         for (int j = 0; j < this.layeredPixels.get(i).get(k).size() - 1; j++) {
           if (j == 0) {
-            pixPrime = this.formula(this.layeredPixels.get(i).get(k).get(j), this.layeredPixels.get(i).get(k).get(j + 1));
+            pixPrime = this.formula(this.layeredPixels.get(i).get(k).get(j),
+                    this.layeredPixels.get(i).get(k).get(j + 1));
           }
           if (j > 0) {
             pixPrime = this.formula(pixPrime, this.layeredPixels.get(i).get(k).get(j + 1));
@@ -156,12 +166,13 @@ public class Project {
   /**
    * A method that computes prime values from RGBA values.
    * This is done with a formula provided.
-   * @param top represents the layer above the bottom layer.
+   *
+   * @param top    represents the layer above the bottom layer.
    * @param bottom represents the layer below the top layer.
    * @return a new Pixel that represents the RGBA value with the alpha
-   * formula applied.
+   *         formula applied.
    */
-  public Pixel formula (Pixel top, Pixel bottom) {
+  public Pixel formula(Pixel top, Pixel bottom) {
     if (top.alpha == 0 && bottom.alpha > 0) {
       return bottom;
     }
@@ -176,7 +187,7 @@ public class Project {
     }
     float topAlpha = top.alpha;
     float bottomAlpha = bottom.alpha;
-    float aDoublePrime = (topAlpha/255 + bottomAlpha/255 * (1 - (topAlpha/255)));
+    float aDoublePrime = (topAlpha / 255 + bottomAlpha / 255 * (1 - (topAlpha / 255)));
     float aPrime = aDoublePrime * 255;
     float topRed = top.red;
     float bottomRed = bottom.red;
@@ -184,15 +195,15 @@ public class Project {
     float bottomGreen = bottom.green;
     float topBlue = top.blue;
     float bottomBlue = bottom.blue;
-    float rPrime = (topAlpha/255 * topRed
-            + bottomRed * (bottomAlpha/255)
-            * (1 - topAlpha/255)) * (1/aDoublePrime);
-    float gPrime = (topAlpha/255 * topGreen
-            + bottomGreen * (bottomAlpha/255)
-            * (1 - topAlpha/255)) * (1/aDoublePrime);
-    float bPrime = (topAlpha/255 * topBlue
-            + bottomBlue * (bottomAlpha/255)
-            * (1 - topAlpha/255)) * (1/aDoublePrime);
+    float rPrime = (topAlpha / 255 * topRed
+            + bottomRed * (bottomAlpha / 255)
+            * (1 - topAlpha / 255)) * (1 / aDoublePrime);
+    float gPrime = (topAlpha / 255 * topGreen
+            + bottomGreen * (bottomAlpha / 255)
+            * (1 - topAlpha / 255)) * (1 / aDoublePrime);
+    float bPrime = (topAlpha / 255 * topBlue
+            + bottomBlue * (bottomAlpha / 255)
+            * (1 - topAlpha / 255)) * (1 / aDoublePrime);
     int rPrimeInt = (int) rPrime;
     int gPrimeInt = (int) gPrime;
     int bPrimeInt = (int) bPrime;
@@ -203,6 +214,7 @@ public class Project {
 
   /**
    * A method that allows a user to add a PPM image to a given layer.
+   *
    * @param layerName represents the layer that the user wants to add
    *                  and image to.
    * @param imageName represents the file path to the image.
@@ -218,8 +230,7 @@ public class Project {
       try {
         view.destination.append("X/Y Values out of bounds." + "\n");
         return;
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         throw new IllegalStateException(e.getMessage());
       }
     }
@@ -233,8 +244,7 @@ public class Project {
       try {
         this.view.destination.append("Given Layer not found. Re-Enter command." + "\n");
         return;
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         throw new IllegalStateException(e.getMessage());
       }
     }
@@ -243,8 +253,7 @@ public class Project {
       try {
         this.view.destination.append("Image can not be found. Re-Enter command." + "\n");
         return;
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         throw new IllegalStateException(e.getMessage());
       }
     }
@@ -257,12 +266,11 @@ public class Project {
       newLayer.add(new ArrayList<Pixel>());
       for (int b = 0; b < newPixels.get(a).size(); b++) {
         if (a >= yPosition && b >= xPosition
-                && this.state.imageToBeAdded.size() > placeCounterA &&
-                this.state.imageToBeAdded.get(placeCounterA).size() > placeCounterB) {
+                && this.state.imageToBeAdded.size() > placeCounterA
+                && this.state.imageToBeAdded.get(placeCounterA).size() > placeCounterB) {
           newLayer.get(a).add(this.state.imageToBeAdded.get(placeCounterA).get(placeCounterB));
           placeCounterB = placeCounterB + 1;
-        }
-        else {
+        } else {
           newLayer.get(a).add(newPixels.get(a).get(b));
         }
       }
@@ -275,6 +283,7 @@ public class Project {
 
   /**
    * A method that gets the layers in a project.
+   *
    * @return an ArrayList of layers.
    */
   public ArrayList<Layer> getLayers() {
@@ -283,6 +292,7 @@ public class Project {
 
   /**
    * A method that retrieves the height of the project.
+   *
    * @return the height of the initial layer.
    */
   public int getHeight() {
@@ -291,6 +301,7 @@ public class Project {
 
   /**
    * A method retrieves the width of the project.
+   *
    * @return the width of the intial layer.
    */
   public int getWidth() {
@@ -299,6 +310,7 @@ public class Project {
 
   /**
    * A method that retrieves the max value of the RGB values.
+   *
    * @return the max value of the RGB values.
    */
   public int getMaxValue() {
@@ -308,7 +320,8 @@ public class Project {
   /**
    * A method that changes the name of a filter, so that when
    * it is applied, the filter can be saved on the layer.
-   * @param layerName represents the name of the layer.
+   *
+   * @param layerName    represents the name of the layer.
    * @param filterOption represents which filter is being choosen.
    */
   public void markFilter(String layerName, String filterOption) {
@@ -322,8 +335,7 @@ public class Project {
       try {
         this.view.destination.append("Given Layer not found. Re-Enter command." + "\n");
         return;
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         throw new IllegalStateException(e.getMessage());
       }
     }
@@ -333,7 +345,8 @@ public class Project {
 
   /**
    * A method that applies a unique filter to a given layer.
-   * @param layerName represents the name of the layer.
+   *
+   * @param layerName    represents the name of the layer.
    * @param filterOption represents which filter is being chosen to be applied.
    */
   public void setFilter(String layerName, String filterOption) {
@@ -347,48 +360,36 @@ public class Project {
       try {
         this.view.destination.append("Given Layer not found. Re-Enter command." + "\n");
         return;
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         throw new IllegalStateException(e.getMessage());
       }
     }
-    if (filterOption.equals("normal")) {}
-
-    else if (filterOption.equals("red-component")) {
+    if (filterOption.equals("normal")) {
+      this.layers.get(layerPos).filterOnCurrentLayer = "normal";
+    } else if (filterOption.equals("red-component")) {
       this.layers.get(layerPos).changeComponent("Red");
-    }
-    else if (filterOption.equals("green-component")) {
+    } else if (filterOption.equals("green-component")) {
       this.layers.get(layerPos).changeComponent("Green");
-    }
-    else if (filterOption.equals("blue-component")) {
+    } else if (filterOption.equals("blue-component")) {
       this.layers.get(layerPos).changeComponent("Blue");
-    }
-    else if (filterOption.equals("brighten-value")) {
+    } else if (filterOption.equals("brighten-value")) {
       this.layers.get(layerPos).brightenValue();
-    }
-    else if (filterOption.equals("brighten-intensity")) {
+    } else if (filterOption.equals("brighten-intensity")) {
       this.layers.get(layerPos).brightenIntensity();
-    }
-    else if (filterOption.equals("brighten-luma")) {
+    } else if (filterOption.equals("brighten-luma")) {
       this.layers.get(layerPos).brightenLuma();
-    }
-    else if (filterOption.equals("darken-value")) {
+    } else if (filterOption.equals("darken-value")) {
       this.layers.get(layerPos).darkenValue();
-    }
-    else if (filterOption.equals("darken-intensity")) {
+    } else if (filterOption.equals("darken-intensity")) {
       this.layers.get(layerPos).darkenIntensity();
-    }
-    else if (filterOption.equals("darken-luma")) {
+    } else if (filterOption.equals("darken-luma")) {
       this.layers.get(layerPos).darkenLuma();
-    }
-
-    else {
+    } else {
       try {
         this.view.destination.append("Invalid Filter Option. Reverted layer to normal.");
         this.setFilter(layerName, this.layers.get(layerPos).filterOnCurrentLayer);
         this.layers.get(layerPos).filterOnCurrentLayer = "normal";
-      }
-      catch (Exception e) {
+      } catch (Exception e) {
         throw new IllegalStateException(e.getMessage());
       }
     }

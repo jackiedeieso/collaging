@@ -11,9 +11,10 @@ public class Layer {
   String filterOnCurrentLayer;
 
   /**
-   * This is the constructor for the Layer class.
+   * This is the first constructor for the Layer class, which is used
+   * when making a layer.
    * @param pixels represents an image, in pixels.
-   * @param name represents the name which is given to.
+   * @param name represents the name of a layer.
    */
   public Layer(ArrayList<ArrayList<Pixel>> pixels, String name) {
     this.pixels = pixels;
@@ -21,6 +22,13 @@ public class Layer {
     this.filterOnCurrentLayer = "normal";
   }
 
+  /**
+   * This is the second constructor class, which is used when the user
+   * creates a new layer.
+   * @param pixels represents the pixels that make up an image.
+   * @param name represents the name of a layer.
+   * @param filterOnCurrentLayer represents the filter on a given layer.
+   */
   public Layer(ArrayList<ArrayList<Pixel>> pixels, String name, String filterOnCurrentLayer) {
     this.pixels = pixels;
     this.name = name;
@@ -38,9 +46,9 @@ public class Layer {
   }
 
   /**
-   * A method used when called in other classs in order to
-   * get the name of a given layer
-   * @return the name of the layer
+   * A method used when called in other classes in order to
+   * get the name of a given layer.
+   * @return the name of the layer.
    */
   public String toString() {
     return this.name;

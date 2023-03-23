@@ -71,7 +71,8 @@ public class Utils {
       if (splited[0].equals("save-project") || splited[0].equals("add-layer")
               || splited[0].equals("save-image") || splited[0].equals("add-image-to-layer")) {
         try {
-          view.destination.append("Cannot do command without importing or making a project." + "\n");
+          view.destination.append("Cannot do command without "
+                  + "importing or making a project." + "\n");
         }
         catch (Exception e) {
           throw new IllegalStateException(e.getMessage());
@@ -96,7 +97,8 @@ public class Utils {
    * @param pixels is a 2D Array of individual pixels that will be mapped to the ppm file.
    * @param name represents the name of the image.
    */
-  public void saveImageToFile(int height, int width, int maxValue, ArrayList<ArrayList<Pixel>> pixels, String name) {
+  public void saveImageToFile(int height, int width, int maxValue,
+                              ArrayList<ArrayList<Pixel>> pixels, String name) {
     TextView view = new TextView(this.state);
     File save;
     PrintWriter pw;
@@ -117,7 +119,7 @@ public class Utils {
       FileWriter fw = new FileWriter(save);
       pw = new PrintWriter(fw);
     }
-    catch(Exception e) {
+    catch (Exception e) {
       throw new IllegalStateException(e.getMessage());
     }
     pw.write("P3" + "\n");
