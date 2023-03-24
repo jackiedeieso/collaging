@@ -187,7 +187,7 @@ public class CollagerController {
           pixels.get(i).add(new PixelRGB(r, g, b, a, this.state, this));
         }
       }
-      layers.add(new LayerRGB(pixels, layerName, filterName));
+      layers.add(new LayerRGB(pixels, layerName, filterName, this.state, this));
     }
     while (scLoading.hasNext());
     this.state.currentProject = new Project("C1", height, width, maxValue,

@@ -98,7 +98,7 @@ public class Project {
         pixels.get(i).add(new PixelRGB(255, 255, 255, 255, this.state, this.controller));
       }
     }
-    this.layers.add(new LayerRGB(pixels, "initial-layer"));
+    this.layers.add(new LayerRGB(pixels, "initial-layer", this.state, this.controller));
   }
 
   /**
@@ -114,7 +114,7 @@ public class Project {
         pixels.get(i).add(new PixelRGB(255, 255, 255, 0, this.state, this.controller));
       }
     }
-    this.layers.add(0, new LayerRGB(pixels, name));
+    this.layers.add(0, new LayerRGB(pixels, name, this.state, this.controller));
   }
 
   /**
@@ -144,7 +144,7 @@ public class Project {
     }
     ArrayList<PixelRGB> fillRow = new ArrayList<PixelRGB>();
     ArrayList<ArrayList<PixelRGB>> finalArray = new ArrayList<ArrayList<PixelRGB>>();
-    PixelRGB pixPrime = new PixelRGB();
+    PixelRGB pixPrime = new PixelRGB(this.state, this.controller);
     for (int i = 0; i < this.layeredPixels.size(); i++) {
       for (int k = 0; k < this.layeredPixels.get(i).size(); k++) {
         for (int j = 0; j < this.layeredPixels.get(i).get(k).size() - 1; j++) {
@@ -341,12 +341,10 @@ public class Project {
       }
     }
     this.layers.get(layerPos).markFilter(filterOption);
-
   }
 
   /**
    * A method that applies a unique filter to a given layer.
-   *
    * @param layerName    represents the name of the layer.
    * @param filterOption represents which filter is being chosen to be applied.
    */
@@ -385,7 +383,12 @@ public class Project {
       this.layers.get(layerPos).darkenIntensity();
     } else if (filterOption.equals("darken-luma")) {
       this.layers.get(layerPos).darkenLuma();
-    } else {
+    } else if (filterOption.equalsIgnoreCase("blend-difference")) {
+      this.layers.get(layerPos).blendDifference(layerPos);
+    } else if (filterOption.equalsIgnoreCase("blend-multiply")) {
+      this.layers.get(layerPos).blendMultiply(layerPos);
+    }
+    else {
       try {
         this.view.destination.append("Invalid Filter Option. Reverted layer to normal.");
         this.setFilter(layerName, this.layers.get(layerPos).filterOnCurrentLayer);

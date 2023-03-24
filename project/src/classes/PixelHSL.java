@@ -1,6 +1,10 @@
 package classes;
 
+import controller.CollagerController;
 import interfaces.PixelType;
+import state.CollagerState;
+import utils.Utils;
+import view.TextView;
 
 /**
  * Class representation of an HSL Pixel, which consists of
@@ -10,6 +14,11 @@ public class PixelHSL implements PixelType {
   double hue;
   double saturation;
   double lightness;
+  CollagerState state;
+
+  CollagerController controller;
+
+  Utils utils;
 
   /**
    * The constructor for the PixelHSL class.
@@ -19,10 +28,13 @@ public class PixelHSL implements PixelType {
    *                   in a given pixel.
    * @param lightness  represents how bright a pixel is.
    */
-  PixelHSL(double hue, double saturation, double lightness) {
+  PixelHSL(double hue, double saturation, double lightness, CollagerState state, CollagerController controller) {
     this.hue = hue;
     this.saturation = saturation;
     this.lightness = lightness;
+    this.state = state;
+    this.controller = controller;
+    this.utils = new Utils(this.state, this.controller);
 
     if (hue > 360 || hue <= 0) {
       throw new IllegalArgumentException("hue value is not within bounds.");
@@ -39,8 +51,10 @@ public class PixelHSL implements PixelType {
    * Constructor for the PixelHSL class that converts an RGB Pixel.
    * @param pixelRGB the pixel in RGB format that will be converted.
    */
-  PixelHSL(PixelRGB pixelRGB) {
+  PixelHSL(PixelRGB pixelRGB, CollagerState state, CollagerController controller) {
+    this.state = state;
     this.convertRGBtoHSL(pixelRGB);
+    this.controller = controller;
   }
 
   /**
@@ -70,7 +84,6 @@ public class PixelHSL implements PixelType {
         hue = (pixelRGB.red - pixelRGB.green) / delta;
         hue += 4;
       }
-
       hue = hue * 60;
     }
 
@@ -79,4 +92,30 @@ public class PixelHSL implements PixelType {
     this.saturation = saturation;
   }
 
+  /**
+   * A method that darkens a given pixel by multiplying together our
+   * darker colors.
+   * @param layerPos represents the position of the layer we are currently working on.
+   * @param row represents the x position of a pixel.
+   * @param col represents the y position of a pixel.
+   */
+  public void blendPixelMultiply(int layerPos, int row, int col) {
+    int firstLayerNotTransparent = -1;
+    TextView view = new TextView(this.state);
+    for (int i = 1; i <= this.state.currentProject.layers.size() - layerPos; i++) {
+      if (this.state.currentProject.layers.get(layerPos + i)
+              .getPixels().get(row).get(col).alpha > 0) {
+        firstLayerNotTransparent = layerPos + i;
+        break;
+      }
+    }
+    if (firstLayerNotTransparent == -1) {
+      return;
+    }
+    PixelHSL convertedPixel =
+            new PixelHSL(this.state.currentProject.layers.
+                    get(firstLayerNotTransparent).getPixels().get(row).get(col),
+                    this.state, this.controller);
+    this.lightness = this.lightness * convertedPixel.lightness;
+  }
 }

@@ -7,6 +7,7 @@ import controller.CollagerController;
 import interfaces.PixelType;
 import state.CollagerState;
 import utils.Utils;
+import view.TextView;
 
 /**
  * Class representation for a pixel. A pixel contains an RGB value,
@@ -66,7 +67,9 @@ public class PixelRGB implements PixelType {
    * Third constructor for the PixelRGB class. It is empty because the
    * saveImage() method needed a pixel variable that had to be initialized.
    */
-  public PixelRGB() {
+  public PixelRGB(CollagerState state, CollagerController controller) {
+    this.state = state;
+    this.controller = controller;
     /*
     This constructor is empty because the saveImage() method needed
     a pixel variable that had to be initialized.
@@ -78,8 +81,10 @@ public class PixelRGB implements PixelType {
    * HSL pixel to a RGB pixel.
    * @param pixelHSL The HSL implementation of the new pixel.
    */
-  public PixelRGB(PixelHSL pixelHSL) {
+  public PixelRGB(PixelHSL pixelHSL, CollagerState state, CollagerController controller) {
     this.convertHSLtoRGB(pixelHSL);
+    this.state = state;
+    this.controller = controller;
   }
 
   /**
@@ -252,10 +257,28 @@ public class PixelRGB implements PixelType {
    * Helper method that performs the translation from the HSL polygonal
    * model to the more familiar RGB model
    */
-  private static double convertFn(double hue, double saturation, double lightness, int n) {
+  private double convertFn(double hue, double saturation, double lightness, int n) {
     double k = (n + (hue/30)) % 12;
     double a  = saturation * Math.min(lightness, 1 - lightness);
 
     return lightness - a * Math.max(-1, Math.min(k - 3, Math.min(9 - k, 1)));
+  }
+
+  public void blendPixelDifference(int layerPos, int row, int col) {
+    int firstLayerNotTransparent = -1;
+    TextView view = new TextView(this.state);
+    for (int i = 1; i <= this.state.currentProject.layers.size() - layerPos; i++) {
+      if (this.state.currentProject.layers.get(layerPos + i).getPixels().get(row).get(col).alpha > 0) {
+        firstLayerNotTransparent = layerPos + i;
+        break;
+      }
+    }
+    if (firstLayerNotTransparent == -1) {
+      return;
+    }
+    this.red = Math.abs(this.red - this.state.currentProject.layers.
+            get(firstLayerNotTransparent).getPixels().get(row).get(col).red);
+    this.green = Math.abs(this.green - this.state.currentProject.layers.get(firstLayerNotTransparent).getPixels().get(row).get(col).green);
+    this.blue = Math.abs(this.blue - this.state.currentProject.layers.get(firstLayerNotTransparent).getPixels().get(row).get(col).blue);
   }
 }

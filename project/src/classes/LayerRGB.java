@@ -2,13 +2,24 @@ package classes;
 
 import java.util.ArrayList;
 
+import controller.CollagerController;
+import state.CollagerState;
+import utils.Utils;
+
 /**
- * Class which represents a singular layer in a project.
+ * Class which represents a singular layer in a project. The pixels
+ * in this layer are displayed from RGB values.
  */
 public class LayerRGB {
   ArrayList<ArrayList<PixelRGB>> pixels;
   String name;
   String filterOnCurrentLayer;
+
+  CollagerState state;
+
+  CollagerController controller;
+
+  Utils utils;
 
   /**
    * This is the first constructor for the LayerRGB class, which is used
@@ -16,10 +27,12 @@ public class LayerRGB {
    * @param pixels represents an image, in pixels.
    * @param name represents the name of a layer.
    */
-  public LayerRGB(ArrayList<ArrayList<PixelRGB>> pixels, String name) {
+  public LayerRGB(ArrayList<ArrayList<PixelRGB>> pixels, String name, CollagerState state, CollagerController controller) {
     this.pixels = pixels;
     this.name = name;
     this.filterOnCurrentLayer = "normal";
+    this.state = state;
+    this.controller = controller;
   }
 
   /**
@@ -29,11 +42,12 @@ public class LayerRGB {
    * @param name represents the name of a layer.
    * @param filterOnCurrentLayer represents the filter on a given layer.
    */
-  public LayerRGB(ArrayList<ArrayList<PixelRGB>> pixels, String name, String filterOnCurrentLayer) {
+  public LayerRGB(ArrayList<ArrayList<PixelRGB>> pixels, String name, String filterOnCurrentLayer, CollagerState state, CollagerController controller) {
     this.pixels = pixels;
     this.name = name;
     this.filterOnCurrentLayer = filterOnCurrentLayer;
-
+    this.state = state;
+    this.controller = controller;
   }
 
   /**
@@ -166,6 +180,37 @@ public class LayerRGB {
       }
     }
     this.filterOnCurrentLayer = "darken-luma";
+  }
+
+  /**
+   * A method that inverts a given pixel, and blends both the current
+   * layer and the composite images underneath that layer.
+   * @param layerPos represents the position of a given layer.
+   */
+  public void blendDifference(int layerPos) {
+    for (int i = 0; i < this.pixels.size(); i++) {
+      for (int k = 0; k < this.pixels.get(i).size(); k++) {
+        this.pixels.get(i).get(k).blendPixelDifference(layerPos, i, k);
+      }
+    }
+    this.filterOnCurrentLayer = "blend-difference";
+  }
+
+  /**
+   * A method that darkens a given pixel by multiplying together
+   * our darker colors.
+   * @param layerPos represents the position of the layer we are currently
+   *                 accessing.
+   */
+  public void blendMultiply(int layerPos) {
+    for(int i = 0; i < this.pixels.size(); i++) {
+      for (int k = 0; k < this.pixels.get(i).size(); k++) {
+        PixelHSL pixelHSL = new PixelHSL(this.pixels.get(i).get(k), this.state, this.controller);
+        pixelHSL.blendPixelMultiply(layerPos, i, k);
+        this.pixels.get(i).set(k, new PixelRGB(pixelHSL, this.state, this.controller));
+      }
+    }
+    this.filterOnCurrentLayer = "blend-multiply";
   }
 
   /**
