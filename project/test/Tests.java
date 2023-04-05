@@ -341,7 +341,7 @@ public class Tests {
     regularScanner.nextInt();
     regularScanner.nextInt();
     assertEquals(regularScanner.nextInt(), 0);
-    assertEquals(regularScanner.nextInt(), 179);
+    assertEquals(regularScanner.nextInt(), 151);
     assertEquals(regularScanner.nextInt(), 0);
   }
 
@@ -360,7 +360,7 @@ public class Tests {
     regularScanner.nextInt();
     assertEquals(regularScanner.nextInt(), 0);
     assertEquals(regularScanner.nextInt(), 0);
-    assertEquals(regularScanner.nextInt(), 151);
+    assertEquals(regularScanner.nextInt(), 179);
   }
 
   @Test
@@ -487,8 +487,8 @@ public class Tests {
     assertEquals(oldGreen, 179);
     assertEquals(oldBlue, 151);
     assertEquals(newRed, 22);
-    assertEquals(newGreen, 28);
-    assertEquals(newBlue, 0);
+    assertEquals(newGreen, 0);
+    assertEquals(newBlue, 28);
   }
 
   @Test
@@ -551,7 +551,7 @@ public class Tests {
     assertEquals(oldGreen, 179);
     assertEquals(oldBlue, 151);
     assertEquals(newRed, 6);
-    assertEquals(newGreen, 12);
-    assertEquals(newBlue, 0);
+    assertEquals(newGreen, 0);
+    assertEquals(newBlue, 12);
   }
 }

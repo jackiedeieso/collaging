@@ -55,7 +55,7 @@ public class Utils {
     }
     if (this.state.active) {
       if (splited[0].equals("save-project")) {
-        this.controller.saveProject();
+        this.controller.saveProject(splited);
       }
       if (splited[0].equals("add-layer")) {
         this.controller.addLayer(splited);
@@ -129,7 +129,7 @@ public class Utils {
     pw.write(width + " " + height + "\n");
     pw.write(maxValue + "\n");
     for (int i = 0; i < pixels.size(); i++) {
-      for (int k = 0; k < pixels.get(0).size(); k++) {
+      for (int k = 0; k < pixels.get(i).size(); k++) {
         ArrayList<Integer> x = pixels.get(i).get(k).getRGBAConvertRGB();
         pw.write(x.get(0) + " " + x.get(1) + " " + x.get(2) + " ");
       }

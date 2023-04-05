@@ -11,14 +11,12 @@ import view.TextView;
  * a hue value, a saturation value, and a lightness value.
  */
 public class PixelHSL implements PixelType {
-  double hue;
-  double saturation;
-  double lightness;
-  CollagerState state;
-
-  CollagerController controller;
-
-  Utils utils;
+  private double hue;
+  private double saturation;
+  private double lightness;
+  private CollagerState state;
+  private CollagerController controller;
+  private Utils utils;
 
   /**
    * The constructor for the PixelHSL class.
@@ -58,12 +56,39 @@ public class PixelHSL implements PixelType {
   }
 
   /**
+   * A method that gets the HSL color value based on a string.
+   * @param color represents one of the HSL values.
+   * @return a singular H, S, or L value.
+   */
+  public double getHSLColorDouble(String color) {
+    boolean validColor = true;
+    if (!color.equals("Hue") && !color.equals("Saturation") && !color.equals("Lightness")) {
+      validColor = false;
+    }
+    double c = 0;
+    if (color.equals("Hue")) {
+      c = this.hue;
+    }
+    if (color.equals("Saturation")) {
+      c = this.saturation;
+    }
+    if (color.equals("Lightness")) {
+      c = this.lightness;
+    }
+    if (!validColor) {
+      System.out.println(c);
+      throw new IllegalStateException("Invalid color called for.");
+    }
+    return c;
+  }
+
+  /**
    * A method which converts an RGB value into an HSL value.
    * @param pixelRGB represents a given RGB pixel value.
    */
   public void convertRGBtoHSL(PixelRGB pixelRGB) {
-    double componentMax = Math.max(pixelRGB.red, Math.max(pixelRGB.green, pixelRGB.blue));
-    double componentMin = Math.min(pixelRGB.red, Math.min(pixelRGB.green, pixelRGB.blue));
+    double componentMax = Math.max(pixelRGB.getColorInt("Red"), Math.max(pixelRGB.getColorInt("Green"), pixelRGB.getColorInt("Blue")));
+    double componentMin = Math.min(pixelRGB.getColorInt("Red"), Math.min(pixelRGB.getColorInt("Green"), pixelRGB.getColorInt("Blue")));
     double delta = componentMax - componentMin;
 
     double lightness = (componentMax + componentMin) / 2;
@@ -74,14 +99,14 @@ public class PixelHSL implements PixelType {
     } else {
       saturation = delta / (1 - Math.abs(2 * lightness - 1));
       hue = 0;
-      if (componentMax == pixelRGB.red) {
-        hue = (pixelRGB.green - pixelRGB.blue) / delta;
+      if (componentMax == pixelRGB.getColorInt("Red")) {
+        hue = (pixelRGB.getColorInt("Green") - pixelRGB.getColorInt("Blue")) / delta;
         hue = hue % 6;
-      } else if (componentMax == pixelRGB.green) {
-        hue = (pixelRGB.blue - pixelRGB.red) / delta;
+      } else if (componentMax == pixelRGB.getColorInt("Green")) {
+        hue = (pixelRGB.getColorInt("Blue") - pixelRGB.getColorInt("Red")) / delta;
         hue += 2;
-      } else if (componentMax == pixelRGB.blue) {
-        hue = (pixelRGB.red - pixelRGB.green) / delta;
+      } else if (componentMax == pixelRGB.getColorInt("Blue")) {
+        hue = (pixelRGB.getColorInt("Red") - pixelRGB.getColorInt("Green")) / delta;
         hue += 4;
       }
       hue = hue * 60;
@@ -102,9 +127,9 @@ public class PixelHSL implements PixelType {
   public void blendPixelMultiply(int layerPos, int row, int col) {
     int firstLayerNotTransparent = -1;
     TextView view = new TextView(this.state);
-    for (int i = 1; i <= this.state.currentProject.layers.size() - layerPos; i++) {
-      if (this.state.currentProject.layers.get(layerPos + i)
-              .getPixels().get(row).get(col).alpha > 0) {
+    for (int i = 1; i <= this.state.currentProject.getLayers().size() - layerPos; i++) {
+      if (this.state.currentProject.getLayers().get(layerPos + i)
+              .getPixels().get(row).get(col).getColorDouble("Alpha") > 0) {
         firstLayerNotTransparent = layerPos + i;
         break;
       }
@@ -113,7 +138,7 @@ public class PixelHSL implements PixelType {
       return;
     }
     PixelHSL convertedPixel =
-            new PixelHSL(this.state.currentProject.layers.
+            new PixelHSL(this.state.currentProject.getLayers().
                     get(firstLayerNotTransparent).getPixels().get(row).get(col),
                     this.state, this.controller);
     this.lightness = this.lightness * convertedPixel.lightness;

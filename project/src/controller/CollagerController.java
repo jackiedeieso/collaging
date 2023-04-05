@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import classes.LayerRGB;
+import classes.Layer;
 import classes.PixelRGB;
 import classes.Project;
 import state.CollagerState;
@@ -19,10 +19,9 @@ import view.TextView;
  */
 public class CollagerController {
 
-  CollagerState state;
-  TextView view;
-  Scanner sc;
-
+  private CollagerState state;
+  private TextView view;
+  private Scanner sc;
   public boolean enterCommandStopper;
 
   /**
@@ -74,16 +73,23 @@ public class CollagerController {
   /**
    * A method that, prompted by the user, saves a project to a .txt file.
    */
-  public void saveProject() {
+  public void saveProject(String[] input) {
+    String fileName = "";
     File save;
     PrintWriter pw;
-    try {
-      this.view.destination.append("Name the file. (no extension, just a name)" + "\n");
+    if (input.length <= 1) {
+      try {
+        this.view.destination.append("Name the file. (no extension, just a name)" + "\n");
+      }
+      catch (Exception e) {
+        throw new IllegalStateException(e.getMessage());
+      }
+      fileName = this.sc.next();
+      this.enterCommandStopper = true;
     }
-    catch (Exception e) {
-      throw new IllegalStateException(e.getMessage());
+    else {
+      fileName = input[1];
     }
-    String fileName = this.sc.next();
     try {
       save = new File(fileName + ".txt");
     }
@@ -119,7 +125,6 @@ public class CollagerController {
       }
     }
     pw.close();
-    this.enterCommandStopper = true;
   }
 
   /**
@@ -172,7 +177,7 @@ public class CollagerController {
     int width = scLoading.nextInt();
     int height = scLoading.nextInt();
     int maxValue = scLoading.nextInt();
-    ArrayList<LayerRGB> layers = new ArrayList<LayerRGB>();
+    ArrayList<Layer> layers = new ArrayList<Layer>();
     do {
       String layerName = scLoading.next();
       String filterName = scLoading.next();
@@ -187,7 +192,7 @@ public class CollagerController {
           pixels.get(i).add(new PixelRGB(r, g, b, a, this.state, this));
         }
       }
-      layers.add(new LayerRGB(pixels, layerName, filterName, this.state, this));
+      layers.add(new Layer(pixels, layerName, filterName, this.state, this));
     }
     while (scLoading.hasNext());
     this.state.currentProject = new Project("C1", height, width, maxValue,

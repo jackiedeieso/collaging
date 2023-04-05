@@ -14,13 +14,13 @@ import view.TextView;
  * which is used to determine the color of the pixel.
  */
 public class PixelRGB implements PixelType {
-  int red;
-  int green;
-  int blue;
-  int alpha;
-  CollagerState state;
-  CollagerController controller;
-  Utils utils;
+  private int red;
+  private int green;
+  private int blue;
+  private int alpha;
+  private CollagerState state;
+  private CollagerController controller;
+  private Utils utils;
 
   /**
    * First constructor for the PixelRGB class. This constructor is used for
@@ -90,7 +90,6 @@ public class PixelRGB implements PixelType {
   /**
    * A method with the purpose of creating a new ArrayList of each PixelRGB's
    * values.
-   *
    * @return An ArrayList of the RGB components of a PixelRGB.
    */
   public ArrayList<Integer> getRGB() {
@@ -100,16 +99,14 @@ public class PixelRGB implements PixelType {
   /**
    * A method used for four-component PixelRGB values, which creates a new ArrayList
    * of each PixelRGB's values.
-   *
-   * @return
+   * @return a new ArrayList of the RGBA values.
    */
   public ArrayList<Integer> getRGBA() {
     return new ArrayList<Integer>(Arrays.asList(this.red, this.green, this.blue, this.alpha));
   }
 
   /**
-   * Creates a combined string of the PixelRGB.
-   *
+   * A method that creates a combined string of the PixelRGB.
    * @return a string of the PixelRGB RGBA.
    */
   public String toString() {
@@ -117,10 +114,9 @@ public class PixelRGB implements PixelType {
   }
 
   /**
-   * Converting a three-component pixel into a four-component
-   * pixel, adding the alpha value and creating a transparency
-   * effect.
-   *
+   * A method that converts a three-component pixel into a
+   * four-component pixel, adding the alpha value and creating
+   * a transparency effect.
    * @return An array of the changed RGB values.
    */
   public ArrayList<Integer> getRGBAConvertRGB() {
@@ -135,13 +131,13 @@ public class PixelRGB implements PixelType {
    * are not going above 255.
    */
   public void checkRGBLimits() {
-    if (this.red > this.state.currentProject.maxValue) {
+    if (this.red > this.state.currentProject.getMaxValue()) {
       this.red = 255;
     }
-    if (this.green > this.state.currentProject.maxValue) {
+    if (this.green > this.state.currentProject.getMaxValue()) {
       this.green = 255;
     }
-    if (this.blue > this.state.currentProject.maxValue) {
+    if (this.blue > this.state.currentProject.getMaxValue()) {
       this.blue = 255;
     }
   }
@@ -159,6 +155,26 @@ public class PixelRGB implements PixelType {
     }
     if (this.blue < 0) {
       this.blue = 0;
+    }
+  }
+
+  /**
+   * A method that changes a pixel based on the filter being applied.
+   * This is a helper for the method changeComponent.
+   * @param color represents the color that is not changing.
+   */
+  public void changePixelComponent(String color) {
+    if (color.equals("Red")) {
+      this.green = 0;
+      this.blue = 0;
+    }
+    if (color.equals("Green")) {
+      this.red = 0;
+      this.blue = 0;
+    }
+    if (color.equals("Blue")) {
+      this.red = 0;
+      this.green = 0;
     }
   }
 
@@ -244,18 +260,50 @@ public class PixelRGB implements PixelType {
     this.checkRGBLimitZero();
   }
 
+  /**
+   * A method that converts an HSL pixel to an RGB pixel.
+   * @param pixelHSL represents an HSL pixel to be converted.
+   */
   public void convertHSLtoRGB(PixelHSL pixelHSL) {
-    double r = convertFn(pixelHSL.hue, pixelHSL.saturation, pixelHSL.lightness, 0) * 255;
-    double g = convertFn(pixelHSL.hue, pixelHSL.saturation, pixelHSL.lightness, 8) * 255;
-    double b = convertFn(pixelHSL.hue, pixelHSL.saturation, pixelHSL.lightness, 4) * 255;
+    double r = convertFn(pixelHSL.getHSLColorDouble("Hue"),
+            pixelHSL.getHSLColorDouble("Saturation"),
+            pixelHSL.getHSLColorDouble("Lightness"), 0) * 255;
+    double g = convertFn(pixelHSL.getHSLColorDouble("Hue"),
+            pixelHSL.getHSLColorDouble("Saturation"),
+            pixelHSL.getHSLColorDouble("Lightness"), 8) * 255;
+    double b = convertFn(pixelHSL.getHSLColorDouble("Hue"),
+            pixelHSL.getHSLColorDouble("Saturation"),
+            pixelHSL.getHSLColorDouble("Lightness"), 4) * 255;
     this.red = (int) r;
     this.green = (int) g;
     this.blue = (int) b;
+    this.limitRGBValues();
   }
 
-  /*
+  public void limitRGBValues() {
+    if (this.red < 0) {
+      this.red = 0;
+    }
+    if (this.green < 0) {
+      this.green = 0;
+    }
+    if (this.blue < 0) {
+      this.blue = 0;
+    }
+    if (this.red > 255) {
+      this.red = 255;
+    }
+    if (this.green > 255) {
+      this.green = 255;
+    }
+    if (this.blue > 255) {
+      this.blue = 255;
+    }
+  }
+
+  /**
    * Helper method that performs the translation from the HSL polygonal
-   * model to the more familiar RGB model
+   * model to the more familiar RGB model.
    */
   private double convertFn(double hue, double saturation, double lightness, int n) {
     double k = (n + (hue/30)) % 12;
@@ -264,11 +312,17 @@ public class PixelRGB implements PixelType {
     return lightness - a * Math.max(-1, Math.min(k - 3, Math.min(9 - k, 1)));
   }
 
+  /**
+   * A method that filters a layer based on all project layers.
+   * @param layerPos represents the starting position of the layer.
+   * @param row represents the x position of the filter.
+   * @param col represents the y position of the filter.
+   */
   public void blendPixelDifference(int layerPos, int row, int col) {
     int firstLayerNotTransparent = -1;
     TextView view = new TextView(this.state);
-    for (int i = 1; i <= this.state.currentProject.layers.size() - layerPos; i++) {
-      if (this.state.currentProject.layers.get(layerPos + i).getPixels().get(row).get(col).alpha > 0) {
+    for (int i = 1; i <= this.state.currentProject.getLayers().size() - layerPos; i++) {
+      if (this.state.currentProject.getLayers().get(layerPos + i).getPixels().get(row).get(col).alpha > 0) {
         firstLayerNotTransparent = layerPos + i;
         break;
       }
@@ -276,9 +330,46 @@ public class PixelRGB implements PixelType {
     if (firstLayerNotTransparent == -1) {
       return;
     }
-    this.red = Math.abs(this.red - this.state.currentProject.layers.
-            get(firstLayerNotTransparent).getPixels().get(row).get(col).red);
-    this.green = Math.abs(this.green - this.state.currentProject.layers.get(firstLayerNotTransparent).getPixels().get(row).get(col).green);
-    this.blue = Math.abs(this.blue - this.state.currentProject.layers.get(firstLayerNotTransparent).getPixels().get(row).get(col).blue);
+    this.red = Math.abs(this.red - this.state.currentProject.getLayers()
+            .get(firstLayerNotTransparent).getPixels().get(row).get(col).red);
+    this.green = Math.abs(this.green - this.state.currentProject.getLayers()
+            .get(firstLayerNotTransparent).getPixels().get(row).get(col).green);
+    this.blue = Math.abs(this.blue - this.state.currentProject.getLayers()
+            .get(firstLayerNotTransparent).getPixels().get(row).get(col).blue);
+  }
+
+  /**
+   * A method that is used for other methods to return the color float.
+   * @param color represents the desired color.
+   * @return the number of the color.
+   */
+  public double getColorDouble(String color) {
+    double c = -1;
+    if (color.equals("Green")) {
+      c = this.green;
+    }
+    if (color.equals("Blue")) {
+      c = this.blue;
+    }
+    if (color.equals("Red")) {
+      c = this.red;
+    }
+    if (color.equals("Alpha")) {
+      c = this.alpha;
+    }
+    if (c < 0) {
+      throw new IllegalStateException("Invalid color called for.");
+    }
+    return c;
+  }
+
+  /**
+   * A method that is finding the RGB value represented as an
+   * integer.
+   * @param color represents the desired color.
+   * @return an integer representation of the R, G, or B value.
+   */
+  public int getColorInt(String color) {
+    return (int) this.getColorDouble(color);
   }
 }

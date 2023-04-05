@@ -13,11 +13,11 @@ import view.TextView;
  * or close, and can contain multiple layers.
  */
 public class Project {
-  String name;
-  int height;
-  int width;
-  int maxValue;
-  ArrayList<LayerRGB> layers;
+  private String name;
+  private int height;
+  private int width;
+  private int maxValue;
+  private ArrayList<Layer> layers;
   CollagerState state;
   Utils utils;
   CollagerController controller;
@@ -45,7 +45,7 @@ public class Project {
     this.width = width;
     this.maxValue = utils.maxValue;
     this.view = new TextView(this.state);
-    this.layers = new ArrayList<LayerRGB>();
+    this.layers = new ArrayList<Layer>();
     this.layeredPixels = new ArrayList<ArrayList<ArrayList<PixelRGB>>>();
   }
 
@@ -62,7 +62,7 @@ public class Project {
    * @param controller represents the controller class that run methods for the main.
    */
   public Project(String name, int height, int width, int maxValue,
-                 ArrayList<LayerRGB> layers, CollagerState state,
+                 ArrayList<Layer> layers, CollagerState state,
                  CollagerController controller) {
     this.state = state;
     this.controller = controller;
@@ -98,12 +98,11 @@ public class Project {
         pixels.get(i).add(new PixelRGB(255, 255, 255, 255, this.state, this.controller));
       }
     }
-    this.layers.add(new LayerRGB(pixels, "initial-layer", this.state, this.controller));
+    this.layers.add(new Layer(pixels, "initial-layer", this.state, this.controller));
   }
 
   /**
    * A method that creates a new layer to an existing project.
-   *
    * @param name represents the title of the new layer.
    */
   public void addLayer(String name) {
@@ -114,31 +113,51 @@ public class Project {
         pixels.get(i).add(new PixelRGB(255, 255, 255, 0, this.state, this.controller));
       }
     }
-    this.layers.add(0, new LayerRGB(pixels, name, this.state, this.controller));
+    this.layers.add(0, new Layer(pixels, name, this.state, this.controller));
+  }
+
+  /**
+   * A method that saves the pixels to a different list.
+   */
+  public void populateSavePixels() {
+    for (int i = 0; i < this.layers.size(); i++) {
+      for (int k = 0; k < this.layers.get(i).getPixels().size(); k++) {
+        this.layers.get(i).getSaveImagePixels().add(new ArrayList<PixelRGB>());
+        for (int j = 0; j < this.layers.get(i).getPixels().get(k).size(); j++) {
+          PixelRGB newPixel = new PixelRGB(this.layers.get(i).getPixels().get(k).get(j).getColorInt("Red"),
+                  this.layers.get(i).getPixels().get(k).get(j).getColorInt("Blue"),
+                  this.layers.get(i).getPixels().get(k).get(j).getColorInt("Green"),
+                  this.layers.get(i).getPixels().get(k).get(j).getColorInt("Alpha"),
+                  this.state,
+                  this.controller);
+          this.layers.get(i).getSaveImagePixels().get(k).add(newPixel);
+        }
+      }
+    }
   }
 
   /**
    * A method that saves an image as a PPM.
-   *
    * @param input represents the name of the
    *              file given by the user.
    */
   public void saveImage(String[] input) {
     for (int d = 0; d < this.layers.size(); d++) {
-      this.setFilter(this.layers.get(d).name, this.layers.get(d).getCurrentFilter());
+      this.populateSavePixels();
+      this.setFilterOnSave(this.layers.get(d).toString(), this.layers.get(d).getCurrentFilter());
     }
     String name = input[1];
     if (this.layers.size() == 1) {
       this.utils.saveImageToFile(this.height, this.width, this.maxValue,
-              this.layers.get(0).pixels, name);
+              this.layers.get(0).getSaveImagePixels(), name);
       return;
     }
-    for (int i = 0; i < this.layers.get(0).pixels.size(); i++) {
+    for (int i = 0; i < this.layers.get(0).getSaveImagePixels().size(); i++) {
       this.layeredPixels.add(new ArrayList<ArrayList<PixelRGB>>());
-      for (int k = 0; k < this.layers.get(0).pixels.get(0).size(); k++) {
+      for (int k = 0; k < this.layers.get(0).getSaveImagePixels().get(i).size(); k++) {
         this.layeredPixels.get(i).add(new ArrayList<PixelRGB>());
         for (int j = 0; j < this.layers.size(); j++) {
-          this.layeredPixels.get(i).get(k).add(this.layers.get(j).pixels.get(i).get(k));
+          this.layeredPixels.get(i).get(k).add(this.layers.get(j).getSaveImagePixels().get(i).get(k));
         }
       }
     }
@@ -174,35 +193,35 @@ public class Project {
    *         formula applied.
    */
   public PixelRGB formula(PixelRGB top, PixelRGB bottom) {
-    if (top.alpha == 0 && bottom.alpha > 0) {
+    if (top.getColorDouble("Alpha") == 0 && bottom.getColorDouble("Alpha") > 0) {
       return bottom;
     }
-    if (bottom.alpha == 0 && top.alpha > 0) {
+    if (bottom.getColorDouble("Alpha") == 0 && top.getColorDouble("Alpha") > 0) {
       return top;
     }
-    if (top.alpha == 0 && bottom.alpha == 0) {
+    if (top.getColorDouble("Alpha") == 0 && bottom.getColorDouble("Alpha") == 0) {
       return top;
     }
-    if (top.alpha == 255 && bottom.alpha == 255) {
+    if (top.getColorDouble("Alpha") == 255 && bottom.getColorDouble("Alpha") == 255) {
       return top;
     }
-    float topAlpha = top.alpha;
-    float bottomAlpha = bottom.alpha;
-    float aDoublePrime = (topAlpha / 255 + bottomAlpha / 255 * (1 - (topAlpha / 255)));
-    float aPrime = aDoublePrime * 255;
-    float topRed = top.red;
-    float bottomRed = bottom.red;
-    float topGreen = top.green;
-    float bottomGreen = bottom.green;
-    float topBlue = top.blue;
-    float bottomBlue = bottom.blue;
-    float rPrime = (topAlpha / 255 * topRed
+    double topAlpha = top.getColorDouble("Alpha");
+    double bottomAlpha = bottom.getColorDouble("Alpha");
+    double aDoublePrime = (topAlpha / 255 + bottomAlpha / 255 * (1 - (topAlpha / 255)));
+    double aPrime = aDoublePrime * 255;
+    double topRed = top.getColorDouble("Red");
+    double bottomRed = bottom.getColorDouble("Red");
+    double topGreen = top.getColorDouble("Green");
+    double bottomGreen = bottom.getColorDouble("Green");
+    double topBlue = top.getColorDouble("Blue");
+    double bottomBlue = bottom.getColorDouble("Blue");
+    double rPrime = (topAlpha / 255 * topRed
             + bottomRed * (bottomAlpha / 255)
             * (1 - topAlpha / 255)) * (1 / aDoublePrime);
-    float gPrime = (topAlpha / 255 * topGreen
+    double gPrime = (topAlpha / 255 * topGreen
             + bottomGreen * (bottomAlpha / 255)
             * (1 - topAlpha / 255)) * (1 / aDoublePrime);
-    float bPrime = (topAlpha / 255 * topBlue
+    double bPrime = (topAlpha / 255 * topBlue
             + bottomBlue * (bottomAlpha / 255)
             * (1 - topAlpha / 255)) * (1 / aDoublePrime);
     int rPrimeInt = (int) rPrime;
@@ -215,7 +234,6 @@ public class Project {
 
   /**
    * A method that allows a user to add a PPM image to a given layer.
-   *
    * @param layerName represents the layer that the user wants to add
    *                  and image to.
    * @param imageName represents the file path to the image.
@@ -237,13 +255,13 @@ public class Project {
     }
     int layerPos = -1;
     for (int i = 0; i < this.layers.size(); i++) {
-      if (layerName.equals(this.layers.get(i).name)) {
+      if (layerName.equals(this.layers.get(i).toString())) {
         layerPos = i;
       }
     }
     if (layerPos == -1) {
       try {
-        this.view.destination.append("Given LayerRGB not found. Re-Enter command." + "\n");
+        this.view.destination.append("Given Layer not found. Re-Enter command." + "\n");
         return;
       } catch (Exception e) {
         throw new IllegalStateException(e.getMessage());
@@ -258,7 +276,7 @@ public class Project {
         throw new IllegalStateException(e.getMessage());
       }
     }
-    ArrayList<ArrayList<PixelRGB>> newPixels = this.layers.get(layerPos).pixels;
+    ArrayList<ArrayList<PixelRGB>> newPixels = this.layers.get(layerPos).getPixels();
     ArrayList<ArrayList<PixelRGB>> newLayer = new ArrayList<ArrayList<PixelRGB>>();
     int placeCounterA = 0;
     int placeCounterB = 0;
@@ -279,7 +297,7 @@ public class Project {
         placeCounterA = placeCounterA + 1;
       }
     }
-    this.layers.get(layerPos).pixels = newLayer;
+    this.layers.get(layerPos).assignPixels(newLayer);
   }
 
   /**
@@ -287,13 +305,12 @@ public class Project {
    *
    * @return an ArrayList of layers.
    */
-  public ArrayList<LayerRGB> getLayers() {
+  public ArrayList<Layer> getLayers() {
     return this.layers;
   }
 
   /**
    * A method that retrieves the height of the project.
-   *
    * @return the height of the initial layer.
    */
   public int getHeight() {
@@ -302,7 +319,6 @@ public class Project {
 
   /**
    * A method retrieves the width of the project.
-   *
    * @return the width of the intial layer.
    */
   public int getWidth() {
@@ -311,7 +327,6 @@ public class Project {
 
   /**
    * A method that retrieves the max value of the RGB values.
-   *
    * @return the max value of the RGB values.
    */
   public int getMaxValue() {
@@ -321,20 +336,19 @@ public class Project {
   /**
    * A method that changes the name of a filter, so that when
    * it is applied, the filter can be saved on the layer.
-   *
    * @param layerName    represents the name of the layer.
    * @param filterOption represents which filter is being choosen.
    */
   public void markFilter(String layerName, String filterOption) {
     int layerPos = -1;
     for (int i = 0; i < this.layers.size(); i++) {
-      if (layerName.equals(this.layers.get(i).name)) {
+      if (layerName.equals(this.layers.get(i).toString())) {
         layerPos = i;
       }
     }
     if (layerPos == -1) {
       try {
-        this.view.destination.append("Given LayerRGB not found. Re-Enter command." + "\n");
+        this.view.destination.append("Given Layer not found. Re-Enter command." + "\n");
         return;
       } catch (Exception e) {
         throw new IllegalStateException(e.getMessage());
@@ -344,27 +358,27 @@ public class Project {
   }
 
   /**
-   * A method that applies a unique filter to a given layer.
+   * A method that applies a unique filter to a given layer. This is used for saveImage
    * @param layerName    represents the name of the layer.
    * @param filterOption represents which filter is being chosen to be applied.
    */
-  public void setFilter(String layerName, String filterOption) {
+  public void setFilterOnSave(String layerName, String filterOption) {
     int layerPos = -1;
     for (int i = 0; i < this.layers.size(); i++) {
-      if (layerName.equals(this.layers.get(i).name)) {
+      if (layerName.equals(this.layers.get(i).toString())) {
         layerPos = i;
       }
     }
     if (layerPos == -1) {
       try {
-        this.view.destination.append("Given LayerRGB not found. Re-Enter command." + "\n");
+        this.view.destination.append("Given Layer not found. Re-Enter command." + "\n");
         return;
       } catch (Exception e) {
         throw new IllegalStateException(e.getMessage());
       }
     }
     if (filterOption.equals("normal")) {
-      this.layers.get(layerPos).filterOnCurrentLayer = "normal";
+      this.layers.get(layerPos).assignCurrentFilterString("normal");
     } else if (filterOption.equals("red-component")) {
       this.layers.get(layerPos).changeComponent("Red");
     } else if (filterOption.equals("green-component")) {
@@ -391,8 +405,8 @@ public class Project {
     else {
       try {
         this.view.destination.append("Invalid Filter Option. Reverted layer to normal.");
-        this.setFilter(layerName, this.layers.get(layerPos).filterOnCurrentLayer);
-        this.layers.get(layerPos).filterOnCurrentLayer = "normal";
+        this.setFilterOnSave(layerName, this.layers.get(layerPos).getCurrentFilterString());
+        this.layers.get(layerPos).assignCurrentFilterString("normal");
       } catch (Exception e) {
         throw new IllegalStateException(e.getMessage());
       }
