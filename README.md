@@ -60,4 +60,4 @@ In order to create a proper design for this assignment, we considered various co
 * quit
 
 # Citations 
-* The picture is a personal picture of my dog! No citations needed.
+* The picture is a personal picture of my dog, and all code was written without internet sources! No citations needed.
