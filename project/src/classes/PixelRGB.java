@@ -21,6 +21,7 @@ public class PixelRGB implements PixelType {
   private CollagerState state;
   private CollagerController controller;
   private Utils utils;
+  private TextView view;
 
   /**
    * First constructor for the PixelRGB class. This constructor is used for
@@ -32,10 +33,11 @@ public class PixelRGB implements PixelType {
    * @param state      represents the full state of the game.
    * @param controller represents the controller class that run methods for the main.
    */
-  public PixelRGB(int red, int green, int blue, CollagerState state, CollagerController controller) {
+  public PixelRGB(int red, int green, int blue, CollagerState state, CollagerController controller, TextView view) {
     this.state = state;
     this.controller = controller;
-    this.utils = new Utils(this.state, this.controller);
+    this.view = view;
+    this.utils = new Utils(this.state, this.controller, this.view);
     this.red = red;
     this.green = green;
     this.blue = blue;
@@ -53,10 +55,11 @@ public class PixelRGB implements PixelType {
    * @param controller represents the controller class that run methods for the main.
    */
   public PixelRGB(int red, int green, int blue, int alpha,
-                  CollagerState state, CollagerController controller) {
+                  CollagerState state, CollagerController controller, TextView view) {
     this.state = state;
     this.controller = controller;
-    this.utils = new Utils(this.state, this.controller);
+    this.view = view;
+    this.utils = new Utils(this.state, this.controller, this.view);
     this.red = red;
     this.green = green;
     this.blue = blue;
@@ -274,9 +277,10 @@ public class PixelRGB implements PixelType {
     double b = convertFn(pixelHSL.getHSLColorDouble("Hue"),
             pixelHSL.getHSLColorDouble("Saturation"),
             pixelHSL.getHSLColorDouble("Lightness"), 4) * 255;
-    this.red = (int) r;
-    this.green = (int) g;
-    this.blue = (int) b;
+    this.red = (int) Math.round(r);
+    this.green = (int) Math.round(g);
+    this.blue = (int) Math.round(b);
+    this.alpha = pixelHSL.getAlpha();
     this.limitRGBValues();
   }
 

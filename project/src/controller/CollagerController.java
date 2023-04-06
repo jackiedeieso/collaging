@@ -65,9 +65,14 @@ public class CollagerController {
         throw new IllegalStateException(exception.getMessage());
       }
     }
-    this.state.currentProject = new Project("C1", height, width, this.state, this);
+    this.state.currentProject = new Project("C1", height, width, this.state, this, this.view);
     this.state.currentProject.addInitialLayer();
     this.state.active = true;
+    try {
+      this.view.destination.append("New Project Made!" + "\n");
+    } catch (Exception e) {
+      throw new IllegalStateException(e.getMessage());
+    }
   }
 
   /**
@@ -125,6 +130,11 @@ public class CollagerController {
       }
     }
     pw.close();
+    try {
+      this.view.destination.append("Project Saved!" + "\n");
+    } catch (Exception e) {
+      throw new IllegalStateException(e.getMessage());
+    }
   }
 
   /**
@@ -189,15 +199,20 @@ public class CollagerController {
           int g = scLoading.nextInt();
           int b = scLoading.nextInt();
           int a = scLoading.nextInt();
-          pixels.get(i).add(new PixelRGB(r, g, b, a, this.state, this));
+          pixels.get(i).add(new PixelRGB(r, g, b, a, this.state, this, this.view));
         }
       }
-      layers.add(new Layer(pixels, layerName, filterName, this.state, this));
+      layers.add(new Layer(pixels, layerName, filterName, this.state, this, this.view));
     }
     while (scLoading.hasNext());
     this.state.currentProject = new Project("C1", height, width, maxValue,
-            layers, this.state, this);
+            layers, this.state, this, this.view);
     this.state.active = true;
+    try {
+      this.view.destination.append("Loaded Project Successfully" + "\n");
+    } catch (Exception e) {
+      throw new IllegalStateException(e.getMessage());
+    }
   }
 
   /**
@@ -207,6 +222,11 @@ public class CollagerController {
   public void addLayer(String[] input) {
     if (input.length > 1) {
       this.state.currentProject.addLayer(input[1]);
+      try {
+        this.view.destination.append("Layer added!" + "\n");
+      } catch (Exception e) {
+        throw new IllegalStateException(e.getMessage());
+      }
     }
     else {
       try {
@@ -235,6 +255,20 @@ public class CollagerController {
     }
     if (input.length > 1) {
       this.state.currentProject.saveImage(input);
+      if (!this.state.currentProject.forPreview) {
+        try {
+          this.view.destination.append("Image saved!" + "\n");
+        } catch (Exception e) {
+          throw new IllegalStateException(e.getMessage());
+        }
+      }
+      if (this.state.currentProject.forPreview) {
+        try {
+          this.view.destination.append("Preview loaded! " + "\n");
+        } catch (Exception e) {
+          throw new IllegalStateException(e.getMessage());
+        }
+      }
     }
   }
 
@@ -297,5 +331,10 @@ public class CollagerController {
       }
     }
     this.state.currentProject.markFilter(layerName, filterOption);
+    try {
+      this.view.destination.append("Filter set!" + "\n");
+    } catch (Exception e) {
+      throw new IllegalStateException(e.getMessage());
+    }
   }
 }

@@ -25,6 +25,8 @@ public class Project {
   TextView view;
   String blendingFilter;
 
+  public boolean forPreview;
+
   /**
    * First constructor for the Project class. This is used for creating a
    * new project.
@@ -36,17 +38,18 @@ public class Project {
    * @param controller represents the controller class that run methods for the main.
    */
   public Project(String name, int height, int width, CollagerState state,
-                 CollagerController controller) {
+                 CollagerController controller, TextView view) {
     this.state = state;
     this.controller = controller;
-    this.utils = new Utils(this.state, this.controller);
+    this.view = view;
+    this.utils = new Utils(this.state, this.controller, this.view);
     this.name = name;
     this.height = height;
     this.width = width;
     this.maxValue = utils.maxValue;
-    this.view = new TextView(this.state);
     this.layers = new ArrayList<Layer>();
     this.layeredPixels = new ArrayList<ArrayList<ArrayList<PixelRGB>>>();
+    this.forPreview = false;
   }
 
   /**
@@ -63,17 +66,18 @@ public class Project {
    */
   public Project(String name, int height, int width, int maxValue,
                  ArrayList<Layer> layers, CollagerState state,
-                 CollagerController controller) {
+                 CollagerController controller, TextView view) {
     this.state = state;
     this.controller = controller;
-    this.utils = new Utils(this.state, this.controller);
+    this.utils = new Utils(this.state, this.controller, this.view);
     this.name = name;
     this.height = height;
     this.width = width;
     this.maxValue = maxValue;
-    this.view = new TextView(this.state);
+    this.view = view;
     this.layers = layers;
     this.layeredPixels = new ArrayList<ArrayList<ArrayList<PixelRGB>>>();
+    this.forPreview = false;
   }
 
   /**
@@ -95,10 +99,10 @@ public class Project {
     for (int i = 0; i < this.height; i++) {
       pixels.add(new ArrayList<PixelRGB>());
       for (int k = 0; k < this.width; k++) {
-        pixels.get(i).add(new PixelRGB(255, 255, 255, 255, this.state, this.controller));
+        pixels.get(i).add(new PixelRGB(255, 255, 255, 255, this.state, this.controller, this.view));
       }
     }
-    this.layers.add(new Layer(pixels, "initial-layer", this.state, this.controller));
+    this.layers.add(new Layer(pixels, "initial-layer", this.state, this.controller, this.view));
   }
 
   /**
@@ -110,10 +114,10 @@ public class Project {
     for (int i = 0; i < this.height; i++) {
       pixels.add(new ArrayList<PixelRGB>());
       for (int k = 0; k < this.width; k++) {
-        pixels.get(i).add(new PixelRGB(255, 255, 255, 0, this.state, this.controller));
+        pixels.get(i).add(new PixelRGB(255, 255, 255, 0, this.state, this.controller, this.view));
       }
     }
-    this.layers.add(0, new Layer(pixels, name, this.state, this.controller));
+    this.layers.add(0, new Layer(pixels, name, this.state, this.controller, this.view));
   }
 
   /**
@@ -129,8 +133,7 @@ public class Project {
                   this.layers.get(i).getPixels().get(k).get(j).getColorInt("Green"),
                   this.layers.get(i).getPixels().get(k).get(j).getColorInt("Blue"),
                   this.layers.get(i).getPixels().get(k).get(j).getColorInt("Alpha"),
-                  this.state,
-                  this.controller);
+                  this.state, this.controller, this.view);
           this.layers.get(i).getSaveImagePixels().get(k).add(newPixel);
         }
       }
@@ -148,7 +151,7 @@ public class Project {
       this.setFilterOnSave(this.layers.get(d).toString(), this.layers.get(d).getCurrentFilter());
     }
     String name = input[1];
-    if (this.layers.size() == 1) {
+    if (this.layers.size() == 1 && !this.forPreview) {
       this.utils.saveImageToFile(this.height, this.width, this.maxValue,
               this.layers.get(0).getSaveImagePixels(), name);
       return;
@@ -182,7 +185,17 @@ public class Project {
       fillRow = new ArrayList<PixelRGB>();
     }
     this.layeredPixels = new ArrayList<ArrayList<ArrayList<PixelRGB>>>();
-    this.utils.saveImageToFile(this.height, this.width, this.maxValue, finalArray, name);
+    if (!this.forPreview) {
+      this.utils.saveImageToFile(this.height, this.width, this.maxValue, finalArray, name);
+    }
+    if (this.forPreview) {
+      if (this.layers.size() == 1) {
+        this.state.previewPixels = this.layers.get(0).getSaveImagePixels();
+      }
+      else {
+        this.state.previewPixels = finalArray;
+      }
+    }
   }
 
   /**
@@ -231,7 +244,7 @@ public class Project {
     int bPrimeInt = (int) bPrime;
     int aPrimeInt = (int) aPrime;
 
-    return new PixelRGB(rPrimeInt, gPrimeInt, bPrimeInt, aPrimeInt, this.state, this.controller);
+    return new PixelRGB(rPrimeInt, gPrimeInt, bPrimeInt, aPrimeInt, this.state, this.controller, this.view);
   }
 
   /**
@@ -246,7 +259,7 @@ public class Project {
    *                  down.
    */
   public void addImageToLayer(String layerName, String imageName, int xPosition, int yPosition) {
-    ImageUtil imageUtil = new ImageUtil(this.state, this.controller);
+    ImageUtil imageUtil = new ImageUtil(this.state, this.controller, this.view);
     if (xPosition < 0 || yPosition < 0 || xPosition > this.width || yPosition > this.height) {
       try {
         view.destination.append("X/Y Values out of bounds." + "\n");
@@ -300,6 +313,11 @@ public class Project {
       }
     }
     this.layers.get(layerPos).assignPixels(newLayer);
+    try {
+      this.view.destination.append("Image added to layer!");
+    } catch (Exception e) {
+      throw new IllegalStateException(e.getMessage());
+    }
   }
 
   /**

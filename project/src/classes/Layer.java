@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import controller.CollagerController;
 import state.CollagerState;
 import utils.Utils;
+import view.TextView;
 
 /**
  * Class which represents a singular layer in a project. The pixels
@@ -19,19 +20,22 @@ public class Layer {
   private CollagerController controller;
   private Utils utils;
 
+  private TextView view;
+
   /**
    * This is the first constructor for the Layer class, which is used
    * when making a layer.
    * @param pixels represents an image, in pixels.
    * @param name represents the name of a layer.
    */
-  public Layer(ArrayList<ArrayList<PixelRGB>> pixels, String name, CollagerState state, CollagerController controller) {
+  public Layer(ArrayList<ArrayList<PixelRGB>> pixels, String name, CollagerState state, CollagerController controller, TextView view) {
     this.pixels = pixels;
     this.saveImagePixels = new ArrayList<ArrayList<PixelRGB>>();
     this.name = name;
     this.filterOnCurrentLayer = "normal";
     this.state = state;
     this.controller = controller;
+    this.view = view;
   }
 
   /**
@@ -41,13 +45,14 @@ public class Layer {
    * @param name represents the name of a layer.
    * @param filterOnCurrentLayer represents the filter on a given layer.
    */
-  public Layer(ArrayList<ArrayList<PixelRGB>> pixels, String name, String filterOnCurrentLayer, CollagerState state, CollagerController controller) {
+  public Layer(ArrayList<ArrayList<PixelRGB>> pixels, String name, String filterOnCurrentLayer, CollagerState state, CollagerController controller, TextView view) {
     this.pixels = pixels;
     this.saveImagePixels = new ArrayList<ArrayList<PixelRGB>>();
     this.name = name;
     this.filterOnCurrentLayer = filterOnCurrentLayer;
     this.state = state;
     this.controller = controller;
+    this.view = view;
   }
 
   /**
@@ -214,7 +219,7 @@ public class Layer {
   public void blendMultiply(int layerPos) {
     for (int i = 0; i < this.saveImagePixels.size(); i++) {
       for (int k = 0; k < this.saveImagePixels.get(i).size(); k++) {
-        PixelHSL pixelHSL = new PixelHSL(this.saveImagePixels.get(i).get(k), this.state, this.controller);
+        PixelHSL pixelHSL = new PixelHSL(this.saveImagePixels.get(i).get(k), this.state, this.controller, this.view);
         pixelHSL.blendPixelMultiply(layerPos, i, k);
         this.saveImagePixels.get(i).set(k, new PixelRGB(pixelHSL, this.state, this.controller));
       }
@@ -230,8 +235,8 @@ public class Layer {
    */
   public void blendScreen(int layerPos) {
     for (int i = 0; i < this.saveImagePixels.size(); i++) {
-      for (int j = 0; i < this.saveImagePixels.get(i).size(); j++) {
-        PixelHSL pixelHSL = new PixelHSL(this.saveImagePixels.get(i).get(j), this.state, this.controller);
+      for (int j = 0; j < this.saveImagePixels.get(i).size(); j++) {
+        PixelHSL pixelHSL = new PixelHSL(this.saveImagePixels.get(i).get(j), this.state, this.controller, this.view);
         pixelHSL.blendPixelScreen(layerPos, i, j);
         this.saveImagePixels.get(i).set(j, new PixelRGB(pixelHSL, this.state, this.controller));
       }

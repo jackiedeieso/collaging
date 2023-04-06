@@ -1,5 +1,7 @@
 package view;
 
+import javax.swing.*;
+
 import state.CollagerState;
 
 /**
@@ -8,7 +10,9 @@ import state.CollagerState;
  */
 public class TextView {
   public Appendable destination;
+
   public CollagerState state;
+  public DefaultListModel<String> outputList;
 
   /**
    * This is the constructor for the TextView class, which allows
@@ -19,4 +23,11 @@ public class TextView {
     this.destination = System.out;
     this.state = state;
   }
+
+  public TextView(CollagerState state, CollagerGUIBuffer collagerGUIBuffer, DefaultListModel<String> outputList) {
+    this.state = state;
+    this.destination = collagerGUIBuffer;
+    this.outputList = outputList;
+  }
+
 }

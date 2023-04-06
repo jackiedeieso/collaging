@@ -16,6 +16,8 @@ public class CollagerState {
 
   public ArrayList<String> possibleFilters;
 
+  public ArrayList<ArrayList<PixelRGB>> previewPixels;
+
   /**
    * Constructor for CollageState that represents the initial state of
    * the game.
@@ -28,5 +30,6 @@ public class CollagerState {
             "brighten-value", "brighten-luma", "brighten-intensity",
             "darken-value", "darken-luma", "darken-intensity",
             "blend-difference", "blend-multiply", "blend-screen"));
+    this.previewPixels = new ArrayList<ArrayList<PixelRGB>>();
   }
 }

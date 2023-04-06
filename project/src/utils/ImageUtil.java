@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import classes.PixelRGB;
 import controller.CollagerController;
 import state.CollagerState;
+import view.TextView;
 
 
 /**
@@ -18,15 +19,18 @@ public class ImageUtil {
   CollagerState state;
   CollagerController controller;
 
+  TextView view;
+
   /**
    * This is the constructor for the ImageUtil class, which is used to scan
    * and import a PPM file.
    * @param state the current state of the game.
    * @param controller represents the directs the program.
    */
-  public ImageUtil(CollagerState state, CollagerController controller) {
+  public ImageUtil(CollagerState state, CollagerController controller, TextView view) {
     this.state = state;
     this.controller = controller;
+    this.view = view;
   }
 
   /**
@@ -71,10 +75,10 @@ public class ImageUtil {
         int r = sc.nextInt();
         int g = sc.nextInt();
         int b = sc.nextInt();
-        convertedPixels.get(i).add(new PixelRGB(r, g, b, this.state, this.controller));
+        convertedPixels.get(i).add(new PixelRGB(r, g, b, this.state, this.controller, this.view));
       }
     }
-    this.state.imageToBeAdded = convertedPixels;
+      this.state.imageToBeAdded = convertedPixels;
   }
 }
 

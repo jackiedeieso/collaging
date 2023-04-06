@@ -1,5 +1,9 @@
 package classes;
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+
 import controller.CollagerController;
 import interfaces.PixelType;
 import state.CollagerState;
@@ -14,9 +18,12 @@ public class PixelHSL implements PixelType {
   private double hue;
   private double saturation;
   private double lightness;
+  private int alpha;
   private CollagerState state;
   private CollagerController controller;
   private Utils utils;
+
+  private TextView view;
 
   /**
    * The constructor for the PixelHSL class.
@@ -26,13 +33,15 @@ public class PixelHSL implements PixelType {
    *                   in a given pixel.
    * @param lightness  represents how bright a pixel is.
    */
-  public PixelHSL(double hue, double saturation, double lightness, CollagerState state, CollagerController controller) {
+  public PixelHSL(double hue, double saturation, double lightness, int alpha, CollagerState state, CollagerController controller, TextView view) {
     this.hue = hue;
     this.saturation = saturation;
     this.lightness = lightness;
+    this.alpha = alpha;
     this.state = state;
     this.controller = controller;
-    this.utils = new Utils(this.state, this.controller);
+    this.view = view;
+    this.utils = new Utils(this.state, this.controller, this.view);
 
     if (hue > 360 || hue < 0) {
       throw new IllegalArgumentException("hue value is not within bounds.");
@@ -49,10 +58,13 @@ public class PixelHSL implements PixelType {
    * Constructor for the PixelHSL class that converts an RGB Pixel.
    * @param pixelRGB the pixel in RGB format that will be converted.
    */
-  public PixelHSL(PixelRGB pixelRGB, CollagerState state, CollagerController controller) {
+  public PixelHSL(PixelRGB pixelRGB, CollagerState state, CollagerController controller, TextView view) {
     this.state = state;
+    this.alpha = pixelRGB.getColorInt("Alpha");
     this.convertRGBtoHSL(pixelRGB);
     this.controller = controller;
+    this.view = view;
+    this.utils = new Utils(this.state, this.controller, this.view);
     if (this.hue > 360) {
       this.hue = 360;
     }
@@ -99,13 +111,20 @@ public class PixelHSL implements PixelType {
     return c;
   }
 
+  public int getAlpha() {
+    return this.alpha;
+  }
+
   /**
    * A method which converts an RGB value into an HSL value.
-   * @param pixelRGB represents a given RGB pixel value.
+   * @param pixelRGBInit represents a given RGB pixel value.
    */
-  public void convertRGBtoHSL(PixelRGB pixelRGB) {
-    double componentMax = Math.max(pixelRGB.getColorInt("Red"), Math.max(pixelRGB.getColorInt("Green"), pixelRGB.getColorInt("Blue")));
-    double componentMin = Math.min(pixelRGB.getColorInt("Red"), Math.min(pixelRGB.getColorInt("Green"), pixelRGB.getColorInt("Blue")));
+  public void convertRGBtoHSL(PixelRGB pixelRGBInit) {
+    double r = pixelRGBInit.getColorInt("Red") / 255.0;
+    double g = pixelRGBInit.getColorInt("Green") / 255.0;
+    double b = pixelRGBInit.getColorInt("Blue") / 255.0;
+    double componentMax = Math.max(r, Math.max(g, b));
+    double componentMin = Math.min(r, Math.min(g, b));
     double delta = componentMax - componentMin;
 
     double lightness = (componentMax + componentMin) / 2;
@@ -116,14 +135,14 @@ public class PixelHSL implements PixelType {
     } else {
       saturation = delta / (1 - Math.abs(2 * lightness - 1));
       hue = 0;
-      if (componentMax == pixelRGB.getColorInt("Red")) {
-        hue = (pixelRGB.getColorInt("Green") - pixelRGB.getColorInt("Blue")) / delta;
+      if (componentMax == r) {
+        hue = (g - b) / delta;
         hue = hue % 6;
-      } else if (componentMax == pixelRGB.getColorInt("Green")) {
-        hue = (pixelRGB.getColorInt("Blue") - pixelRGB.getColorInt("Red")) / delta;
+      } else if (componentMax == g) {
+        hue = (b - r) / delta;
         hue += 2;
-      } else if (componentMax == pixelRGB.getColorInt("Blue")) {
-        hue = (pixelRGB.getColorInt("Red") - pixelRGB.getColorInt("Green")) / delta;
+      } else if (componentMax == b) {
+        hue = (r - g) / delta;
         hue += 4;
       }
       hue = hue * 60;
@@ -156,7 +175,7 @@ public class PixelHSL implements PixelType {
     PixelHSL convertedPixel =
             new PixelHSL(this.state.currentProject.getLayers().
                     get(firstLayerNotTransparent).getPixels().get(row).get(col),
-                    this.state, this.controller);
+                    this.state, this.controller, this.view);
     this.lightness = this.lightness * convertedPixel.lightness;
   }
 
@@ -183,7 +202,7 @@ public class PixelHSL implements PixelType {
     PixelHSL convertedPixel =
             new PixelHSL(this.state.currentProject.getLayers().
                     get(firstLayerNotTransparent).getPixels().get(row).get(col),
-                    this.state, this.controller);
+                    this.state, this.controller, this.view);
     this.lightness = (1 - ((1 - this.lightness) * (1 - convertedPixel.lightness)));
   }
 }

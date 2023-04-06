@@ -30,7 +30,7 @@ public class Tests {
     assertEquals(state.active, false);
     view.state.active = true;
     assertEquals(state.active, true);
-    Utils utils = new Utils(state, controller);
+    Utils utils = new Utils(state, controller, view);
     utils.state.active = false;
     assertEquals(state.active, false);
   }
@@ -41,7 +41,7 @@ public class Tests {
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
     String response = "new-project 400 500";
-    Utils utils = new Utils(state, controller);
+    Utils utils = new Utils(state, controller, view);
     assertEquals(state.currentProject, null);
     utils.possibleOptions(response);
     assertEquals(state.currentProject.toString(), "C1");
@@ -76,7 +76,7 @@ public class Tests {
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
     String response = "add-layer layer1";
-    Utils utils = new Utils(state, controller);
+    Utils utils = new Utils(state, controller, view);
     utils.possibleOptions("new-project 20 10");
     utils.possibleOptions(response);
     assertEquals(state.currentProject.getLayers().size(), 2);
@@ -106,13 +106,13 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    Utils utils = new Utils(state, controller);
+    Utils utils = new Utils(state, controller, view);
     utils.possibleOptions("new-project 1000 1000");
-    PixelRGB pixel1 = new PixelRGB(173, 179, 151, 255, state, controller);
-    PixelRGB pixel2 = new PixelRGB(155, 155, 155, 0, state, controller);
+    PixelRGB pixel1 = new PixelRGB(173, 179, 151, 255, state, controller, view);
+    PixelRGB pixel2 = new PixelRGB(155, 155, 155, 0, state, controller, view);
     assertEquals(state.currentProject.formula(pixel1, pixel2).toString(), "(173, 179, 151, 255)");
-    pixel1 = new PixelRGB(173, 179, 151, 100, state, controller);
-    pixel2 = new PixelRGB(155, 155, 155, 155, state, controller);
+    pixel1 = new PixelRGB(173, 179, 151, 100, state, controller, view);
+    pixel2 = new PixelRGB(155, 155, 155, 155, state, controller, view);
     assertEquals(state.currentProject.formula(pixel1, pixel2).toString(), "(164, 167, 152, 194)");
   }
 
@@ -145,7 +145,7 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    Utils util = new Utils(state, controller);
+    Utils util = new Utils(state, controller, view);
     assertEquals(state.active, false);
     util.possibleOptions("new-project 100 100");
     assertEquals(state.active, true);
@@ -156,10 +156,10 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    Utils util = new Utils(state, controller);
+    Utils util = new Utils(state, controller, view);
     ArrayList<ArrayList<PixelRGB>> pixels = new ArrayList<ArrayList<PixelRGB>>();
     pixels.add(new ArrayList<PixelRGB>());
-    pixels.get(0).add(new PixelRGB(100, 100, 100, 255, state, controller));
+    pixels.get(0).add(new PixelRGB(100, 100, 100, 255, state, controller, view));
     util.saveImageToFile(1, 1, 255, pixels, "res/onePixelTest.ppm");
     Scanner saveImageScanner = new Scanner(new FileInputStream("res/onePixelTest.ppm"));
     saveImageScanner.next();
@@ -179,7 +179,7 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    PixelRGB pix = new PixelRGB(100, 100, 100, 255, state, controller);
+    PixelRGB pix = new PixelRGB(100, 100, 100, 255, state, controller, view);
     assertEquals(pix.getRGB(), new ArrayList<Integer>(Arrays.asList(100, 100, 100)));
   }
 
@@ -188,7 +188,7 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    PixelRGB pix = new PixelRGB(100, 100, 100, 255, state, controller);
+    PixelRGB pix = new PixelRGB(100, 100, 100, 255, state, controller, view);
     assertEquals(pix.getRGBA(), new ArrayList<Integer>(Arrays.asList(100, 100, 100, 255)));
   }
 
@@ -197,7 +197,7 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    PixelRGB pix = new PixelRGB(50, 60, 70, 100, state, controller);
+    PixelRGB pix = new PixelRGB(50, 60, 70, 100, state, controller, view);
     assertEquals(pix.getRGBAConvertRGB(), new ArrayList<Integer>(Arrays.asList(19, 23, 27)));
   }
 
@@ -206,7 +206,7 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    PixelRGB pix = new PixelRGB(350, 60, 150, 255, state, controller);
+    PixelRGB pix = new PixelRGB(350, 60, 150, 255, state, controller, view);
     controller.makeNewProject("new-project 100 100".split(" "));
     pix.checkRGBLimits();
     assertEquals(pix.getRGB(), new ArrayList<Integer>(Arrays.asList(255, 60, 150)));
@@ -217,7 +217,7 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    PixelRGB pix = new PixelRGB(100, 50, 100, 255, state, controller);
+    PixelRGB pix = new PixelRGB(100, 50, 100, 255, state, controller, view);
     controller.makeNewProject("new-project 100 100".split(" "));
     pix.brightenPixelValue();
     assertEquals(pix.toString(), "(200, 150, 200, 255)");
@@ -228,7 +228,7 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    PixelRGB pix = new PixelRGB(100, 50, 100, 255, state, controller);
+    PixelRGB pix = new PixelRGB(100, 50, 100, 255, state, controller, view);
     controller.makeNewProject("new-project 100 100".split(" "));
     pix.brightenPixelIntensity();
     assertEquals(pix.toString(), "(183, 133, 183, 255)");
@@ -239,7 +239,7 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    PixelRGB pix = new PixelRGB(20, 30, 40, 255, state, controller);
+    PixelRGB pix = new PixelRGB(20, 30, 40, 255, state, controller, view);
     controller.makeNewProject("new-project 100 100".split(" "));
     pix.brightenPixelLuma();
     assertEquals(pix.toString(), "(86, 96, 106, 255)");
@@ -250,7 +250,7 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    PixelRGB pix = new PixelRGB(30, 50, 100, 255, state, controller);
+    PixelRGB pix = new PixelRGB(30, 50, 100, 255, state, controller, view);
     controller.makeNewProject("new-project 100 100".split(" "));
     pix.darkenPixelValue();
     assertEquals(pix.toString(), "(0, 20, 70, 255)");
@@ -261,7 +261,7 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    PixelRGB pix = new PixelRGB(30, 50, 100, 255, state, controller);
+    PixelRGB pix = new PixelRGB(30, 50, 100, 255, state, controller, view);
     controller.makeNewProject("new-project 100 100".split(" "));
     pix.darkenPixelIntensity();
     assertEquals(pix.toString(), "(0, 0, 40, 255)");
@@ -272,7 +272,7 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    PixelRGB pix = new PixelRGB(150, 20, 100, 255, state, controller);
+    PixelRGB pix = new PixelRGB(150, 20, 100, 255, state, controller, view);
     controller.makeNewProject("new-project 100 100".split(" "));
     pix.darkenPixelLuma();
     assertEquals(pix.toString(), "(15, 0, 0, 255)");
@@ -283,7 +283,7 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    state.currentProject = new Project("test", 100, 100, state, controller);
+    state.currentProject = new Project("test", 100, 100, state, controller, view);
     state.currentProject.addInitialLayer();
     assertEquals(state.currentProject.getLayers().get(0).toString(), "initial-layer");
   }
@@ -304,7 +304,7 @@ public class Tests {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    ImageUtil imageUtils = new ImageUtil(state, controller);
+    ImageUtil imageUtils = new ImageUtil(state, controller, view);
     imageUtils.readPPM("res/sample.ppm");
     assertEquals(state.imageToBeAdded.get(0).get(0).toString(), "(173, 179, 151, 255)");
   }

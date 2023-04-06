@@ -9,9 +9,9 @@ import javax.swing.*;
 
 import classes.PixelRGB;
 import controller.CollagerController;
+import graphics.CollagerFrame;
 import state.CollagerState;
 import view.TextView;
-import graphics.Frame;
 
 /**
  * class for Utils.
@@ -20,6 +20,7 @@ public class Utils {
   public int maxValue;
   public CollagerState state;
   public CollagerController controller;
+  public TextView view;
 
   /**
    * Utility class that holds miscellaneous methods.
@@ -27,10 +28,11 @@ public class Utils {
    * @param controller represents the controller class, which controls most of
    *                   the actions that a user can do.
    */
-  public Utils(CollagerState state, CollagerController controller) {
+  public Utils(CollagerState state, CollagerController controller, TextView view) {
     this.maxValue = 255;
     this.state = state;
     this.controller = controller;
+    this.view = view;
   }
 
   /**
@@ -40,7 +42,6 @@ public class Utils {
    */
   public void possibleOptions(String response) {
     boolean throwMessage = true;
-    TextView view = new TextView(this.state);
     String[] splited = response.split(" ");
     if (splited[0].equals("new-project")) {
       this.controller.makeNewProject(splited);
@@ -74,7 +75,7 @@ public class Utils {
       if (splited[0].equals("save-project") || splited[0].equals("add-layer")
               || splited[0].equals("save-image") || splited[0].equals("add-image-to-layer")) {
         try {
-          view.destination.append("Cannot do command without "
+          this.view.destination.append("Cannot do command without "
                   + "importing or making a project." + "\n");
         }
         catch (Exception e) {
@@ -83,7 +84,7 @@ public class Utils {
       }
       else {
         try {
-          view.destination.append("Unknown Command. Re-Type" + "\n");
+          this.view.destination.append("Unknown Command. Re-Type" + "\n");
         }
         catch (Exception e) {
           throw new IllegalStateException(e.getMessage());
@@ -138,11 +139,7 @@ public class Utils {
     pw.close();
   }
 
-  public void startGUI() {
-    Frame.setDefaultLookAndFeelDecorated(false);
-    Frame frame = new Frame();
-    
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setVisible(true);
+  public void startGUI(CollagerState state, CollagerController controller, TextView view, DefaultListModel<String> outputList) {
+    CollagerFrame frame = new CollagerFrame(this.state, this.controller, this, this.view, outputList);
   }
 }

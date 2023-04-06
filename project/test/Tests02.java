@@ -6,6 +6,7 @@ import java.util.Scanner;
 import classes.PixelHSL;
 import classes.PixelRGB;
 import controller.CollagerController;
+import secondpart.RepresentationConverter;
 import state.CollagerState;
 import utils.Utils;
 import view.TextView;
@@ -22,7 +23,7 @@ public class Tests02 {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    Utils utils = new Utils(state, controller);
+    Utils utils = new Utils(state, controller, view);
   }
 
   @Test
@@ -30,7 +31,7 @@ public class Tests02 {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    Utils utils = new Utils(state, controller);
+    Utils utils = new Utils(state, controller, view);
     utils.possibleOptions("new-project 1000 1000");
     utils.possibleOptions("add-layer purple");
     utils.possibleOptions("add-layer mainImage");
@@ -46,7 +47,7 @@ public class Tests02 {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    Utils utils = new Utils(state, controller);
+    Utils utils = new Utils(state, controller, view);
     utils.possibleOptions("new-project 100 100");
     utils.possibleOptions("add-layer purple");
     utils.possibleOptions("add-layer mainImage");
@@ -61,7 +62,7 @@ public class Tests02 {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    Utils utils = new Utils(state, controller);
+    Utils utils = new Utils(state, controller, view);
     utils.possibleOptions("new-project 1000 1000");
     utils.possibleOptions("add-image-to-layer initial-layer tako.ppm 0 0");
     utils.possibleOptions("set-filter initial-layer red-component");
@@ -76,7 +77,7 @@ public class Tests02 {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    Utils utils = new Utils(state, controller);
+    Utils utils = new Utils(state, controller, view);
     utils.possibleOptions("new-project 1000 1000");
     utils.possibleOptions("add-layer purple");
     utils.possibleOptions("add-layer mainImage");
@@ -90,13 +91,41 @@ public class Tests02 {
   }
 
   @Test
+  public void testBlendScreen() {
+    CollagerState state = new CollagerState();
+    TextView view = new TextView(state);
+    CollagerController controller = new CollagerController(state, view, this.sc);
+    Utils utils = new Utils(state, controller, view);
+    utils.possibleOptions("new-project 1000 1000");
+    utils.possibleOptions("add-layer purple");
+    utils.possibleOptions("add-layer mainImage");
+
+    utils.possibleOptions("add-image-to-layer mainImage tako.ppm 0 0");
+    utils.possibleOptions("add-image-to-layer purple purpleSquare.ppm 0 300");
+    utils.possibleOptions("set-filter mainImage blend-screen");
+    utils.possibleOptions("save-project testBlendScreen");
+    utils.possibleOptions("save-image testBlendScreen.ppm");
+  }
+
+  @Test
   public void testHSLToRGB() {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
-    Utils utils = new Utils(state, controller);
-    PixelRGB testPixel = new PixelRGB(147, 74, 150, state, controller);
-    PixelHSL testConvert = new PixelHSL(testPixel, state, controller);
-    assertEquals(new PixelRGB(testConvert, state, controller).toString(), "(147, 74, 150)");
+    Utils utils = new Utils(state, controller, view);
+    RepresentationConverter converter = new RepresentationConverter();
+    PixelRGB testPixel = new PixelRGB(147, 74, 150, state, controller, view);
+    PixelHSL testConvert = new PixelHSL(testPixel, state, controller, view);
+    assertEquals(new PixelRGB(testConvert, state, controller).toString(), "(147, 74, 150, 255)");
+  }
+
+  @Test
+  public void testNewImage() {
+    CollagerState state = new CollagerState();
+    TextView view = new TextView(state);
+    CollagerController controller = new CollagerController(state, view, this.sc);
+    Utils utils = new Utils(state, controller, view);
+    utils.possibleOptions("new-project 100 100");
+    utils.possibleOptions("save-image testNewImage.ppm");
   }
 }
