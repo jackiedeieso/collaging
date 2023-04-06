@@ -39,3 +39,6 @@ In order to create a proper design for this assignment, we considered various co
 * save-image file-name: Saves the project as a ppm file with the given file-name. This method also applies all filters to their layers.
 
 * quit: ends the program and quits out.
+
+# Citations 
+* The picture is a personal picture of my dog! No citations needed.
