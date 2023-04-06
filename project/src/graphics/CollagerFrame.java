@@ -57,40 +57,30 @@ public class CollagerFrame extends JFrame implements ActionListener {
 
     // frame settings
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    this.setLayout(null);
     this.setSize(1200, 950);
     this.setVisible(true);
+    this.setLayout(new BorderLayout(2, 2));
 
     // picture panel
     this.picturePanel = new PreviewPanel(this.state);
-    this.pictureLabel = new JLabel();
-    this.pictureLabel.setText("Picture!!");
-    this.pictureLabel.setBounds(410, 5, 390, 25);
-    this.add(this.picturePanel);
-
-    // dialogBox setup
-    this.dialogBox = new JPanel();
-    this.dialogBox.setBounds(10, 830, 800, 100);
-    this.dialogBox.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-    this.dialogBox.setLayout(null);
+    this.picturePanel.setSize(800, 800);
+    this.add(picturePanel, BorderLayout.WEST);
 
     // commandPanel setup
     this.commandPanel = new JPanel();
-    Border commandBorder = BorderFactory.createTitledBorder("Commands");
-    this.commandPanel.setBorder(commandBorder);
-    this.commandPanel.setBounds(810, 25, 280, 280);
     this.commandPanel.setLayout(null);
+    this.commandPanel.setSize(280, 280);
     this.addCommandButtons();
     this.add(this.commandPanel);
 
     // output setup
     this.outputList = outputList;
     this.outputList.addElement("---Collager Responses---");
+    this.dialogBox = new JPanel();
     this.listOfResponses = new JList<>(this.outputList);
-    this.listOfResponses.setBounds(0, 0, 800, 100);
-    this.listOfResponses.setLayout(null);
     this.dialogBox.add(this.listOfResponses);
-    this.add(this.dialogBox);
+    this.dialogBox.setSize( 800, 100);
+    this.add(this.dialogBox, BorderLayout.SOUTH);
     this.getContentPane();
     this.pack();
   }
@@ -152,10 +142,6 @@ public class CollagerFrame extends JFrame implements ActionListener {
     this.quitButton.setText("quit");
     this.quitButton.addActionListener(this);
     this.commandPanel.add(quitButton);
-  }
-
-  public Dimension getPreferredSize() {
-    return new Dimension(1200, 950);
   }
 
   @Override

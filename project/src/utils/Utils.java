@@ -141,5 +141,6 @@ public class Utils {
 
   public void startGUI(CollagerState state, CollagerController controller, TextView view, DefaultListModel<String> outputList) {
     CollagerFrame frame = new CollagerFrame(this.state, this.controller, this, this.view, outputList);
+    frame.setSize(1200, 950);
   }
 }

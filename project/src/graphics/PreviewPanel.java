@@ -18,8 +18,11 @@ public class PreviewPanel extends Panel {
     // make picture preview panel.
     this.setBounds(10, 30, 800, 800);
     this.setLayout(null);
+    this.setVisible(true);
+  }
 
-
+  public Dimension getPreferredSize() {
+    return new Dimension(800, 800);
   }
 
   public void paint(Graphics g) {
