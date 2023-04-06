@@ -223,6 +223,22 @@ public class Layer {
   }
 
   /**
+   * A method that brightens an image by using all layers
+   * involved.
+   * @param layerPos represents the top left corner position of
+   *                 the layer.
+   */
+  public void blendScreen(int layerPos) {
+    for (int i = 0; i < this.saveImagePixels.size(); i++) {
+      for (int j = 0; i < this.saveImagePixels.get(i).size(); j++) {
+        PixelHSL pixelHSL = new PixelHSL(this.saveImagePixels.get(i).get(j), this.state, this.controller);
+        pixelHSL.blendPixelScreen(layerPos, i, j);
+        this.saveImagePixels.get(i).set(j, new PixelRGB(pixelHSL, this.state, this.controller));
+      }
+    }
+  }
+
+  /**
    * A method that labels the current layers filter.
    * @param filterOption represents which filter is being used on
    *                     a given layer.
@@ -242,6 +258,10 @@ public class Layer {
 
   public void assignPixels(ArrayList<ArrayList<PixelRGB>> newLayer) {
     this.pixels = newLayer;
+  }
+
+  public void resetSaveImagePixels() {
+    this.saveImagePixels = new ArrayList<ArrayList<PixelRGB>>();
   }
 }
 

@@ -121,12 +121,13 @@ public class Project {
    */
   public void populateSavePixels() {
     for (int i = 0; i < this.layers.size(); i++) {
+      this.layers.get(i).resetSaveImagePixels();
       for (int k = 0; k < this.layers.get(i).getPixels().size(); k++) {
         this.layers.get(i).getSaveImagePixels().add(new ArrayList<PixelRGB>());
         for (int j = 0; j < this.layers.get(i).getPixels().get(k).size(); j++) {
           PixelRGB newPixel = new PixelRGB(this.layers.get(i).getPixels().get(k).get(j).getColorInt("Red"),
-                  this.layers.get(i).getPixels().get(k).get(j).getColorInt("Blue"),
                   this.layers.get(i).getPixels().get(k).get(j).getColorInt("Green"),
+                  this.layers.get(i).getPixels().get(k).get(j).getColorInt("Blue"),
                   this.layers.get(i).getPixels().get(k).get(j).getColorInt("Alpha"),
                   this.state,
                   this.controller);
@@ -142,8 +143,8 @@ public class Project {
    *              file given by the user.
    */
   public void saveImage(String[] input) {
+    this.populateSavePixels();
     for (int d = 0; d < this.layers.size(); d++) {
-      this.populateSavePixels();
       this.setFilterOnSave(this.layers.get(d).toString(), this.layers.get(d).getCurrentFilter());
     }
     String name = input[1];
@@ -180,6 +181,7 @@ public class Project {
       finalArray.add(fillRow);
       fillRow = new ArrayList<PixelRGB>();
     }
+    this.layeredPixels = new ArrayList<ArrayList<ArrayList<PixelRGB>>>();
     this.utils.saveImageToFile(this.height, this.width, this.maxValue, finalArray, name);
   }
 
@@ -401,6 +403,8 @@ public class Project {
       this.layers.get(layerPos).blendDifference(layerPos);
     } else if (filterOption.equalsIgnoreCase("blend-multiply")) {
       this.layers.get(layerPos).blendMultiply(layerPos);
+    } else if (filterOption.equalsIgnoreCase("blend-screen")) {
+      this.layers.get(layerPos).blendScreen(layerPos);
     }
     else {
       try {

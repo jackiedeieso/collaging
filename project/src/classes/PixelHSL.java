@@ -26,7 +26,7 @@ public class PixelHSL implements PixelType {
    *                   in a given pixel.
    * @param lightness  represents how bright a pixel is.
    */
-  PixelHSL(double hue, double saturation, double lightness, CollagerState state, CollagerController controller) {
+  public PixelHSL(double hue, double saturation, double lightness, CollagerState state, CollagerController controller) {
     this.hue = hue;
     this.saturation = saturation;
     this.lightness = lightness;
@@ -34,7 +34,7 @@ public class PixelHSL implements PixelType {
     this.controller = controller;
     this.utils = new Utils(this.state, this.controller);
 
-    if (hue > 360 || hue <= 0) {
+    if (hue > 360 || hue < 0) {
       throw new IllegalArgumentException("hue value is not within bounds.");
     }
     if (saturation > 1 || saturation < 0) {
@@ -49,10 +49,28 @@ public class PixelHSL implements PixelType {
    * Constructor for the PixelHSL class that converts an RGB Pixel.
    * @param pixelRGB the pixel in RGB format that will be converted.
    */
-  PixelHSL(PixelRGB pixelRGB, CollagerState state, CollagerController controller) {
+  public PixelHSL(PixelRGB pixelRGB, CollagerState state, CollagerController controller) {
     this.state = state;
     this.convertRGBtoHSL(pixelRGB);
     this.controller = controller;
+    if (this.hue > 360) {
+      this.hue = 360;
+    }
+    if (this.saturation > 1) {
+      this.saturation = 1;
+    }
+    if (this.lightness > 1) {
+      this.lightness = 1;
+    }
+    if (this.hue < 0) {
+      this.hue = 0;
+    }
+    if (this.saturation < 0) {
+      this.saturation = 0;
+    }
+    if (this.lightness < 0) {
+      this.lightness = 0;
+    }
   }
 
   /**
@@ -76,7 +94,6 @@ public class PixelHSL implements PixelType {
       c = this.lightness;
     }
     if (!validColor) {
-      System.out.println(c);
       throw new IllegalStateException("Invalid color called for.");
     }
     return c;
@@ -111,7 +128,6 @@ public class PixelHSL implements PixelType {
       }
       hue = hue * 60;
     }
-
     this.hue = hue;
     this.lightness = lightness;
     this.saturation = saturation;
@@ -142,5 +158,32 @@ public class PixelHSL implements PixelType {
                     get(firstLayerNotTransparent).getPixels().get(row).get(col),
                     this.state, this.controller);
     this.lightness = this.lightness * convertedPixel.lightness;
+  }
+
+  /**
+   * A method that lightens a pixel based on the layers underneath
+   * the desired filtering layer.
+   * @param layerPos represents the layer to be lightened.
+   * @param row represents the x position of a pixel.
+   * @param col represents the y position of a pixel.
+   */
+  public void blendPixelScreen(int layerPos, int row, int col) {
+    int firstLayerNotTransparent = -1;
+    TextView view = new TextView(this.state);
+    for (int i = 1; i <= this.state.currentProject.getLayers().size() - layerPos; i++) {
+      if (this.state.currentProject.getLayers().get(layerPos + i)
+              .getPixels().get(row).get(col).getColorDouble("Alpha") > 0) {
+        firstLayerNotTransparent = layerPos + i;
+        break;
+      }
+    }
+    if (firstLayerNotTransparent == -1) {
+      return;
+    }
+    PixelHSL convertedPixel =
+            new PixelHSL(this.state.currentProject.getLayers().
+                    get(firstLayerNotTransparent).getPixels().get(row).get(col),
+                    this.state, this.controller);
+    this.lightness = (1 - ((1 - this.lightness) * (1 - convertedPixel.lightness)));
   }
 }

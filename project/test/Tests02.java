@@ -3,6 +3,8 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Scanner;
 
+import classes.PixelHSL;
+import classes.PixelRGB;
 import controller.CollagerController;
 import state.CollagerState;
 import utils.Utils;
@@ -31,13 +33,10 @@ public class Tests02 {
     Utils utils = new Utils(state, controller);
     utils.possibleOptions("new-project 1000 1000");
     utils.possibleOptions("add-layer purple");
-    utils.possibleOptions("add-layer black");
-
     utils.possibleOptions("add-layer mainImage");
     utils.possibleOptions("add-image-to-layer mainImage tako.ppm 0 0");
-    utils.possibleOptions("add-image-to-layer purple purple.ppm 0 0");
-    utils.possibleOptions("add-image-to-layer black black.ppm 0 100");
-
+    utils.possibleOptions("add-image-to-layer purple PurpleSquare.ppm 0 0");
+    utils.possibleOptions("save-image testBlendDifferenceBeforeFilter");
     utils.possibleOptions("set-filter mainImage blend-difference");
     utils.possibleOptions("save-image testBlendDifference.ppm");
   }
@@ -78,17 +77,26 @@ public class Tests02 {
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
     Utils utils = new Utils(state, controller);
-    utils.possibleOptions("new-project 200 200");
+    utils.possibleOptions("new-project 1000 1000");
     utils.possibleOptions("add-layer purple");
-    utils.possibleOptions("add-layer black");
     utils.possibleOptions("add-layer mainImage");
 
     utils.possibleOptions("add-image-to-layer mainImage tako.ppm 0 0");
-    utils.possibleOptions("add-image-to-layer purple purple.ppm 0 0");
-    utils.possibleOptions("add-image-to-layer black black.ppm 0 100");
+    utils.possibleOptions("add-image-to-layer purple purpleSquare.ppm 0 300");
 
     utils.possibleOptions("set-filter mainImage blend-multiply");
     utils.possibleOptions("save-project testBlendMultiply");
     utils.possibleOptions("save-image testBlendMultiply.ppm");
+  }
+
+  @Test
+  public void testHSLToRGB() {
+    CollagerState state = new CollagerState();
+    TextView view = new TextView(state);
+    CollagerController controller = new CollagerController(state, view, this.sc);
+    Utils utils = new Utils(state, controller);
+    PixelRGB testPixel = new PixelRGB(147, 74, 150, state, controller);
+    PixelHSL testConvert = new PixelHSL(testPixel, state, controller);
+    assertEquals(new PixelRGB(testConvert, state, controller).toString(), "(147, 74, 150)");
   }
 }

@@ -26,6 +26,7 @@ public class CollagerState {
     this.possibleFilters = new ArrayList<String>(Arrays.asList(
             "normal", "red-component", "green-component", "blue-component",
             "brighten-value", "brighten-luma", "brighten-intensity",
-                    "darken-value", "darken-luma", "darken-intensity", "blend-difference", "blend-multiply"));
+            "darken-value", "darken-luma", "darken-intensity",
+            "blend-difference", "blend-multiply", "blend-screen"));
   }
 }
