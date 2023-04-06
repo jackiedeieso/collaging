@@ -7,7 +7,9 @@ In order to create a proper design for this assignment, we considered various co
 # Classes & Interfaces 
 * Layer: The class Layer is used as a representation of a layer in a project. There is an initial layer when a new project is created - titled initial-layer - which represents the bottom-most layer in the project. This layer has a unique height and width input by the user. The first layer is then created, which is simply a plain white background. After the initial creation of the intial layer, the user is able to add layers. When a user creates their own layer, they are able to give it a unique name. This class is constructed such that it has two constructors, one for the initial layer of the game - which will be the same every time, except for width and height - and one for when the users wants to create a new layer. This allows for structure within the initial layer, and flexibilty in the unique layers.
 
-* Pixel: The class Pixel is used as a representation for a Pixel in the project. There are two different types of Pixels, three-component pixels and four-component pixels. For three component pixels, there is a red value, a green value, and a blue value. For four-component Pixels, it is RGB values, with an additional value: the Alpha value. This value determines how transparent a given Pixel is. In this class, there are three different constructors. The first constructor is made for three-component pixels, and simply sets the alpha value to 255. The second constructor is used for four-component pixels, and allows for a unique alpha value to be interpreted. For the last constructor, we decided to create an empty constructor. We were experiencing a bug, and this got rid of the bug. 
+* PixelRGB: The class Pixel is used as a representation for an RGB or RGBA Pixel in the project. There are two different types of Pixels, three-component pixels and four-component pixels. For three component pixels, there is a red value, a green value, and a blue value. For four-component Pixels, it is RGB values, with an additional value: the Alpha value. This value determines how transparent a given Pixel is. In this class, there are three different constructors. The first constructor is made for three-component pixels, and simply sets the alpha value to 255. The second constructor is used for four-component pixels, and allows for a unique alpha value to be interpreted. For the last constructor, we decided to create an empty constructor. We were experiencing a bug, and this got rid of the bug. 
+
+* PixelHSL: The class PixelHSL is used as a representation for a Pixel with HSL values. HSL stands for hue, saturation, and lightness, and is another way of storing information in a pixel. The hue value is betweeen 0 and 360, while the saturation and brightnesss values are from 0 to 1. The first contructor in this class is used for means of calling the state, controller, and Utils classes. The second constructor is used to convert a RGB Pixel into an HSL Pixel. This is meant for specific filters that are applied using the HSL format. 
 
 * Project: The class Project is a representation of a singular project. A project contains multiple layers, which may or may not have images. This class is what controls all of the commands that allow a user to make a project, load a project in, save a project, save an image, add a layer, and add an image to a layer. There are two constructors, one that is used for creating a new project, and another for loading an existing project into the program.  
 
@@ -23,7 +25,15 @@ In order to create a proper design for this assignment, we considered various co
 
 * TextView: the class TextView controls what the program responds with when a user inputs a command. This is also used when the user types in an incorrect command, which will prompt the user to type in a valid command.
 
-# Command List
+* SwingFeatures: This is a class that plays a part in opening the main window for the Graphical User Interface (GUI) of 
+
+* SwingFeaturesFrame: This is a class that opens the main window for the GUI used. There is only one constructor, and it is empty. 
+
+* RepresentationConverter: This is a class that contains utility methods to convert an RGB representation to HSL and back, and print those results.
+
+* Frame: Thisclass is a representation of a frame, which is used for the GUI. 
+
+# Command Line
 * new-project canvas-height canvas-width: Creates a new project file. The new project comes with one layer, which is named "initial-layer" and can be accessed with that name.
 
 * load-project path-to-project-file: loads a .txt file with the right format into the program. (The project files are saved as .txt).
@@ -39,3 +49,25 @@ In order to create a proper design for this assignment, we considered various co
 * save-image file-name: Saves the project as a ppm file with the given file-name. This method also applies all filters to their layers.
 
 * quit: ends the program and quits out.
+
+# Command Script
+* new-project 100 100
+* add-layer blue-layer
+* add-image-to-layer blue-layer res/sample.ppm 0 0
+* set-filter blue-layer blue-component
+* add-layer red-layer
+* add-image-to-layer red-layer res/sample.ppm 20 20
+* set-filter red-layer red-component
+* add-layer brightened-layer
+* add-image-to-layer brightened-layer res/sample.ppm 40 40
+* set-filter brightened-layer brighten-luma
+* add-layer darkened-layer
+* add-image-to-layer darkened-layer res/sample.ppm 60 60
+* set-filter darkened-layer darken-value
+* save-project
+* res/CommandsProject
+* save-image res/CommandsProject.ppm
+* quit
+
+# Citations 
+* The picture is a personal picture of my dog, and all code was written without internet sources! No citations needed.
