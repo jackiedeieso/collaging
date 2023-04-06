@@ -23,7 +23,7 @@ In order to create a proper design for this assignment, we considered various co
 
 * TextView: the class TextView controls what the program responds with when a user inputs a command. This is also used when the user types in an incorrect command, which will prompt the user to type in a valid command.
 
-# Command Script
+# Command Line
 * new-project canvas-height canvas-width: Creates a new project file. The new project comes with one layer, which is named "initial-layer" and can be accessed with that name.
 
 * load-project path-to-project-file: loads a .txt file with the right format into the program. (The project files are saved as .txt).
@@ -39,6 +39,25 @@ In order to create a proper design for this assignment, we considered various co
 * save-image file-name: Saves the project as a ppm file with the given file-name. This method also applies all filters to their layers.
 
 * quit: ends the program and quits out.
+
+# Command Script
+* new-project 100 100
+* add-layer blue-layer
+* add-image-to-layer blue-layer res/sample.ppm 0 0
+* set-filter blue-layer blue-component
+* add-layer red-layer
+* add-image-to-layer red-layer res/sample.ppm 20 20
+* set-filter red-layer red-component
+* add-layer brightened-layer
+* add-image-to-layer brightened-layer res/sample.ppm 40 40
+* set-filter brightened-layer brighten-luma
+* add-layer darkened-layer
+* add-image-to-layer darkened-layer res/sample.ppm 60 60
+* set-filter darkened-layer darken-value
+* save-project
+* res/CommandsProject
+* save-image res/CommandsProject.ppm
+* quit
 
 # Citations 
 * The picture is a personal picture of my dog! No citations needed.
