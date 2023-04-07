@@ -17,21 +17,19 @@ In order to create a proper design for this assignment, we considered various co
 
 * Main: The class Main runs the program in its entirety. Once the user enters a command, the Main sends the user's input to the Utilities class, where the information is split up and sent to the correct method in the controller.
 
-* CollagerState: the class CollagerState serves as a place where the current project data is held. It allows multiple class and methods to affect the same project object, without a direct connection. 
+* CollagerState: The class CollagerState serves as a place where the current project data is held. It allows multiple class and methods to affect the same project object, without a direct connection. 
 
-* ImageUtil: the class ImageUtil contains the method readPPM, which reads a PPM file, and saves it so it can be added to a layer. 
+* ImageUtil: The class ImageUtil contains the method readPPM, which reads a PPM file, and saves it so it can be added to a layer. 
 
-* Utils: the class Utils is where miscellaneous helper methods are placed.  
+* Utils: The class Utils is where miscellaneous helper methods are placed.  
 
-* TextView: the class TextView controls what the program responds with when a user inputs a command. This is also used when the user types in an incorrect command, which will prompt the user to type in a valid command.
+* TextView: The class TextView controls what the program responds with when a user inputs a command. This is also used when the user types in an incorrect command, which will prompt the user to type in a valid command.
 
-* SwingFeatures: This is a class that plays a part in opening the main window for the Graphical User Interface (GUI) of 
+* CollagerGUIBuffer: The class CollagerGUIBuffer is a representation of the Appendable used in order to run the Collager GUI. 
 
-* SwingFeaturesFrame: This is a class that opens the main window for the GUI used. There is only one constructor, and it is empty. 
+* CollagerFrame: The class CollagerFrame is a representation of the window, or frame, that the GUI uses. The constructor doesn't take in anything, but is used to design and organize the panel. Some of these design choices include creating buttons, scrollboxes, etc. 
 
-* RepresentationConverter: This is a class that contains utility methods to convert an RGB representation to HSL and back, and print those results.
-
-* Frame: Thisclass is a representation of a frame, which is used for the GUI. 
+* PreviewPanel: This class is a representation of the panel used for project. This class is mainly used for importing images onto given layers.
 
 # Command Line
 * new-project canvas-height canvas-width: Creates a new project file. The new project comes with one layer, which is named "initial-layer" and can be accessed with that name.
@@ -49,25 +47,6 @@ In order to create a proper design for this assignment, we considered various co
 * save-image file-name: Saves the project as a ppm file with the given file-name. This method also applies all filters to their layers.
 
 * quit: ends the program and quits out.
-
-# Command Script
-* new-project 100 100
-* add-layer blue-layer
-* add-image-to-layer blue-layer res/sample.ppm 0 0
-* set-filter blue-layer blue-component
-* add-layer red-layer
-* add-image-to-layer red-layer res/sample.ppm 20 20
-* set-filter red-layer red-component
-* add-layer brightened-layer
-* add-image-to-layer brightened-layer res/sample.ppm 40 40
-* set-filter brightened-layer brighten-luma
-* add-layer darkened-layer
-* add-image-to-layer darkened-layer res/sample.ppm 60 60
-* set-filter darkened-layer darken-value
-* save-project
-* res/CommandsProject
-* save-image res/CommandsProject.ppm
-* quit
 
 # Citations 
 * The picture is a personal picture of my dog, and all code was written without internet sources! No citations needed.
