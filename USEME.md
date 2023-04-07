@@ -1,3 +1,12 @@
 # How To Use The Collager GUI
 
-* 
+* In order to open the GUI, the user must type ***java -jar Program.jar*** into the command line. 
+* Once the GUI is opened, the user will find that there is an open box on the left side, which represents where the project preview will be shown. In addition, on the right side, there are multiple buttons which allow a user to make a new projectt, load a project, add an image to a layer, add a layer, set a filter, save an image, and save a project. Finally, under these buttons there is a display of the layer, with the current layer highlighted. 
+* When the user presses on one of the buttons, it creates a pop up window, that allows the user to type in what they want, depending on which button is pressed. 
+* On the bottom, there is command output that shows the user if they type in the incorrect information for the given button. 
+* The user can then create a new project, and if the project is too large for the space given to it, the user will be able to scroll in order to get a view of the entire image.
+* If the user desires to quit, they can press the quit button, which will close out the GUI window. 
+
+
+
+
