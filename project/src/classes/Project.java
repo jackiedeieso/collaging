@@ -13,24 +13,22 @@ import view.TextView;
  * or close, and can contain multiple layers.
  */
 public class Project {
+
   private String name;
   private int height;
   private int width;
   private int maxValue;
   private ArrayList<Layer> layers;
-  CollagerState state;
-  Utils utils;
-  CollagerController controller;
-  ArrayList<ArrayList<ArrayList<PixelRGB>>> layeredPixels;
-  TextView view;
-  String blendingFilter;
-
+  private CollagerState state;
+  private Utils utils;
+  private CollagerController controller;
+  private ArrayList<ArrayList<ArrayList<PixelRGB>>> layeredPixels;
+  private TextView view;
   public boolean forPreview;
 
   /**
    * First constructor for the Project class. This is used for creating a
    * new project.
-   *
    * @param name       represents the title given to a project.
    * @param height     represents the height of a frame for the project.
    * @param width      represents the width of a frame for the project.
@@ -55,7 +53,6 @@ public class Project {
   /**
    * Second constructor for the Project class. This constructor is used for
    * loading an existing project in.
-   *
    * @param name       represents the title given to a project.
    * @param height     represents the height of a frame for the project.
    * @param width      represents the width of a frame for the project.
@@ -83,7 +80,6 @@ public class Project {
   /**
    * A method that converts the project into a string by returning
    * the project name.
-   *
    * @return the name of the project.
    */
   public String toString() {
@@ -201,7 +197,6 @@ public class Project {
   /**
    * A method that computes prime values from RGBA values.
    * This is done with a formula provided.
-   *
    * @param top    represents the layer above the bottom layer.
    * @param bottom represents the layer below the top layer.
    * @return a new PixelRGB that represents the RGBA value with the alpha
@@ -322,7 +317,6 @@ public class Project {
 
   /**
    * A method that gets the layers in a project.
-   *
    * @return an ArrayList of layers.
    */
   public ArrayList<Layer> getLayers() {

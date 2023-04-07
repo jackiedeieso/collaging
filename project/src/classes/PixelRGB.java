@@ -14,6 +14,7 @@ import view.TextView;
  * which is used to determine the color of the pixel.
  */
 public class PixelRGB implements PixelType {
+
   private int red;
   private int green;
   private int blue;
@@ -26,7 +27,6 @@ public class PixelRGB implements PixelType {
   /**
    * First constructor for the PixelRGB class. This constructor is used for
    * pixels with three components.
-   *
    * @param red        represents the red value of RGB.
    * @param green      represents the green value of RGB.
    * @param blue       represents the blue value of RGB.
@@ -46,7 +46,6 @@ public class PixelRGB implements PixelType {
 
   /**
    * Second constructor for the PixelRGB class. This constructor is used for four component pixels.
-   *
    * @param red        represents the red component of the RGB value.
    * @param green      represents the green component of the RGB value.
    * @param blue       represents the blue components of the RGB value.
@@ -284,6 +283,11 @@ public class PixelRGB implements PixelType {
     this.limitRGBValues();
   }
 
+  /**
+   * A method that gives the RGB values a limit. The RGB
+   * values are restricted to a range of 0 to 255. This prevents
+   * filters from going over that limit during calculations.
+   */
   public void limitRGBValues() {
     if (this.red < 0) {
       this.red = 0;
@@ -312,7 +316,6 @@ public class PixelRGB implements PixelType {
   private double convertFn(double hue, double saturation, double lightness, int n) {
     double k = (n + (hue/30)) % 12;
     double a  = saturation * Math.min(lightness, 1 - lightness);
-
     return lightness - a * Math.max(-1, Math.min(k - 3, Math.min(9 - k, 1)));
   }
 

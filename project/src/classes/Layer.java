@@ -12,6 +12,7 @@ import view.TextView;
  * in this layer are displayed from RGB or HSL values.
  */
 public class Layer {
+
   private ArrayList<ArrayList<PixelRGB>> pixels;
   private ArrayList<ArrayList<PixelRGB>> saveImagePixels;
   private String name;
@@ -19,7 +20,6 @@ public class Layer {
   private CollagerState state;
   private CollagerController controller;
   private Utils utils;
-
   private TextView view;
 
   /**
@@ -64,6 +64,11 @@ public class Layer {
     return this.pixels;
   }
 
+  /**
+   * A method that returns the pixels to save an image. Used to call this
+   * field in other classes.
+   * @return
+   */
   public ArrayList<ArrayList<PixelRGB>> getSaveImagePixels() {
     return this.saveImagePixels;
   }
@@ -261,10 +266,18 @@ public class Layer {
     return this.filterOnCurrentLayer;
   }
 
+  /**
+   * A method that assigns a new array of pixels to a layer.
+   * @param newLayer represents the pixels in a new layer.
+   */
   public void assignPixels(ArrayList<ArrayList<PixelRGB>> newLayer) {
     this.pixels = newLayer;
   }
 
+  /**
+   * A method that is used to reset the field saveImagePixels
+   * by setting it to an empty ArrayList.
+   */
   public void resetSaveImagePixels() {
     this.saveImagePixels = new ArrayList<ArrayList<PixelRGB>>();
   }

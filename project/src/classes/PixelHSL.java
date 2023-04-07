@@ -15,6 +15,7 @@ import view.TextView;
  * a hue value, a saturation value, and a lightness value.
  */
 public class PixelHSL implements PixelType {
+
   private double hue;
   private double saturation;
   private double lightness;
@@ -22,7 +23,6 @@ public class PixelHSL implements PixelType {
   private CollagerState state;
   private CollagerController controller;
   private Utils utils;
-
   private TextView view;
 
   /**
@@ -111,6 +111,11 @@ public class PixelHSL implements PixelType {
     return c;
   }
 
+  /**
+   * A method that is used to store the alpha value. This is
+   * used for calling in other classes.
+   * @return the alpha value of a Pixel.
+   */
   public int getAlpha() {
     return this.alpha;
   }

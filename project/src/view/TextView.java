@@ -9,8 +9,8 @@ import state.CollagerState;
  * read output.
  */
 public class TextView {
-  public Appendable destination;
 
+  public Appendable destination;
   public CollagerState state;
   public DefaultListModel<String> outputList;
 

@@ -6,7 +6,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.*;
-import javax.swing.border.Border;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import classes.PixelRGB;
 import controller.CollagerController;
@@ -20,8 +21,8 @@ import view.TextView;
 public class CollagerFrame extends JFrame implements ActionListener {
 
   PreviewPanel picturePanel;
-  JLabel pictureLabel;
-
+  JScrollPane jp;
+  JPanel mainPanel;
   JPanel dialogBox;
   JButton newProjectButton;
   JButton loadProjectButton;
@@ -31,6 +32,8 @@ public class CollagerFrame extends JFrame implements ActionListener {
   JButton setFilterButton;
   JButton saveImageButton;
   JButton quitButton;
+
+  JButton layerButton;
   JPanel commandPanel;
   JList<String> listOfResponses;
   DefaultListModel<String> outputList;
@@ -40,38 +43,61 @@ public class CollagerFrame extends JFrame implements ActionListener {
   CollagerController controller;
 
   /**
-   * Constructor for the CollagerFrame class. Can be called when starting the GUI.
-   * @param state
-   * @param controller
-   * @param utils
-   * @param view
-   * @param outputList
+   * Constructor for the class CollagerFrame. Allows for initialization
+   * of significant parameters for starting a GUI.
+   * @param state represents the current state of the collager.
+   * @param controller represents the controller class that run methods for the main.
+   * @param utils represents the utility class.
+   * @param view represents the current view of the collager.
+   * @param outputList represents where the view sends its response for the GUI.
    */
-  public CollagerFrame(CollagerState state, CollagerController controller, Utils utils, TextView view, DefaultListModel<String> outputList) {
-
+  public CollagerFrame(CollagerState state, CollagerController controller,
+                       Utils utils, TextView view, DefaultListModel<String> outputList) {
+    super();
     // Starter setup
     this.state = state;
     this.controller = controller;
     this.utils = utils;
     this.view = view;
+    this.mainPanel = new JPanel();
+    mainPanel.setLayout(new BorderLayout(2, 2));
 
     // frame settings
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setSize(1200, 950);
+    this.setTitle("Collager");
     this.setVisible(true);
-    this.setLayout(new BorderLayout(2, 2));
+    this.setLayout(new BorderLayout(0, 0));
 
     // picture panel
+    JPanel holderPanel = new JPanel();
+    holderPanel.setPreferredSize(new Dimension(800, 800));
+    holderPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    holderPanel.setVisible(true);
+    holderPanel.setBackground(Color.WHITE);
+
+    // scroll box
     this.picturePanel = new PreviewPanel(this.state);
-    this.picturePanel.setSize(800, 800);
-    this.add(picturePanel, BorderLayout.WEST);
+    this.jp = new JScrollPane(this.picturePanel);
+    this.jp.setPreferredSize(new Dimension(750, 750));
+    this.jp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+    this.jp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+    holderPanel.add(this.jp);
+    this.jp.setVisible(true);
+    this.mainPanel.add(holderPanel, BorderLayout.WEST);
 
     // commandPanel setup
+    JPanel rightSidePanel = new JPanel();
+    rightSidePanel.setLayout(new BorderLayout());
     this.commandPanel = new JPanel();
     this.commandPanel.setLayout(null);
     this.commandPanel.setSize(280, 280);
+    this.commandPanel.setVisible(true);
     this.addCommandButtons();
-    this.add(this.commandPanel);
+    rightSidePanel.add(this.commandPanel);
+    rightSidePanel.setVisible(true);
+    rightSidePanel.setPreferredSize(new Dimension(280, 800));
+    this.mainPanel.add(rightSidePanel, BorderLayout.EAST);
 
     // output setup
     this.outputList = outputList;
@@ -79,14 +105,19 @@ public class CollagerFrame extends JFrame implements ActionListener {
     this.dialogBox = new JPanel();
     this.listOfResponses = new JList<>(this.outputList);
     this.dialogBox.add(this.listOfResponses);
-    this.dialogBox.setSize( 800, 100);
-    this.add(this.dialogBox, BorderLayout.SOUTH);
+    this.dialogBox.setPreferredSize(new Dimension(800, 100));
+    this.dialogBox.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    this.mainPanel.add(this.dialogBox, BorderLayout.SOUTH);
+    this.add(this.mainPanel);
     this.getContentPane();
     this.pack();
   }
 
+  /**
+   * A method that is used to assign a task to each button, which allows
+   * for proper use of the buttons displayed in the GUI.
+   */
   public void addCommandButtons() {
-
     // newProject button
     this.newProjectButton = new JButton();
     this.newProjectButton.setBounds(0, 0, 140, 70);
@@ -142,53 +173,115 @@ public class CollagerFrame extends JFrame implements ActionListener {
     this.quitButton.setText("quit");
     this.quitButton.addActionListener(this);
     this.commandPanel.add(quitButton);
+
+    // choose filter button
+    this.layerButton = new JButton();
+    this.layerButton.setBounds(0, 280, 280, 70);
+    this.layerButton.setText("layers");
+    this.layerButton.addActionListener(this);
+    this.commandPanel.add(this.layerButton);
   }
 
+  class ListSelectionHandler implements ListSelectionListener {
+
+    int selectedLayer;
+
+    CollagerState state;
+
+    public ListSelectionHandler(CollagerState state) {
+      this.state = state;
+    }
+    /**
+     * Called whenever the value of the selection changes.
+     *
+     * @param e the event that characterizes the change.
+     */
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+      this.selectedLayer = e.getFirstIndex();
+      this.state.currentProject.getLayers().add(0, this.state.currentProject.getLayers().get(this.selectedLayer));
+      this.state.currentProject.getLayers().remove(this.selectedLayer);
+    }
+  }
+
+  /**
+   * A method that listens for events, and allows the program
+   * to perform specific tasks based on these events.
+   * @param e the event to be processed
+   */
   @Override
   public void actionPerformed(ActionEvent e) {
-    if (e.getSource()==this.newProjectButton) {
+    if (e.getSource() == this.newProjectButton) {
       String heightWidth = JOptionPane.showInputDialog("Enter the Width and Height of the new project" + "\n"
               + "Format: 1000 1000");
       this.utils.possibleOptions("new-project " + heightWidth);
     }
-    if (e.getSource()==this.loadProjectButton) {
+    if (e.getSource() == this.loadProjectButton) {
       String projectPath = JOptionPane.showInputDialog("Enter the file path of the project");
       this.utils.possibleOptions("load-project " + projectPath);
     }
-    if (e.getSource()==this.saveProjectButton) {
+    if (e.getSource() == this.saveProjectButton) {
       String saveProjectPath = JOptionPane.showInputDialog("Enter the path you want to save the file");
       this.utils.possibleOptions("save-project " + saveProjectPath);
     }
-    if (e.getSource()==this.addLayerButton) {
+    if (e.getSource() == this.addLayerButton) {
       String layerName = JOptionPane.showInputDialog("Enter the name of the new layer");
       this.utils.possibleOptions("add-layer " + layerName);
     }
-    if (e.getSource()==this.addImageToLayerButton) {
+    if (e.getSource() == this.addImageToLayerButton) {
       String commandBulk = JOptionPane.showInputDialog("Enter the image directory, the layer, and the x/y position"
               + "\n" + "Format: initial-layer tako.ppm 0 0");
       this.utils.possibleOptions("add-image-to-layer " + commandBulk);
     }
-    if (e.getSource()==this.setFilterButton) {
+    if (e.getSource() == this.setFilterButton) {
       String commandBulk = JOptionPane.showInputDialog("Enter the layer name and the filter name"
               + "\n" + "Format: initial-layer red-component");
       this.utils.possibleOptions("set-filter " + commandBulk);
     }
-    if (e.getSource()==this.saveImageButton) {
+    if (e.getSource() == this.saveImageButton) {
       String imageName = JOptionPane.showInputDialog("Enter the directory to save the image");
       this.utils.possibleOptions("save-image " + imageName);
     }
-    if (e.getSource()==this.quitButton) {
+    if (e.getSource() == this.quitButton) {
       this.dispose();
+    }
+    if (e.getSource() == this.layerButton) {
+      if (this.state.active) {
+        JFrame x = new JFrame();
+        JPanel y = new JPanel();
+        x.setVisible(true);
+        x.setPreferredSize(new Dimension(300, 300));
+        DefaultListModel<String> layerNames = new DefaultListModel<>();
+        for (int i = 0; i < this.state.currentProject.getLayers().size(); i++) {
+          layerNames.add(i, this.state.currentProject.getLayers().get(i).toString());
+        }
+        JList<String> jList = new JList<>(layerNames);
+        JScrollPane jScrollPane = new JScrollPane(jList);
+        jList.setVisible(true);
+        ListSelectionHandler handler = new ListSelectionHandler(this.state);
+        jList.addListSelectionListener(handler);
+        y.setPreferredSize(new Dimension(300, 300));
+        y.setVisible(true);
+        y.add(jList);
+        x.add(y);
+        x.getContentPane();
+        x.pack();
+      } else {
+        try {
+          this.view.destination.append("Must create project before editing layers.");
+        } catch (Exception ex) {
+          throw new IllegalStateException(ex.getMessage());
+        }
+      }
     }
     if (this.state.active) {
       this.state.previewPixels = new ArrayList<ArrayList<PixelRGB>>();
       this.state.currentProject.forPreview = true;
       this.utils.possibleOptions("save-image preview");
-      this.picturePanel.repaint();
+      this.picturePanel.changeSize();
       this.state.currentProject.forPreview = false;
+      this.revalidate();
+      this.jp.revalidate();
     }
-
-
   }
-
 }

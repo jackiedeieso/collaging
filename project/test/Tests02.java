@@ -1,6 +1,8 @@
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import classes.PixelHSL;
@@ -24,10 +26,14 @@ public class Tests02 {
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
     Utils utils = new Utils(state, controller, view);
+    PixelRGB pix = new PixelRGB(100, 50, 100, 255, state, controller, view);
+    controller.makeNewProject("new-project 100 100".split(" "));
+    pix.blendPixelDifference(1, 3, 3);
+    assertEquals(pix.toString(), "(100, 50, 100, 255)");
   }
 
   @Test
-  public void testBlendDifference() {
+  public void testBlendDifference() throws FileNotFoundException {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
@@ -40,6 +46,28 @@ public class Tests02 {
     utils.possibleOptions("save-image testBlendDifferenceBeforeFilter");
     utils.possibleOptions("set-filter mainImage blend-difference");
     utils.possibleOptions("save-image testBlendDifference.ppm");
+    Scanner regularScanner = new Scanner(new FileInputStream("res/sample.ppm"));
+    regularScanner.next();
+    regularScanner.nextInt();
+    regularScanner.nextInt();
+    regularScanner.nextInt();
+    int oldRed = regularScanner.nextInt();
+    int oldGreen = regularScanner.nextInt();
+    int oldBlue = regularScanner.nextInt();
+    Scanner blendDifferenceScanner = new Scanner(new FileInputStream("res/testProject.ppm"));
+    blendDifferenceScanner.next();
+    blendDifferenceScanner.nextInt();
+    blendDifferenceScanner.nextInt();
+    blendDifferenceScanner.nextInt();
+    int newRed = blendDifferenceScanner.nextInt();
+    int newGreen = blendDifferenceScanner.nextInt();
+    int newBlue = blendDifferenceScanner.nextInt();
+    assertEquals(oldRed, 173);
+    assertEquals(oldGreen, 179);
+    assertEquals(oldBlue, 151);
+    assertEquals(newRed, 255);
+    assertEquals(newGreen, 255);
+    assertEquals(newBlue, 255);
   }
 
   @Test
@@ -54,7 +82,10 @@ public class Tests02 {
     utils.possibleOptions("add-image-to-layer purple purple.ppm 0 0");
     utils.possibleOptions("add-image-to-layer mainImage tako.ppm 0 0");
     utils.possibleOptions("set-filter mainImage blend-multiply");
-
+    PixelHSL pix = new PixelHSL(100, 50, 100, 255, state, controller, view);
+    controller.makeNewProject("new-project 100 100".split(" "));
+    pix.blendPixelMultiply(1, 3, 3);
+    assertEquals(pix.toString(), "(200, 150, 200, 255)");
   }
 
   @Test
@@ -73,25 +104,64 @@ public class Tests02 {
   }
 
   @Test
-  public void testBlendMultiply() {
+  public void testBlendMultiply() throws FileNotFoundException {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
     Utils utils = new Utils(state, controller, view);
-    utils.possibleOptions("new-project 1000 1000");
+    utils.possibleOptions("new-project 100 100");
     utils.possibleOptions("add-layer purple");
     utils.possibleOptions("add-layer mainImage");
-
     utils.possibleOptions("add-image-to-layer mainImage tako.ppm 0 0");
     utils.possibleOptions("add-image-to-layer purple purpleSquare.ppm 0 300");
-
+    utils.possibleOptions("save-image testBlendMultiplyBeforeFilter.ppm");
     utils.possibleOptions("set-filter mainImage blend-multiply");
     utils.possibleOptions("save-project testBlendMultiply");
     utils.possibleOptions("save-image testBlendMultiply.ppm");
+    Scanner regularScanner = new Scanner(new FileInputStream("BlendMultiplyBeforeFilter.ppm"));
+    regularScanner.next();
+    regularScanner.nextInt();
+    regularScanner.nextInt();
+    regularScanner.nextInt();
+    int oldRed = regularScanner.nextInt();
+    int oldGreen = regularScanner.nextInt();
+    int oldBlue = regularScanner.nextInt();
+    Scanner blendMultiplyScanner = new Scanner(new FileInputStream("testBlendMultiply.ppm"));
+    blendMultiplyScanner.next();
+    blendMultiplyScanner.nextInt();
+    blendMultiplyScanner.nextInt();
+    blendMultiplyScanner.nextInt();
+    int newRed = blendMultiplyScanner.nextInt();
+    int newGreen = blendMultiplyScanner.nextInt();
+    int newBlue = blendMultiplyScanner.nextInt();
+    assertEquals(oldRed, 173);
+    assertEquals(oldGreen, 179);
+    assertEquals(oldBlue, 151);
+    assertEquals(newRed, 22);
+    assertEquals(newGreen, 0);
+    assertEquals(newBlue, 28);
   }
 
   @Test
-  public void testBlendScreen() {
+  public void testBlendPixelScreen() {
+    CollagerState state = new CollagerState();
+    TextView view = new TextView(state);
+    CollagerController controller = new CollagerController(state, view, this.sc);
+    Utils utils = new Utils(state, controller, view);
+    utils.possibleOptions("new-project 100 100");
+    utils.possibleOptions("add-layer purple");
+    utils.possibleOptions("add-layer mainImage");
+    utils.possibleOptions("add-image-to-layer purple purple.ppm 0 0");
+    utils.possibleOptions("add-image-to-layer mainImage tako.ppm 0 0");
+    utils.possibleOptions("set-filter mainImage blend-multiply");
+    PixelHSL pix = new PixelHSL(100, 50, 100, 255, state, controller, view);
+    controller.makeNewProject("new-project 100 100".split(" "));
+    pix.blendPixelScreen(1, 3, 3);
+    assertEquals(pix.toString(), "(200, 150, 200, 255)");
+  }
+
+  @Test
+  public void testBlendScreen() throws FileNotFoundException {
     CollagerState state = new CollagerState();
     TextView view = new TextView(state);
     CollagerController controller = new CollagerController(state, view, this.sc);
@@ -99,12 +169,33 @@ public class Tests02 {
     utils.possibleOptions("new-project 1000 1000");
     utils.possibleOptions("add-layer purple");
     utils.possibleOptions("add-layer mainImage");
-
     utils.possibleOptions("add-image-to-layer mainImage tako.ppm 0 0");
     utils.possibleOptions("add-image-to-layer purple purpleSquare.ppm 0 300");
     utils.possibleOptions("set-filter mainImage blend-screen");
     utils.possibleOptions("save-project testBlendScreen");
     utils.possibleOptions("save-image testBlendScreen.ppm");
+    Scanner regularScanner = new Scanner(new FileInputStream("BlendScreenBeforeFilter.ppm"));
+    regularScanner.next();
+    regularScanner.nextInt();
+    regularScanner.nextInt();
+    regularScanner.nextInt();
+    int oldRed = regularScanner.nextInt();
+    int oldGreen = regularScanner.nextInt();
+    int oldBlue = regularScanner.nextInt();
+    Scanner blendScreenScanner = new Scanner(new FileInputStream("testBlendMultiply.ppm"));
+    blendScreenScanner.next();
+    blendScreenScanner.nextInt();
+    blendScreenScanner.nextInt();
+    blendScreenScanner.nextInt();
+    int newRed = blendScreenScanner.nextInt();
+    int newGreen = blendScreenScanner.nextInt();
+    int newBlue = blendScreenScanner.nextInt();
+    assertEquals(oldRed, 173);
+    assertEquals(oldGreen, 179);
+    assertEquals(oldBlue, 151);
+    assertEquals(newRed, 22);
+    assertEquals(newGreen, 0);
+    assertEquals(newBlue, 28);
   }
 
   @Test

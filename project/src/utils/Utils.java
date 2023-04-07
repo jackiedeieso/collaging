@@ -17,6 +17,7 @@ import view.TextView;
  * class for Utils.
  */
 public class Utils {
+
   public int maxValue;
   public CollagerState state;
   public CollagerController controller;
@@ -139,7 +140,20 @@ public class Utils {
     pw.close();
   }
 
+  /**
+   * A method that is used to start the GUI.
+   * @param state represents the current state of the collager.
+   * @param controller represents the controller class that run methods
+   *                   for the main.
+   * @param view represents the current view of the collager.
+   * @param outputList represents where the view sends its response for the GUI.
+   */
   public void startGUI(CollagerState state, CollagerController controller, TextView view, DefaultListModel<String> outputList) {
+    try {
+      UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+    } catch (Exception e) {
+      throw new IllegalStateException(e.getMessage());
+    }
     CollagerFrame frame = new CollagerFrame(this.state, this.controller, this, this.view, outputList);
     frame.setSize(1200, 950);
   }
