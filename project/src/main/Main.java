@@ -40,10 +40,10 @@ public class Main {
         utils.possibleOptions(response);
       }
       while (!response.equalsIgnoreCase("quit"));
-    } else if (args[0].equals("user")) {
+    } else if (args[0].equals("-user")) {
       Scanner sc = new Scanner(System.in);
       if (args.length == 2) {
-        if (args[1].equals("GUI")) {
+        if (args[1].equals("-GUI")) {
           CollagerState guiState = new CollagerState();
           DefaultListModel<String> outputList = new DefaultListModel<>();
           CollagerGUIBuffer guiBuffer = new CollagerGUIBuffer(outputList);

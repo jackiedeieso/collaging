@@ -167,7 +167,7 @@ public class PixelHSL implements PixelType {
   public void blendPixelMultiply(int layerPos, int row, int col) {
     int firstLayerNotTransparent = -1;
     TextView view = new TextView(this.state);
-    for (int i = 1; i <= this.state.currentProject.getLayers().size() - layerPos; i++) {
+    for (int i = 1; i < this.state.currentProject.getLayers().size() - layerPos; i++) {
       if (this.state.currentProject.getLayers().get(layerPos + i)
               .getPixels().get(row).get(col).getColorDouble("Alpha") > 0) {
         firstLayerNotTransparent = layerPos + i;
@@ -194,7 +194,7 @@ public class PixelHSL implements PixelType {
   public void blendPixelScreen(int layerPos, int row, int col) {
     int firstLayerNotTransparent = -1;
     TextView view = new TextView(this.state);
-    for (int i = 1; i <= this.state.currentProject.getLayers().size() - layerPos; i++) {
+    for (int i = 1; i < this.state.currentProject.getLayers().size() - layerPos; i++) {
       if (this.state.currentProject.getLayers().get(layerPos + i)
               .getPixels().get(row).get(col).getColorDouble("Alpha") > 0) {
         firstLayerNotTransparent = layerPos + i;

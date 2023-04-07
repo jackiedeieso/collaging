@@ -328,7 +328,7 @@ public class PixelRGB implements PixelType {
   public void blendPixelDifference(int layerPos, int row, int col) {
     int firstLayerNotTransparent = -1;
     TextView view = new TextView(this.state);
-    for (int i = 1; i <= this.state.currentProject.getLayers().size() - layerPos; i++) {
+    for (int i = 1; i < this.state.currentProject.getLayers().size() - layerPos; i++) {
       if (this.state.currentProject.getLayers().get(layerPos + i).getPixels().get(row).get(col).alpha > 0) {
         firstLayerNotTransparent = layerPos + i;
         break;

@@ -43,10 +43,10 @@ public class Tests02 {
     utils.possibleOptions("add-layer mainImage");
     utils.possibleOptions("add-image-to-layer mainImage tako.ppm 0 0");
     utils.possibleOptions("add-image-to-layer purple PurpleSquare.ppm 0 0");
-    utils.possibleOptions("save-image testBlendDifferenceBeforeFilter");
+    utils.possibleOptions("save-image testBlendDifferenceBeforeFilter.ppm");
     utils.possibleOptions("set-filter mainImage blend-difference");
     utils.possibleOptions("save-image testBlendDifference.ppm");
-    Scanner regularScanner = new Scanner(new FileInputStream("res/sample.ppm"));
+    Scanner regularScanner = new Scanner(new FileInputStream("testBlendDifferenceBeforeFilter.ppm"));
     regularScanner.next();
     regularScanner.nextInt();
     regularScanner.nextInt();
@@ -54,7 +54,7 @@ public class Tests02 {
     int oldRed = regularScanner.nextInt();
     int oldGreen = regularScanner.nextInt();
     int oldBlue = regularScanner.nextInt();
-    Scanner blendDifferenceScanner = new Scanner(new FileInputStream("res/testProject.ppm"));
+    Scanner blendDifferenceScanner = new Scanner(new FileInputStream("testBlendDifference.ppm"));
     blendDifferenceScanner.next();
     blendDifferenceScanner.nextInt();
     blendDifferenceScanner.nextInt();
@@ -65,9 +65,9 @@ public class Tests02 {
     assertEquals(oldRed, 173);
     assertEquals(oldGreen, 179);
     assertEquals(oldBlue, 151);
-    assertEquals(newRed, 255);
-    assertEquals(newGreen, 255);
-    assertEquals(newBlue, 255);
+    assertEquals(newRed, 10);
+    assertEquals(newGreen, 106);
+    assertEquals(newBlue, 12);
   }
 
   @Test
@@ -80,12 +80,13 @@ public class Tests02 {
     utils.possibleOptions("add-layer purple");
     utils.possibleOptions("add-layer mainImage");
     utils.possibleOptions("add-image-to-layer purple purple.ppm 0 0");
-    utils.possibleOptions("add-image-to-layer mainImage tako.ppm 0 0");
+    utils.possibleOptions("add-image-to-layer mainImage pupper.ppm 0 0");
     utils.possibleOptions("set-filter mainImage blend-multiply");
-    PixelHSL pix = new PixelHSL(100, 50, 100, 255, state, controller, view);
+    PixelRGB pixR = new PixelRGB(100, 50, 100, 255, state, controller, view);
+    PixelHSL pix = new PixelHSL(pixR, state, controller, view);
     controller.makeNewProject("new-project 100 100".split(" "));
     pix.blendPixelMultiply(1, 3, 3);
-    assertEquals(pix.toString(), "(200, 150, 200, 255)");
+    assertEquals(new PixelRGB(pix, state, controller).toString(), "(100, 50, 50, 255)");
   }
 
   @Test
@@ -118,7 +119,7 @@ public class Tests02 {
     utils.possibleOptions("set-filter mainImage blend-multiply");
     utils.possibleOptions("save-project testBlendMultiply");
     utils.possibleOptions("save-image testBlendMultiply.ppm");
-    Scanner regularScanner = new Scanner(new FileInputStream("BlendMultiplyBeforeFilter.ppm"));
+    Scanner regularScanner = new Scanner(new FileInputStream("res/BlendMultiplyBeforeFilter.ppm"));
     regularScanner.next();
     regularScanner.nextInt();
     regularScanner.nextInt();
@@ -126,7 +127,7 @@ public class Tests02 {
     int oldRed = regularScanner.nextInt();
     int oldGreen = regularScanner.nextInt();
     int oldBlue = regularScanner.nextInt();
-    Scanner blendMultiplyScanner = new Scanner(new FileInputStream("testBlendMultiply.ppm"));
+    Scanner blendMultiplyScanner = new Scanner(new FileInputStream("res/stestBlendMultiply.ppm"));
     blendMultiplyScanner.next();
     blendMultiplyScanner.nextInt();
     blendMultiplyScanner.nextInt();
@@ -154,10 +155,11 @@ public class Tests02 {
     utils.possibleOptions("add-image-to-layer purple purple.ppm 0 0");
     utils.possibleOptions("add-image-to-layer mainImage tako.ppm 0 0");
     utils.possibleOptions("set-filter mainImage blend-multiply");
-    PixelHSL pix = new PixelHSL(100, 50, 100, 255, state, controller, view);
+    PixelRGB pixR = new PixelRGB(100, 50, 100, 255, state, controller, view);
+    PixelHSL pix = new PixelHSL(pixR, state, controller, view);
     controller.makeNewProject("new-project 100 100".split(" "));
     pix.blendPixelScreen(1, 3, 3);
-    assertEquals(pix.toString(), "(200, 150, 200, 255)");
+    assertEquals(new PixelRGB(pix, state, controller).toString(), "(100, 50, 50, 255)");
   }
 
   @Test
@@ -174,7 +176,7 @@ public class Tests02 {
     utils.possibleOptions("set-filter mainImage blend-screen");
     utils.possibleOptions("save-project testBlendScreen");
     utils.possibleOptions("save-image testBlendScreen.ppm");
-    Scanner regularScanner = new Scanner(new FileInputStream("BlendScreenBeforeFilter.ppm"));
+    Scanner regularScanner = new Scanner(new FileInputStream("res/BlendScreenBeforeFilter.ppm"));
     regularScanner.next();
     regularScanner.nextInt();
     regularScanner.nextInt();
@@ -182,7 +184,7 @@ public class Tests02 {
     int oldRed = regularScanner.nextInt();
     int oldGreen = regularScanner.nextInt();
     int oldBlue = regularScanner.nextInt();
-    Scanner blendScreenScanner = new Scanner(new FileInputStream("testBlendMultiply.ppm"));
+    Scanner blendScreenScanner = new Scanner(new FileInputStream("res/testBlendScreen.ppm"));
     blendScreenScanner.next();
     blendScreenScanner.nextInt();
     blendScreenScanner.nextInt();

@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import classes.Layer;
 import classes.PixelRGB;
 import controller.CollagerController;
 import state.CollagerState;
@@ -188,8 +189,17 @@ public class CollagerFrame extends JFrame implements ActionListener {
 
     CollagerState state;
 
-    public ListSelectionHandler(CollagerState state) {
+    PreviewPanel picturePanel;
+
+    Utils utils;
+
+    JFrame x;
+
+    public ListSelectionHandler(CollagerState state, PreviewPanel picturePanel, Utils utils, JFrame x) {
       this.state = state;
+      this.picturePanel = picturePanel;
+      this.utils = utils;
+      this.x = x;
     }
     /**
      * Called whenever the value of the selection changes.
@@ -198,9 +208,17 @@ public class CollagerFrame extends JFrame implements ActionListener {
      */
     @Override
     public void valueChanged(ListSelectionEvent e) {
-      this.selectedLayer = e.getFirstIndex();
-      this.state.currentProject.getLayers().add(0, this.state.currentProject.getLayers().get(this.selectedLayer));
-      this.state.currentProject.getLayers().remove(this.selectedLayer);
+      if (!e.getValueIsAdjusting()) {
+        this.selectedLayer = e.getFirstIndex();
+        Layer tempLayer = this.state.currentProject.getLayers().get(this.selectedLayer);
+        this.state.currentProject.getLayers().remove(this.selectedLayer);
+        this.state.currentProject.getLayers().add(0, tempLayer);
+        this.state.currentProject.forPreview = true;
+        this.utils.possibleOptions("save-image preview");
+        this.picturePanel.changeSize();
+        this.state.currentProject.forPreview = false;
+        x.dispose();
+      }
     }
   }
 
@@ -258,7 +276,7 @@ public class CollagerFrame extends JFrame implements ActionListener {
         JList<String> jList = new JList<>(layerNames);
         JScrollPane jScrollPane = new JScrollPane(jList);
         jList.setVisible(true);
-        ListSelectionHandler handler = new ListSelectionHandler(this.state);
+        ListSelectionHandler handler = new ListSelectionHandler(this.state, this.picturePanel, this.utils, x);
         jList.addListSelectionListener(handler);
         y.setPreferredSize(new Dimension(300, 300));
         y.setVisible(true);
