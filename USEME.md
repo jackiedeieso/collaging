@@ -5,6 +5,9 @@
 * When the user presses on one of the buttons, it creates a pop up window, that allows the user to type in what they want, depending on which button is pressed. 
 * On the bottom, there is command output that shows the user if they type in the incorrect information for the given button. 
 * The user can then create a new project, and if the project is too large for the space given to it, the user will be able to scroll in order to get a view of the entire image.
+* When a layer is added, the layer is placed into a list, and you are able to access this list by pressing on the button ***Layer.***
+* When you press on a layer in the list, and it is selected for 2 seconds, it will bring this layer to the top.
+* The user is then able to edit the layer by putting a filter on it if they would like. 
 * If the user desires to quit, they can press the quit button, which will close out the GUI window. 
 
 
