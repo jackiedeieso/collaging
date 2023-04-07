@@ -48,24 +48,5 @@ In order to create a proper design for this assignment, we considered various co
 
 * quit: ends the program and quits out.
 
-# Command Script
-1. new-project 100 100
-2. add-layer blue-layer
-3. add-image-to-layer blue-layer res/sample.ppm 0 0
-4. set-filter blue-layer blue-component
-5. add-layer red-layer
-6. add-image-to-layer red-layer res/sample.ppm 20 20
-7. set-filter red-layer red-component
-8. add-layer brightened-layer
-9. add-image-to-layer brightened-layer res/sample.ppm 40 40
-10. set-filter brightened-layer brighten-luma
-11. add-layer darkened-layer
-12. add-image-to-layer darkened-layer res/sample.ppm 60 60
-13. set-filter darkened-layer darken-value
-14. save-project
-15. res/CommandsProject
-16. save-image res/CommandsProject.ppm
-17. quit
-
 # Citations 
 * The picture is a personal picture of my dog, and all code was written without internet sources! No citations needed.
