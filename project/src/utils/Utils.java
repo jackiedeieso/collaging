@@ -5,7 +5,8 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-import javax.swing.*;
+import javax.swing.DefaultListModel;
+import javax.swing.UIManager;
 
 import classes.PixelRGB;
 import controller.CollagerController;
@@ -148,13 +149,15 @@ public class Utils {
    * @param view represents the current view of the collager.
    * @param outputList represents where the view sends its response for the GUI.
    */
-  public void startGUI(CollagerState state, CollagerController controller, TextView view, DefaultListModel<String> outputList) {
+  public void startGUI(CollagerState state, CollagerController controller,
+                       TextView view, DefaultListModel<String> outputList) {
     try {
       UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
     } catch (Exception e) {
       throw new IllegalStateException(e.getMessage());
     }
-    CollagerFrame frame = new CollagerFrame(this.state, this.controller, this, this.view, outputList);
+    CollagerFrame frame = new CollagerFrame(this.state, this.controller, this,
+            this.view, outputList);
     frame.setSize(1200, 950);
   }
 }

@@ -1,0 +1,14 @@
+<component name="libraryTable">
+  <library name="collaging">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/project.zip!/" />
+      <root url="jar://$PROJECT_DIR$/FinalOOD.zip!/" />
+      <root url="jar://$PROJECT_DIR$/OOD.zip!/" />
+      <root url="jar://$PROJECT_DIR$/src.zip!/" />
+      <root url="jar://$PROJECT_DIR$/res.zip!/" />
+      <root url="jar://$PROJECT_DIR$/collager.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

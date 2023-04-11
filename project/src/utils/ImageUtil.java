@@ -78,7 +78,7 @@ public class ImageUtil {
         convertedPixels.get(i).add(new PixelRGB(r, g, b, this.state, this.controller, this.view));
       }
     }
-      this.state.imageToBeAdded = convertedPixels;
+    this.state.imageToBeAdded = convertedPixels;
   }
 }
 

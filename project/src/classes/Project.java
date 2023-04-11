@@ -125,7 +125,8 @@ public class Project {
       for (int k = 0; k < this.layers.get(i).getPixels().size(); k++) {
         this.layers.get(i).getSaveImagePixels().add(new ArrayList<PixelRGB>());
         for (int j = 0; j < this.layers.get(i).getPixels().get(k).size(); j++) {
-          PixelRGB newPixel = new PixelRGB(this.layers.get(i).getPixels().get(k).get(j).getColorInt("Red"),
+          PixelRGB newPixel = new PixelRGB(this.layers.get(i).getPixels()
+                  .get(k).get(j).getColorInt("Red"),
                   this.layers.get(i).getPixels().get(k).get(j).getColorInt("Green"),
                   this.layers.get(i).getPixels().get(k).get(j).getColorInt("Blue"),
                   this.layers.get(i).getPixels().get(k).get(j).getColorInt("Alpha"),
@@ -157,7 +158,8 @@ public class Project {
       for (int k = 0; k < this.layers.get(0).getSaveImagePixels().get(i).size(); k++) {
         this.layeredPixels.get(i).add(new ArrayList<PixelRGB>());
         for (int j = 0; j < this.layers.size(); j++) {
-          this.layeredPixels.get(i).get(k).add(this.layers.get(j).getSaveImagePixels().get(i).get(k));
+          this.layeredPixels.get(i).get(k).add(this.layers
+                  .get(j).getSaveImagePixels().get(i).get(k));
         }
       }
     }
@@ -239,7 +241,8 @@ public class Project {
     int bPrimeInt = (int) bPrime;
     int aPrimeInt = (int) aPrime;
 
-    return new PixelRGB(rPrimeInt, gPrimeInt, bPrimeInt, aPrimeInt, this.state, this.controller, this.view);
+    return new PixelRGB(rPrimeInt, gPrimeInt, bPrimeInt, aPrimeInt,
+            this.state, this.controller, this.view);
   }
 
   /**

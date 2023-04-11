@@ -27,13 +27,15 @@ public class PixelRGB implements PixelType {
   /**
    * First constructor for the PixelRGB class. This constructor is used for
    * pixels with three components.
+   *
    * @param red        represents the red value of RGB.
    * @param green      represents the green value of RGB.
    * @param blue       represents the blue value of RGB.
    * @param state      represents the full state of the game.
    * @param controller represents the controller class that run methods for the main.
    */
-  public PixelRGB(int red, int green, int blue, CollagerState state, CollagerController controller, TextView view) {
+  public PixelRGB(int red, int green, int blue, CollagerState state,
+                  CollagerController controller, TextView view) {
     this.state = state;
     this.controller = controller;
     this.view = view;
@@ -46,6 +48,7 @@ public class PixelRGB implements PixelType {
 
   /**
    * Second constructor for the PixelRGB class. This constructor is used for four component pixels.
+   *
    * @param red        represents the red component of the RGB value.
    * @param green      represents the green component of the RGB value.
    * @param blue       represents the blue components of the RGB value.
@@ -81,6 +84,7 @@ public class PixelRGB implements PixelType {
   /**
    * Fourth constructor for the PixelRGB class. Converts an
    * HSL pixel to a RGB pixel.
+   *
    * @param pixelHSL The HSL implementation of the new pixel.
    */
   public PixelRGB(PixelHSL pixelHSL, CollagerState state, CollagerController controller) {
@@ -92,6 +96,7 @@ public class PixelRGB implements PixelType {
   /**
    * A method with the purpose of creating a new ArrayList of each PixelRGB's
    * values.
+   *
    * @return An ArrayList of the RGB components of a PixelRGB.
    */
   public ArrayList<Integer> getRGB() {
@@ -101,6 +106,7 @@ public class PixelRGB implements PixelType {
   /**
    * A method used for four-component PixelRGB values, which creates a new ArrayList
    * of each PixelRGB's values.
+   *
    * @return a new ArrayList of the RGBA values.
    */
   public ArrayList<Integer> getRGBA() {
@@ -109,6 +115,7 @@ public class PixelRGB implements PixelType {
 
   /**
    * A method that creates a combined string of the PixelRGB.
+   *
    * @return a string of the PixelRGB RGBA.
    */
   public String toString() {
@@ -119,6 +126,7 @@ public class PixelRGB implements PixelType {
    * A method that converts a three-component pixel into a
    * four-component pixel, adding the alpha value and creating
    * a transparency effect.
+   *
    * @return An array of the changed RGB values.
    */
   public ArrayList<Integer> getRGBAConvertRGB() {
@@ -163,6 +171,7 @@ public class PixelRGB implements PixelType {
   /**
    * A method that changes a pixel based on the filter being applied.
    * This is a helper for the method changeComponent.
+   *
    * @param color represents the color that is not changing.
    */
   public void changePixelComponent(String color) {
@@ -264,6 +273,7 @@ public class PixelRGB implements PixelType {
 
   /**
    * A method that converts an HSL pixel to an RGB pixel.
+   *
    * @param pixelHSL represents an HSL pixel to be converted.
    */
   public void convertHSLtoRGB(PixelHSL pixelHSL) {
@@ -314,22 +324,23 @@ public class PixelRGB implements PixelType {
    * model to the more familiar RGB model.
    */
   private double convertFn(double hue, double saturation, double lightness, int n) {
-    double k = (n + (hue/30)) % 12;
-    double a  = saturation * Math.min(lightness, 1 - lightness);
+    double k = (n + (hue / 30)) % 12;
+    double a = saturation * Math.min(lightness, 1 - lightness);
     return lightness - a * Math.max(-1, Math.min(k - 3, Math.min(9 - k, 1)));
   }
 
   /**
    * A method that filters a layer based on all project layers.
    * @param layerPos represents the starting position of the layer.
-   * @param row represents the x position of the filter.
-   * @param col represents the y position of the filter.
+   * @param row      represents the x position of the filter.
+   * @param col      represents the y position of the filter.
    */
   public void blendPixelDifference(int layerPos, int row, int col) {
     int firstLayerNotTransparent = -1;
     TextView view = new TextView(this.state);
     for (int i = 1; i < this.state.currentProject.getLayers().size() - layerPos; i++) {
-      if (this.state.currentProject.getLayers().get(layerPos + i).getPixels().get(row).get(col).alpha > 0) {
+      if (this.state.currentProject.getLayers().get(layerPos + i)
+              .getPixels().get(row).get(col).alpha > 0) {
         firstLayerNotTransparent = layerPos + i;
         break;
       }
@@ -347,6 +358,7 @@ public class PixelRGB implements PixelType {
 
   /**
    * A method that is used for other methods to return the color float.
+   *
    * @param color represents the desired color.
    * @return the number of the color.
    */
@@ -373,6 +385,7 @@ public class PixelRGB implements PixelType {
   /**
    * A method that is finding the RGB value represented as an
    * integer.
+   *
    * @param color represents the desired color.
    * @return an integer representation of the R, G, or B value.
    */

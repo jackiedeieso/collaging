@@ -1,9 +1,5 @@
 package classes;
 
-import org.w3c.dom.Text;
-
-import java.util.ArrayList;
-
 import controller.CollagerController;
 import interfaces.PixelType;
 import state.CollagerState;
@@ -27,13 +23,15 @@ public class PixelHSL implements PixelType {
 
   /**
    * The constructor for the PixelHSL class.
-   * @param hue represents the tone of the color, (i.e. red,
-   *            green, etc.).
+   *
+   * @param hue        represents the tone of the color, (i.e. red,
+   *                   green, etc.).
    * @param saturation represents the intensity of a color
    *                   in a given pixel.
    * @param lightness  represents how bright a pixel is.
    */
-  public PixelHSL(double hue, double saturation, double lightness, int alpha, CollagerState state, CollagerController controller, TextView view) {
+  public PixelHSL(double hue, double saturation, double lightness, int alpha,
+                  CollagerState state, CollagerController controller, TextView view) {
     this.hue = hue;
     this.saturation = saturation;
     this.lightness = lightness;
@@ -56,9 +54,11 @@ public class PixelHSL implements PixelType {
 
   /**
    * Constructor for the PixelHSL class that converts an RGB Pixel.
+   *
    * @param pixelRGB the pixel in RGB format that will be converted.
    */
-  public PixelHSL(PixelRGB pixelRGB, CollagerState state, CollagerController controller, TextView view) {
+  public PixelHSL(PixelRGB pixelRGB, CollagerState state,
+                  CollagerController controller, TextView view) {
     this.state = state;
     this.alpha = pixelRGB.getColorInt("Alpha");
     this.convertRGBtoHSL(pixelRGB);
@@ -87,6 +87,7 @@ public class PixelHSL implements PixelType {
 
   /**
    * A method that gets the HSL color value based on a string.
+   *
    * @param color represents one of the HSL values.
    * @return a singular H, S, or L value.
    */
@@ -114,6 +115,7 @@ public class PixelHSL implements PixelType {
   /**
    * A method that is used to store the alpha value. This is
    * used for calling in other classes.
+   *
    * @return the alpha value of a Pixel.
    */
   public int getAlpha() {
@@ -122,6 +124,7 @@ public class PixelHSL implements PixelType {
 
   /**
    * A method which converts an RGB value into an HSL value.
+   *
    * @param pixelRGBInit represents a given RGB pixel value.
    */
   public void convertRGBtoHSL(PixelRGB pixelRGBInit) {
@@ -133,7 +136,8 @@ public class PixelHSL implements PixelType {
     double delta = componentMax - componentMin;
 
     double lightness = (componentMax + componentMin) / 2;
-    double hue, saturation;
+    double hue;
+    double saturation;
     if (delta == 0) {
       hue = 0;
       saturation = 0;
@@ -160,9 +164,10 @@ public class PixelHSL implements PixelType {
   /**
    * A method that darkens a given pixel by multiplying together our
    * darker colors.
+   *
    * @param layerPos represents the position of the layer we are currently working on.
-   * @param row represents the x position of a pixel.
-   * @param col represents the y position of a pixel.
+   * @param row      represents the x position of a pixel.
+   * @param col      represents the y position of a pixel.
    */
   public void blendPixelMultiply(int layerPos, int row, int col) {
     int firstLayerNotTransparent = -1;
@@ -187,9 +192,10 @@ public class PixelHSL implements PixelType {
   /**
    * A method that lightens a pixel based on the layers underneath
    * the desired filtering layer.
+   *
    * @param layerPos represents the layer to be lightened.
-   * @param row represents the x position of a pixel.
-   * @param col represents the y position of a pixel.
+   * @param row      represents the x position of a pixel.
+   * @param col      represents the y position of a pixel.
    */
   public void blendPixelScreen(int layerPos, int row, int col) {
     int firstLayerNotTransparent = -1;

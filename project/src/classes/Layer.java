@@ -25,10 +25,12 @@ public class Layer {
   /**
    * This is the first constructor for the Layer class, which is used
    * when making a layer.
+   *
    * @param pixels represents an image, in pixels.
-   * @param name represents the name of a layer.
+   * @param name   represents the name of a layer.
    */
-  public Layer(ArrayList<ArrayList<PixelRGB>> pixels, String name, CollagerState state, CollagerController controller, TextView view) {
+  public Layer(ArrayList<ArrayList<PixelRGB>> pixels, String name, CollagerState state,
+               CollagerController controller, TextView view) {
     this.pixels = pixels;
     this.saveImagePixels = new ArrayList<ArrayList<PixelRGB>>();
     this.name = name;
@@ -41,11 +43,12 @@ public class Layer {
   /**
    * This is the second constructor class, which is used when the user
    * creates a new layer.
-   * @param pixels represents the pixels that make up an image.
-   * @param name represents the name of a layer.
+   * @param pixels               represents the pixels that make up an image.
+   * @param name                 represents the name of a layer.
    * @param filterOnCurrentLayer represents the filter on a given layer.
    */
-  public Layer(ArrayList<ArrayList<PixelRGB>> pixels, String name, String filterOnCurrentLayer, CollagerState state, CollagerController controller, TextView view) {
+  public Layer(ArrayList<ArrayList<PixelRGB>> pixels, String name, String filterOnCurrentLayer,
+               CollagerState state, CollagerController controller, TextView view) {
     this.pixels = pixels;
     this.saveImagePixels = new ArrayList<ArrayList<PixelRGB>>();
     this.name = name;
@@ -58,6 +61,7 @@ public class Layer {
   /**
    * A method used when called in other classes in order to
    * get the pixels in a given layer.
+   *
    * @return 2D array list of pixels.
    */
   public ArrayList<ArrayList<PixelRGB>> getPixels() {
@@ -67,6 +71,7 @@ public class Layer {
   /**
    * A method that returns the pixels to save an image. Used to call this
    * field in other classes.
+   *
    * @return
    */
   public ArrayList<ArrayList<PixelRGB>> getSaveImagePixels() {
@@ -76,6 +81,7 @@ public class Layer {
   /**
    * A method used when called in other classes in order to
    * get the name of a given layer.
+   *
    * @return the name of the layer.
    */
   public String toString() {
@@ -84,6 +90,7 @@ public class Layer {
 
   /**
    * A method used for retrieving the current filter.
+   *
    * @return the filter on the current layer.
    */
   public String getCurrentFilterString() {
@@ -92,6 +99,7 @@ public class Layer {
 
   /**
    * A method used to identify the filter being used on a layer.
+   *
    * @param name represents the name given to the filter.
    */
   public void assignCurrentFilterString(String name) {
@@ -101,6 +109,7 @@ public class Layer {
   /**
    * A method which changes the filter color of a given layer.
    * Once a color is input, turns the rest of the colors to 0.
+   *
    * @param color represents either red, green, or blue.
    */
   public void changeComponent(String color) {
@@ -204,6 +213,7 @@ public class Layer {
   /**
    * A method that inverts a given pixel, and blends both the current
    * layer and the composite images underneath that layer.
+   *
    * @param layerPos represents the position of a given layer.
    */
   public void blendDifference(int layerPos) {
@@ -218,13 +228,15 @@ public class Layer {
   /**
    * A method that darkens a given pixel by multiplying together
    * our darker colors.
+   *
    * @param layerPos represents the position of the layer we are currently
    *                 accessing.
    */
   public void blendMultiply(int layerPos) {
     for (int i = 0; i < this.saveImagePixels.size(); i++) {
       for (int k = 0; k < this.saveImagePixels.get(i).size(); k++) {
-        PixelHSL pixelHSL = new PixelHSL(this.saveImagePixels.get(i).get(k), this.state, this.controller, this.view);
+        PixelHSL pixelHSL = new PixelHSL(this.saveImagePixels.get(i).get(k),
+                this.state, this.controller, this.view);
         pixelHSL.blendPixelMultiply(layerPos, i, k);
         this.saveImagePixels.get(i).set(k, new PixelRGB(pixelHSL, this.state, this.controller));
       }
@@ -235,13 +247,15 @@ public class Layer {
   /**
    * A method that brightens an image by using all layers
    * involved.
+   *
    * @param layerPos represents the top left corner position of
    *                 the layer.
    */
   public void blendScreen(int layerPos) {
     for (int i = 0; i < this.saveImagePixels.size(); i++) {
       for (int j = 0; j < this.saveImagePixels.get(i).size(); j++) {
-        PixelHSL pixelHSL = new PixelHSL(this.saveImagePixels.get(i).get(j), this.state, this.controller, this.view);
+        PixelHSL pixelHSL = new PixelHSL(this.saveImagePixels.get(i).get(j),
+                this.state, this.controller, this.view);
         pixelHSL.blendPixelScreen(layerPos, i, j);
         this.saveImagePixels.get(i).set(j, new PixelRGB(pixelHSL, this.state, this.controller));
       }
@@ -250,6 +264,7 @@ public class Layer {
 
   /**
    * A method that labels the current layers filter.
+   *
    * @param filterOption represents which filter is being used on
    *                     a given layer.
    */
@@ -260,6 +275,7 @@ public class Layer {
   /**
    * A method that is used for other classes in order to determine
    * the filter on a given layer.
+   *
    * @return filter of a layer.
    */
   public String getCurrentFilter() {
@@ -268,6 +284,7 @@ public class Layer {
 
   /**
    * A method that assigns a new array of pixels to a layer.
+   *
    * @param newLayer represents the pixels in a new layer.
    */
   public void assignPixels(ArrayList<ArrayList<PixelRGB>> newLayer) {

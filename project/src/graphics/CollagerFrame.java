@@ -1,8 +1,11 @@
 package graphics;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -23,6 +26,10 @@ public class CollagerFrame extends JFrame implements ActionListener {
 
   PreviewPanel picturePanel;
   JScrollPane jp;
+
+  JLabel imageLabel;
+
+  ImageIcon img;
   JPanel mainPanel;
   JPanel dialogBox;
   JButton newProjectButton;
@@ -79,7 +86,11 @@ public class CollagerFrame extends JFrame implements ActionListener {
 
     // scroll box
     this.picturePanel = new PreviewPanel(this.state);
-    this.jp = new JScrollPane(this.picturePanel);
+    this.img = new ImageIcon();
+    this.imageLabel = new JLabel(this.img);
+    this.imageLabel.setPreferredSize(new Dimension(4000, 4000));
+    this.imageLabel.setVisible(true);
+    this.jp = new JScrollPane(this.imageLabel);
     this.jp.setPreferredSize(new Dimension(750, 750));
     this.jp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     this.jp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -112,6 +123,26 @@ public class CollagerFrame extends JFrame implements ActionListener {
     this.add(this.mainPanel);
     this.getContentPane();
     this.pack();
+  }
+
+
+  public void paintVoid() {
+    if (this.state.previewPixels.size() > 0) {
+      BufferedImage tempImage = new BufferedImage(this.state.previewPixels
+              .get(0).size(), this.state.previewPixels.size(), BufferedImage.TYPE_INT_RGB);
+      for (int i = 0; i < this.state.previewPixels.size(); i++) {
+        for (int k = 0; k < this.state.previewPixels.get(i).size(); k++) {
+          Color tempColor = new Color(
+                  this.state.previewPixels.get(i).get(k).getColorInt("Red"),
+                  this.state.previewPixels.get(i).get(k).getColorInt("Green"),
+                  this.state.previewPixels.get(i).get(k).getColorInt("Blue"));
+          tempImage.setRGB(k, i, tempColor.getRGB());
+        }
+        this.imageLabel.setIcon(new ImageIcon(tempImage));
+        this.imageLabel.revalidate();
+        this.revalidate();
+      }
+    }
   }
 
   /**
@@ -195,17 +226,20 @@ public class CollagerFrame extends JFrame implements ActionListener {
 
     JFrame x;
 
-    public ListSelectionHandler(CollagerState state, PreviewPanel picturePanel, Utils utils, JFrame x) {
+    public ListSelectionHandler(CollagerState state, PreviewPanel picturePanel,
+                                Utils utils, JFrame x) {
       this.state = state;
       this.picturePanel = picturePanel;
       this.utils = utils;
       this.x = x;
     }
+
     /**
      * Called whenever the value of the selection changes.
      *
      * @param e the event that characterizes the change.
      */
+
     @Override
     public void valueChanged(ListSelectionEvent e) {
       if (!e.getValueIsAdjusting()) {
@@ -215,7 +249,6 @@ public class CollagerFrame extends JFrame implements ActionListener {
         this.state.currentProject.getLayers().add(0, tempLayer);
         this.state.currentProject.forPreview = true;
         this.utils.possibleOptions("save-image preview");
-        this.picturePanel.changeSize();
         this.state.currentProject.forPreview = false;
         x.dispose();
       }
@@ -230,7 +263,8 @@ public class CollagerFrame extends JFrame implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == this.newProjectButton) {
-      String heightWidth = JOptionPane.showInputDialog("Enter the Width and Height of the new project" + "\n"
+      String heightWidth = JOptionPane.showInputDialog(
+              "Enter the Width and Height of the new project" + "\n"
               + "Format: 1000 1000");
       this.utils.possibleOptions("new-project " + heightWidth);
     }
@@ -239,7 +273,8 @@ public class CollagerFrame extends JFrame implements ActionListener {
       this.utils.possibleOptions("load-project " + projectPath);
     }
     if (e.getSource() == this.saveProjectButton) {
-      String saveProjectPath = JOptionPane.showInputDialog("Enter the path you want to save the file");
+      String saveProjectPath = JOptionPane.showInputDialog(
+              "Enter the path you want to save the file");
       this.utils.possibleOptions("save-project " + saveProjectPath);
     }
     if (e.getSource() == this.addLayerButton) {
@@ -247,7 +282,8 @@ public class CollagerFrame extends JFrame implements ActionListener {
       this.utils.possibleOptions("add-layer " + layerName);
     }
     if (e.getSource() == this.addImageToLayerButton) {
-      String commandBulk = JOptionPane.showInputDialog("Enter the image directory, the layer, and the x/y position"
+      String commandBulk = JOptionPane.showInputDialog(
+              "Enter the image directory, the layer, and the x/y position"
               + "\n" + "Format: initial-layer tako.ppm 0 0");
       this.utils.possibleOptions("add-image-to-layer " + commandBulk);
     }
@@ -276,7 +312,8 @@ public class CollagerFrame extends JFrame implements ActionListener {
         JList<String> jList = new JList<>(layerNames);
         JScrollPane jScrollPane = new JScrollPane(jList);
         jList.setVisible(true);
-        ListSelectionHandler handler = new ListSelectionHandler(this.state, this.picturePanel, this.utils, x);
+        ListSelectionHandler handler = new ListSelectionHandler(this.state,
+                this.picturePanel, this.utils, x);
         jList.addListSelectionListener(handler);
         y.setPreferredSize(new Dimension(300, 300));
         y.setVisible(true);
@@ -298,6 +335,8 @@ public class CollagerFrame extends JFrame implements ActionListener {
       this.utils.possibleOptions("save-image preview");
       this.picturePanel.changeSize();
       this.state.currentProject.forPreview = false;
+      this.paintVoid();
+      this.repaint();
       this.revalidate();
       this.jp.revalidate();
     }

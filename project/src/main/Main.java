@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Scanner;
 
-import javax.swing.*;
+import javax.swing.DefaultListModel;
 
 import controller.CollagerController;
 import state.CollagerState;
