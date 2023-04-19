@@ -35,6 +35,7 @@ public class PixelRGB implements PixelType {
    * @param controller represents the controller class that run methods for the main.
    */
   public PixelRGB(int red, int green, int blue, CollagerState state,
+
                   CollagerController controller, TextView view) {
     this.state = state;
     this.controller = controller;
