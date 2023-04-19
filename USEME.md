@@ -12,7 +12,7 @@
 * The user is then able to edit the layer by putting a filter on it if they would like. 
 * If the user desires to quit, they can press the quit button, which will close out the GUI window. 
 
-# How to use the Collager command line
+# How To Sse The Collager Command Line
 * new-project canvas-height canvas-width: Creates a new project file. The new project comes with one layer, which is named "initial-layer" and can be accessed with that name.
 
 * load-project path-to-project-file: loads a .txt file with the right format into the program. (The project files are saved as .txt).
