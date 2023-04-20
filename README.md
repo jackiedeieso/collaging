@@ -1,5 +1,8 @@
-# Assignment 4: Collager
-For this assignment, we were asked to create a collager, which would allow a user to interact with an application similar to Gimp or Photoshop. The user is able to create a new project, add layers to this project, save the project, quit, and then reopen it at a later time if desired. In addition, when an image is added, the user is able to add a filter onto the image. The filters include: red-component, green-component, blue-component, brighten-value, brighten-intensity, brighten-luma, darken-value, darken-intensity, and darken-luma. 
+Collager
+For this assignment, we were asked to create a collager, which would allow a user to interact with an application similar to Gimp or Photoshop. The user is able to create a new project, add layers to this project, save the project, quit, and then reopen it at a later time if desired. In addition, when an image is added, the user is able to add a filter onto the image. There are many filters that a user can add, and these filters are applied using the RGB/RGBA system. An RGB value is a way to store a given color, using red, green, and blue components. The filters include: red-component, green-component, blue-component, brighten-value, brighten-intensity, brighten-luma, darken-value, darken-intensity, and darken-luma. All of these filters are meant to change a given layer, and that layer only. In addition to this, there are three filters that use the layer and the composite layer beneath it. These include blend-difference, blend-multiply, and blend-screen. Two of these filters, blend-multiply and blend-screen, are calculated using HSL value, which is another way to store a color. HSL represents hue, saturation, and lightness. Most features are available through all formats, such as GUI and text. However, only the GUI view has the ability to preview the image before it is saved. The features that are not available include not being able to open a file, the user has to type in the directory in order to access a file or a project. In addition, the user cannot scroll on the preview box if the project is larger than 750 by 750. 
+
+# Requirements/Dependencies 
+
 
 # Design
 In order to create a proper design for this assignment, we considered various components that may be added in the future, and that would be important to abstract to avoid issues with our program in the future. This program has been designed so that it can be added to at every step. Starting with the main, the user inputs their desired command, which is then sent to the utils class so the right method can be called on the current project. Due to this, methods and different commands can be added. The CollagerController class communicates with the currentProject field. This field exists in the state class. The CollagerState class is designed as a holder for important data throughout the program. The CollagerState class allows for any of the other classes to access and make edits to the currentProject. This design is useful because it allows the program to make edits to the project with ease. The layer class holds the filterType and applies it when the image is saved. This is necessary for the project to load properly and for the filter to be changed. If the filter was applied immediately, it would be much harder to revert or change the filter because the RGB values had already been changed. By only applying the filter when the final image is being saved, it is much easier to load projects and change the filter settings on each layer.
@@ -31,22 +34,8 @@ In order to create a proper design for this assignment, we considered various co
 
 * PreviewPanel: This class is a representation of the panel used for project. This class is mainly used for importing images onto given layers.
 
-# Command Line
-* new-project canvas-height canvas-width: Creates a new project file. The new project comes with one layer, which is named "initial-layer" and can be accessed with that name.
-
-* load-project path-to-project-file: loads a .txt file with the right format into the program. (The project files are saved as .txt).
-
-* save-project: saves a project in a .txt format. After running this command, the program asks for a name, this name will be used to name the project file.
-
-* add-layer layer-name: adds a layer with the name that is given by the user. This layer automatically goes to the top of the layer-list.
-
-* add-image-to-layer layer-name image-name x-pos y-pos: adds a ppm image to the given layer. The top left corner of the ppm is placed at (x-pos, y-pos).
-
-* set-filter layer-name filter-option: This command marks a layer as having the given filter. When save-image is used, the filter is applied to the layer. The filters that can be used are normal, red-component, green-component, blue-component, brighten-value, brighten-intensity, brighten-luma, darken-value, darken-intensity, and darken-luma.
-
-* save-image file-name: Saves the project as a ppm file with the given file-name. This method also applies all filters to their layers.
-
-* quit: ends the program and quits out.
+# Where is the USEME?
+You can find the USEME in the main project file. You will see a file titled USEME.
 
 # Citations 
 * The picture is a personal picture of my dog, and all code was written without internet sources! No citations needed.
