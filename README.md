@@ -3,8 +3,8 @@ For this assignment, we were asked to create a collager, which would allow a use
 
 
 # Requirements and Dependencies List
-Java.swing
-Java.io
+* Java.swing
+* Java.io
 
 
 # Design
